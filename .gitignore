@@ -1,0 +1,6 @@
+# "temporary" build files
+/target
+/.idea
+.classpath
+.project
+*.iml
