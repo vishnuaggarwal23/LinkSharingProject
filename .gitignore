@@ -1,6 +1,7 @@
 # "temporary" build files
 /target
 /.idea
+/.slcache
 .classpath
 .project
 *.iml
