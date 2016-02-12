@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import enums.Visibility
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -8,13 +9,25 @@ import spock.lang.Specification
  */
 @TestFor(LinkResource)
 class LinkResourceSpec extends Specification {
+    def "Validate Document Resource "() {
 
-    def setup() {
-    }
+        setup:
+        User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: "vishnu.aggarwal@tothenew.com",
+                password: "123456", userName: "vishnu.aggarwal")
+        Topic topic = new Topic(name: "Grails", visibility: Visibility.PRIVATE, createdBy: user)
+        LinkResource linkResource = new LinkResource(url: url, description: "Text", createdBy:
+                user, topic: topic)
 
-    def cleanup() {
-    }
+        when:
+        Boolean result = linkResource.validate()
 
-    void "test something"() {
+        then:
+        result == valid
+
+        where:
+        url                      | valid
+        ""                       | false
+        null                     | false
+        "https://www.google.com" | true
     }
 }

@@ -9,7 +9,7 @@ class User {
     byte[] photo
     boolean isAdmin
     boolean isActive
-    static transients = ['name']
+    //static transients = ['name']
     Date dateCreated
     Date lastUpdated
 

@@ -7,6 +7,6 @@ class ReadingItem {
     Date dateCreated
     Date lastUpdated
     static constraints = {
-        user(unique: ['resource'])
+        resource(unique: ['user'])
     }
 }

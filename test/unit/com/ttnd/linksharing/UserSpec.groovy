@@ -9,21 +9,10 @@ import spock.lang.Specification
  */
 @TestFor(User)
 class UserSpec extends Specification {
-
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
-    def "Email Validation for - #email"() {
+    def "User Validation for - #email"() {
         setup:
-        String email = "vishnu.aggarwal@tothenew.com"
-        String password = "123456"
-        User user = new User(userName: userName, firstName: firstName, lastName: lastName, email: emailId, password: passWord)
+        User user = new User(userName: userName, firstName: firstName, lastName: lastName, email: emailId, password:
+                passWord)
 
         when:
         Boolean result = user.validate()
@@ -33,35 +22,10 @@ class UserSpec extends Specification {
 
         where:
         userName          | firstName | lastName   | emailId                        | passWord | valid
+        null              | null      | null       | null                           | null     | false
         ""                | ""        | ""         | ""                             | ""       | false
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@"             | "123456" | false
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123456" | true
-    }
-
-    def "Check First Name"() {
-        setup:
-        User user = new User(firstName: name)
-
-        expect:
-        result == user.getFirstName()
-
-        where:
-        name     | result
-        ""       | null
-        "Vishnu" | "Vishnu"
-    }
-
-    def "Check Last Name"() {
-        setup:
-        User user = new User(lastName: name)
-
-        expect:
-        result == user.getLastName()
-
-        where:
-        name       | result
-        ""         | null
-        "Aggarwal" | "Aggarwal"
     }
 
     def "Check Full Name"() {
@@ -79,27 +43,22 @@ class UserSpec extends Specification {
         "Vishnu"  | "Aggarwal" | "Vishnu Aggarwal"
     }
 
-    def "Check Password"() {
-        setup:
-        User user = new User(password: password)
-
-
-    }
-
     def "Email Unique - #email"() {
         setup:
         String email = "vishnu.aggarwal@tothenew.com"
         String password = 'password'
-        User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: email, password: password)
+        User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: email, password: password, userName:
+                "vishnu.aggarwal")
 
         when:
         user.save()
 
         then:
-        user.count() == 1
+        User.count() == 1
 
         when:
-        User newUser = new User(firstName: "Vishnu A", lastName: "V Aggarwal", email: email, password: password)
+        User newUser = new User(firstName: "Vishnu A", lastName: "V Aggarwal", email: email, password: password,
+                userName: "v.a")
         newUser.save()
 
         then:
