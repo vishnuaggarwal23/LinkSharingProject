@@ -10,4 +10,6 @@ class ResourceRating {
         score(min:1,max:5)
         user(unique: ['resource'])
     }
+
+    static belongsTo = [user:User,resource:Resource]
 }

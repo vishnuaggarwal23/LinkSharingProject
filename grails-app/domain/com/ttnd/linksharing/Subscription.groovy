@@ -11,4 +11,6 @@ class Subscription {
     static constraints = {
         user(unique: ['topic'])
     }
+
+    static belongsTo = [user:User,topic:Topic]
 }
