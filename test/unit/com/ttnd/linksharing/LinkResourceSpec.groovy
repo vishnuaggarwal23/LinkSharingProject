@@ -15,7 +15,7 @@ class LinkResourceSpec extends Specification {
         User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: "vishnu.aggarwal@tothenew.com",
                 password: "123456", userName: "vishnu.aggarwal")
         Topic topic = new Topic(name: "Grails", visibility: Visibility.PRIVATE, createdBy: user)
-        LinkResource linkResource = new LinkResource(url: url, description: "Text", createdBy:
+        LinkResource linkResource = new LinkResource(url: url, description: description, createdBy:
                 user, topic: topic)
 
         when:
@@ -25,9 +25,11 @@ class LinkResourceSpec extends Specification {
         result == valid
 
         where:
-        url                      | valid
-        ""                       | false
-        null                     | false
-        "https://www.google.com" | true
+        url                      | description | valid
+        ""                       | ""          | false
+        null                     | null        | false
+        "https://www.google.com" | null        | false
+        null                     | "google"    | false
+        "https://www.google.com" | "google"    | true
     }
 }

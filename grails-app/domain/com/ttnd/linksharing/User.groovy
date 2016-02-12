@@ -31,6 +31,6 @@ class User {
     }
 
     String getName() {
-        [this.firstName, this.lastName].findAll{it}.join(' ')
+        [this.firstName, this.lastName].findAll { it }.join(' ')
     }
 }

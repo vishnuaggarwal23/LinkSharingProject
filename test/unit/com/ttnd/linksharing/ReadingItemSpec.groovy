@@ -9,12 +9,21 @@ import spock.lang.Specification
 @TestFor(ReadingItem)
 class ReadingItemSpec extends Specification {
 
-    def setup() {
-    }
+    void "Validating Unique Reading Item"() {
+        given:
+        LinkResource resource = new LinkResource()
+        User user = new User()
+        ReadingItem readingItem = new ReadingItem(resource: resource, user: user, isRead: true)
+        ReadingItem newReadingItem = new ReadingItem(resource: resource, user: user, isRead: false)
 
-    def cleanup() {
-    }
+        when:
+        readingItem.save(flush: true)
+        newReadingItem.save(flush: true)
 
-    void "test something"() {
+        then:
+        !readingItem.errors.allErrors.size()
+        newReadingItem.errors.allErrors.size()
+        newReadingItem.errors.getFieldError('resource')
+
     }
 }
