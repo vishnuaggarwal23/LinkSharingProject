@@ -10,7 +10,7 @@ class Topic {
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [subscriptions: Subscription, documentResources: DocumentResource, linkResources: LinkResource]
+    static hasMany = [subscriptions: Subscription, resources:Resource]
 
     static constraints = {
         name(blank: false, unique: ['createdBy'])

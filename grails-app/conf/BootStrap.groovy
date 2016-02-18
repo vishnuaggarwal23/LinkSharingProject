@@ -7,20 +7,8 @@ class BootStrap {
     def init = { servletContext ->
         List<User> users = createUser()
         List<Topic> topics = createTopic(users)
-        //List<Resource> resources=createResources()
-        /*List<Topic> topics = []
-        users = createUser()
+        List<Resource> resources = createResources(topics)
         println(grailsApplication.config.grails.sampleValue)
-        users.each { user ->
-            validate(user)
-        }
-        users.each { user ->
-            topics = createTopics(user)
-            topics.each{topic->
-                validate(topic)
-            }
-        }
-        new Topic(name: "Topic1",createdBy: users.first(),visibility: Visibility.PRIVATE).save()*/
     }
 
     List<User> createUser() {
@@ -70,130 +58,43 @@ class BootStrap {
                 }
             } else {
                 log.info "User ${user} already have some topics created "
-                topics+=Topic.findAll("from Topic as topic where topic.createdBy=:creator",[creator:user])
+                topics += Topic.findAll("from Topic as topic where topic.createdBy=:creator", [creator: user])
             }
         }
         return topics
     }
 
-    /*List<User> checkUserExists() {
-        Integer normalUserCount = User.countByIsAdmin(false)
-        Integer adminUserCount = User.countByIsAdmin(true)
-        List<User> users=[]
-        User user;
-
-        if (normalUserCount == 0) {
-            user=new User();
-            user.setUserName("normaluser")
-            user.setFirstName("fname")
-            user.setLastName("lname")
-            user.setEmail("normaluser@xyz.com")
-            user.setIsAdmin(false)
-            user.setPassword(AppConstants.PASSWORD)
-            createUser(user, users)
-            validate(user)
-        }
-        if (adminUserCount == 0) {
-            user=new User();
-            user.setUserName("adminuser")
-            user.setFirstName("fname")
-            user.setLastName("lname")
-            user.setEmail("adminuser@xyz.com")
-            user.setIsAdmin(true)
-            user.setPassword(AppConstants.PASSWORD)
-            createUser(user, users)
-            validate(user)
-        } else {
-            users = User.findAll()
-        }
-        return users
-    }
-
-    void createUser(User user, List<User> users) {
-        if (user.save()) {
-            users.add(user)
-            log.info "User Saved ${user}"
-        } else {
-            log.info "User not Saved ${user} ---- ${user.errors.allErrors}"
-        }
-    }
-
-    void validate(def obj) {
-            log.info "---Before validate HasErrors--- ${obj.hasErrors()}"
-            log.info "---User is valid--- ${obj.validate()}"
-            log.info "---After validate HasErrors--- ${obj.hasErrors()}"
-            obj.save(flush: true)
-    }*/
-
-    /*List<User> createUser() {
-        List<User> users = []
-        User user = new User(userName: "user", firstName: "Vishnu", lastName: "Aggarwal", password: AppConstants.PASSWORD, email:
-                "user@ttndlinksharing.com")
-        findOrCheckUser(user, users)
-        user = new User(userName: "admin", firstName: "Admin", lastName: "linksharing", password: AppConstants.PASSWORD, email:
-                "admin@ttndlinksharing.com", isAdmin: true)
-        findOrCheckUser(user, users)
-        return users
-    }
-
-    void validate(def user) {
-        log.info "---Before validate HasErrors--- ${user.hasErrors()}"
-        log.info "---User is valid--- ${user.validate()}"
-        log.info "---After validate HasErrors--- ${user.hasErrors()}"
-        user.save(flush: true)
-    }
-
-    void findOrCheckUser(User user, List<User> users) {
-        User checkUser = User.findByEmail(user.email)
-        if (!checkUser) {
-            if (user.save()) {
-                users.add(user)
-                log.info "User ${user} saved"
+    List<Resource> createResources(List<Topic> topics) {
+        List<Resource> resources = []
+        topics.each { Topic topic ->
+            Integer countResources = Resource.countByTopic(topic)
+            if (!countResources) {
+                2.times {
+                    Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
+                            .createdBy, filePath: "file/path", topic: topic)
+                    Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
+                            .createdBy, url: "https://www.google.co.in", topic: topic)
+                    if (documentResource.save(flush: true, failOnError: true)) {
+                        log.info "document resource ${documentResource} saved"
+                        resources.add(documentResource)
+                        topic.addToResources(documentResource)
+                    } else {
+                        log.info "document resource ${documentResource} not saved"
+                    }
+                    if (linkResource.save(flush: true, failOnError: true)) {
+                        log.info "document resource ${linkResource} saved"
+                        resources.add(linkResource)
+                        topic.addToResources(linkResource)
+                    } else {
+                        log.info "document resource ${linkResource} not saved"
+                    }
+                }
             } else {
-                log.info "User ${user} not saved -----  ${user.errors.allErrors}"
+                resources += Resource.findAll("from Resource")
             }
-        } else {
-            log.info "User already exists ----- ${user}"
-            //user.save(failOnError: true)
         }
+        return resources
     }
-
-    List<Topic> createTopics(User user){
-        int countOfTopicsPerUser=topicCountPerUser(user)
-        List<Topic> topics=[]
-        if(countOfTopicsPerUser){
-            (1..5).each{
-                Topic topic=new Topic(name:"Topic${it}",createdBy: user,visibility:AppConstants.VISIBILITY)
-                findOrCheckTopic(user,topic,topics)
-            }
-        }
-        else{
-            log.info "user ${user} has some topics ${topics}"
-        }
-        return topics
-    }
-
-    void findOrCheckTopic(User user,Topic topic,List<Topic> topics){
-        Topic checkTopic=Topic.findByNameAndCreatedBy(topic.name,user)
-        if(!checkTopic){
-            if(topic.save()){
-                topics.add(topic)
-                log.info "Topic ${topic} saved"
-            }
-            else{
-                log.info "Topic ${topic} not saved ----- ${topic.errors.allErrors}"
-            }
-        }
-        else{
-            log.info "Topic ${topic} already exists for the user ${user}"
-            //topic.save(failOnError: true)
-        }
-    }
-
-    Integer topicCountPerUser(User creator){
-        return Topic.countByCreatedBy(creator)
-    }*/
-
     def destroy = {
     }
 }
