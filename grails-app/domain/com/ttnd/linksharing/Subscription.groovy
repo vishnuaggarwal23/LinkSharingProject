@@ -13,4 +13,8 @@ class Subscription {
     }
     
     static belongsTo = [user:User,topic:Topic]
+
+    String toString(){
+        return "${user} subscribed ${topic}"
+    }
 }

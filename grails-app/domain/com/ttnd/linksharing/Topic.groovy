@@ -27,4 +27,8 @@ class Topic {
             }
         }
     }
+
+    String toString(){
+        return name
+    }
 }

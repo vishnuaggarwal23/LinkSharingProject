@@ -8,6 +8,7 @@ class BootStrap {
         List<User> users = createUser()
         List<Topic> topics = createTopic(users)
         List<Resource> resources = createResources(topics)
+        List<Subscription> subscriptions = createSubscription(users, topics)
         println(grailsApplication.config.grails.sampleValue)
     }
 
@@ -69,29 +70,66 @@ class BootStrap {
         topics.each { Topic topic ->
             Integer countResources = Resource.countByTopic(topic)
             if (!countResources) {
-                Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
-                        .createdBy, filePath: "file/path", topic: topic)
-                Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
-                        .createdBy, url: "https://www.google.co.in", topic: topic)
-                if (documentResource.save(flush: true, failOnError: true)) {
-                    log.info "document resource ${documentResource} saved"
-                    resources.add(documentResource)
-                    //topic.addToResources(documentResource)
-                } else {
-                    log.info "document resource ${documentResource} not saved"
-                }
-                if (linkResource.save(flush: true, failOnError: true)) {
-                    log.info "document resource ${linkResource} saved"
-                    resources.add(linkResource)
-                    //topic.addToResources(linkResource)
-                } else {
-                    log.info "document resource ${linkResource} not saved"
+                2.times {
+                    Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
+                            .createdBy, filePath: "file/path", topic: topic)
+                    Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
+                            .createdBy, url: "https://www.google.co.in", topic: topic)
+                    if (documentResource.save(flush: true, failOnError: true)) {
+                        log.info "document resource ${documentResource} saved"
+                        resources.add(documentResource)
+                        //topic.addToResources(documentResource)
+                    } else {
+                        log.info "document resource ${documentResource} not saved"
+                    }
+                    if (linkResource.save(flush: true, failOnError: true)) {
+                        log.info "document resource ${linkResource} saved"
+                        resources.add(linkResource)
+                        //topic.addToResources(linkResource)
+                    } else {
+                        log.info "document resource ${linkResource} not saved"
+                    }
                 }
             } else {
                 resources += Resource.findAll("from Resource")
             }
         }
         return resources
+    }
+
+    List<Subscription> createSubscription(List<User> users, List<Topic> topics) {
+        List<Subscription> subscriptions = []
+        subscriptions += Subscription.findAll("from Subscription")
+        subscriptions.each { Subscription subscription ->
+            users.each { User user ->
+                topics.each {
+                    Topic topic ->
+                        if (subscription.user == user && subscription.topic == topic) {
+                            log.info "User ${user} already subscribed to the topic ${topic}"
+                        } else {
+                            Subscription newSubscription = new Subscription(user: user, topic: topic, seriousness:
+                                    AppConstants.SERIOUSNESS)
+                            if (newSubscription.save(flush: true, failOnError: true)) {
+                                log.info "${newSubscription} saved "
+                                subscriptions.add(newSubscription)
+                            } else {
+                                log.info "subscription not saved"
+                            }
+                        }
+                }
+                /*if(topic.createdBy!=user){
+                    Subscription subscription=new Subscription(user:user,topic:topic,seriousness: AppConstants.SERIOUSNESS)
+                    if(subscription.save(flush: true,failOnError: true)){
+                        log.info "${subscription} saved "
+                        subscriptions.add(subscription)
+                    }
+                    else{
+                        log.info "subscription not saved"
+                    }
+                }*/
+            }
+        }
+        return subscriptions
     }
     def destroy = {
     }
