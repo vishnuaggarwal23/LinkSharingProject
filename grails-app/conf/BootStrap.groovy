@@ -69,25 +69,23 @@ class BootStrap {
         topics.each { Topic topic ->
             Integer countResources = Resource.countByTopic(topic)
             if (!countResources) {
-                2.times {
-                    Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
-                            .createdBy, filePath: "file/path", topic: topic)
-                    Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
-                            .createdBy, url: "https://www.google.co.in", topic: topic)
-                    if (documentResource.save(flush: true, failOnError: true)) {
-                        log.info "document resource ${documentResource} saved"
-                        resources.add(documentResource)
-                        topic.addToResources(documentResource)
-                    } else {
-                        log.info "document resource ${documentResource} not saved"
-                    }
-                    if (linkResource.save(flush: true, failOnError: true)) {
-                        log.info "document resource ${linkResource} saved"
-                        resources.add(linkResource)
-                        topic.addToResources(linkResource)
-                    } else {
-                        log.info "document resource ${linkResource} not saved"
-                    }
+                Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
+                        .createdBy, filePath: "file/path", topic: topic)
+                Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
+                        .createdBy, url: "https://www.google.co.in", topic: topic)
+                if (documentResource.save(flush: true, failOnError: true)) {
+                    log.info "document resource ${documentResource} saved"
+                    resources.add(documentResource)
+                    //topic.addToResources(documentResource)
+                } else {
+                    log.info "document resource ${documentResource} not saved"
+                }
+                if (linkResource.save(flush: true, failOnError: true)) {
+                    log.info "document resource ${linkResource} saved"
+                    resources.add(linkResource)
+                    //topic.addToResources(linkResource)
+                } else {
+                    log.info "document resource ${linkResource} not saved"
                 }
             } else {
                 resources += Resource.findAll("from Resource")
