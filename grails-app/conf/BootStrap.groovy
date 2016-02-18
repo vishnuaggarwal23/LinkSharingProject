@@ -100,7 +100,7 @@ class BootStrap {
     List<Subscription> createSubscription(List<User> users, List<Topic> topics) {
         List<Subscription> subscriptions = []
         subscriptions += Subscription.findAll("from Subscription")
-        subscriptions.each { Subscription subscription ->
+        /*subscriptions.each { Subscription subscription ->
             users.each { User user ->
                 topics.each {
                     Topic topic ->
@@ -117,7 +117,8 @@ class BootStrap {
                             }
                         }
                 }
-                /*if(topic.createdBy!=user){
+
+                *//*if(topic.createdBy!=user){
                     Subscription subscription=new Subscription(user:user,topic:topic,seriousness: AppConstants.SERIOUSNESS)
                     if(subscription.save(flush: true,failOnError: true)){
                         log.info "${subscription} saved "
@@ -126,11 +127,49 @@ class BootStrap {
                     else{
                         log.info "subscription not saved"
                     }
+                }*//*
+            }
+        }*/
+        users.each { User user ->
+            topics.each { Topic topic ->
+                if(Subscription.findByUserAndTopic(user,topic)==null){
+                    Subscription subscription = new Subscription(user: user, topic: topic, seriousness: AppConstants.SERIOUSNESS)
+                    if (subscription.save(flush: true, failOnError: true)) {
+                        log.info "${subscription} saved "
+                        subscriptions.add(subscription)
+                    } else {
+                        log.info "subscription not saved"
+                    }
+                }else {
+                    log.info "User ${user} already subsctibed to Topic ${topic}"
+                }
+                /*if (!subscriptions.user.contains(user) && !subscriptions.topic.contains(topic)) {
+                    Subscription subscription = new Subscription(user: user, topic: topic, seriousness: AppConstants.SERIOUSNESS)
+                    if (subscription.save(flush: true, failOnError: true)) {
+                        log.info "${subscription} saved "
+                        subscriptions.add(subscription)
+                    } else {
+                        log.info "subscription not saved"
+                    }
+                } else {
+                    log.info "User ${user} already subsctibed to Topic ${topic}"
                 }*/
             }
         }
         return subscriptions
     }
+
+    /*List<ReadingItem> createReadingItems(List<User> users, List<Topic> topics, List<Subscription> subscriptions,
+                                         List<Resource> resources) {
+        users.each{User user->
+            topics.each{Topic topic->
+                subscriptions.each {Subscription subscription->
+                    if(sub)
+                }
+            }
+        }
+
+    }*/
     def destroy = {
     }
 }
