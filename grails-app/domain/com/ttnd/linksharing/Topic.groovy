@@ -10,7 +10,7 @@ class Topic {
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [subscriptions: Subscription, resources:Resource]
+    static hasMany = [subscriptions: Subscription, resources: Resource]
 
     static constraints = {
         name(blank: false, unique: ['createdBy'])
@@ -20,15 +20,30 @@ class Topic {
     def afterInsert() {
         Topic.withNewSession {
             Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: AppConstants.SERIOUSNESS)
-            if (subscription.save()) {
-                log.info "Subscription saved for user ${this.createdBy} for topic ${this}"
+            if (Subscription.save(subscription)) {
+                log.info "${subscription}-> ${this.createdBy} subscribed for ${this}"
+                this.addToSubscriptions(subscription)
+                this.createdBy.addToSubscriptions(subscription)
             } else {
-                log.info "Subscription did not saved"
+                log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
             }
         }
     }
 
-    String toString(){
+    public static Topic save(Topic topic) {
+        topic.validate()
+        if (topic.hasErrors()) {
+            topic.errors.each {
+                log.error "error while saving user ${it}--- ${it.allErrors}"
+            }
+            return null
+        } else {
+            topic.save(flush: true, failOnError: true)
+            return topic
+        }
+    }
+
+    String toString() {
         return name
     }
 }

@@ -1,8 +1,6 @@
 package com.ttnd.linksharing
 
 class ReadingItem {
-    //Resource resource
-    //User user
     boolean isRead
     Date dateCreated
     Date lastUpdated
@@ -11,4 +9,17 @@ class ReadingItem {
     }
 
     static belongsTo = [resource:Resource,user:User]
+
+    public static ReadingItem save(ReadingItem readingItem) {
+        readingItem.validate()
+        if (readingItem.hasErrors()) {
+            readingItem.errors.each {
+                log.error "error while saving readingItem ${it.allErrors}"
+            }
+            return null
+        } else {
+            readingItem.save(flush: true)
+            return readingItem
+        }
+    }
 }

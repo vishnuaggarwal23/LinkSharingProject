@@ -9,11 +9,10 @@ class User {
     byte[] photo
     boolean isAdmin
     boolean isActive
-    //static transients = ['name']
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, documentResources: DocumentResource, linkResources: LinkResource]
+    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource]
 
     static mapping = {
         photo(sqlType: 'longblob')
@@ -34,7 +33,20 @@ class User {
         [this.firstName, this.lastName].findAll { it }.join(' ')
     }
 
-    String toString(){
+    String toString() {
         return userName
+    }
+
+    public static User save(User user) {
+        user.validate()
+        if (user.hasErrors()) {
+            user.errors.each {
+                log.error "error while saving user ${it}--- ${it.allErrors}"
+            }
+            return null
+        } else {
+            user.save(flush: true,failOnError: true)
+            return user
+        }
     }
 }

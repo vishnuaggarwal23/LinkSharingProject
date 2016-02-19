@@ -3,18 +3,29 @@ package com.ttnd.linksharing
 import enums.Seriousness
 
 class Subscription {
-    //Topic topic
-    //User user
     Seriousness seriousness
     Date dateCreated
     Date lastUpdated
     static constraints = {
-        user(unique: ['topic'])
+        topic(unique: ['user'])
     }
     
     static belongsTo = [user:User,topic:Topic]
 
     String toString(){
         return "${user} subscribed ${topic}"
+    }
+
+    public static Subscription save(Subscription subscription) {
+        subscription.validate()
+        if (subscription.hasErrors()) {
+            subscription.errors.each {
+                log.error "error while saving subscription ${it}--- ${it.allErrors}"
+            }
+            return null
+        } else {
+            subscription.save(flush: true,failOnError: true)
+            return subscription
+        }
     }
 }

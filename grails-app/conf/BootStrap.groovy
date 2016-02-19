@@ -9,6 +9,7 @@ class BootStrap {
         List<Topic> topics = createTopic(users)
         List<Resource> resources = createResources(topics)
         List<Subscription> subscriptions = createSubscription(users, topics)
+        List<ReadingItem> readingItems = createReadingItems(users, topics, resources)
         println(grailsApplication.config.grails.sampleValue)
     }
 
@@ -20,19 +21,18 @@ class BootStrap {
                 password: AppConstants.PASSWORD, isAdmin: true)
         Integer countUsers = User.count()
         if (!countUsers) {
-            log.info "Users doesnot exists in the system "
             log.info "Creating new users "
-            if (normalUser.save(flush: true, failOnError: true)) {
-                log.info "User ${normalUser} saved"
+            if (User.save(normalUser)) {
+                log.info "${normalUser} saved"
                 users.add(normalUser)
             } else {
-                log.info "User ${normalUser} cannot be saved"
+                log.error "${normalUser} cannot be saved--- ${normalUser.errors.allErrors}"
             }
-            if (adminUser.save(flush: true, failOnError: true)) {
-                log.info "User ${adminUser} saved"
+            if (User.save(adminUser)) {
+                log.info "${adminUser} saved"
                 users.add(adminUser)
             } else {
-                log.info "User ${adminUser} cannot be saved"
+                log.error "${adminUser} cannot be saved--- ${adminUser.errors.allErrors}"
             }
         } else {
             log.info "Users exists in the system "
@@ -46,19 +46,20 @@ class BootStrap {
         users.each { User user ->
             Integer countTopics = Topic.countByCreatedBy(user)
             if (!countTopics) {
-                log.info "Creating 5 Topics for user ${user}"
+                log.info "Creating 5 Topics for ${user}"
                 (1..5).each {
-                    Topic topic = new Topic(name: "Topic${it}", visibility: AppConstants.VISIBILITY, createdBy: user)
-                    if (topic.save(flush: true, failOnError: true)) {
-                        log.info "Topic ${topic} saved for user ${user}"
-                        user.addToTopics(topic)
+                    Topic topic = new Topic(name: "${user}->Topic${it}", visibility: AppConstants.VISIBILITY,
+                            createdBy: user)
+                    if (Topic.save(topic)) {
+                        log.info "${topic} saved for ${user}"
                         topics.add(topic)
+                        user.addToTopics(topic)
                     } else {
-                        log.info "Topic ${topic} cannot be saved"
+                        log.error "${topic} is not saved for ${user}"
                     }
                 }
             } else {
-                log.info "User ${user} already have some topics created "
+                log.info "${user} already have some topics created "
                 topics += Topic.findAll("from Topic as topic where topic.createdBy=:creator", [creator: user])
             }
         }
@@ -75,19 +76,21 @@ class BootStrap {
                             .createdBy, filePath: "file/path", topic: topic)
                     Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
                             .createdBy, url: "https://www.google.co.in", topic: topic)
-                    if (documentResource.save(flush: true, failOnError: true)) {
-                        log.info "document resource ${documentResource} saved"
+                    if (Resource.save(documentResource)) {
+                        log.info "${documentResource} saved by ${topic.createdBy} for ${topic}"
                         resources.add(documentResource)
-                        //topic.addToResources(documentResource)
+                        topic.addToResources(documentResource)
+                        topic.createdBy.addToResources(documentResource)
                     } else {
-                        log.info "document resource ${documentResource} not saved"
+                        log.error "${documentResource} not saved--- ${documentResource.errors.allErrors}"
                     }
-                    if (linkResource.save(flush: true, failOnError: true)) {
-                        log.info "document resource ${linkResource} saved"
+                    if (Resource.save(linkResource)) {
+                        log.info "${linkResource} saved by ${topic.createdBy} for ${topic}"
                         resources.add(linkResource)
-                        //topic.addToResources(linkResource)
+                        topic.addToResources(linkResource)
+                        topic.createdBy.addToResources(linkResource)
                     } else {
-                        log.info "document resource ${linkResource} not saved"
+                        log.error "${linkResource} not saved--- ${linkResource.errors.allErrors}"
                     }
                 }
             } else {
@@ -100,76 +103,51 @@ class BootStrap {
     List<Subscription> createSubscription(List<User> users, List<Topic> topics) {
         List<Subscription> subscriptions = []
         subscriptions += Subscription.findAll("from Subscription")
-        /*subscriptions.each { Subscription subscription ->
-            users.each { User user ->
-                topics.each {
-                    Topic topic ->
-                        if (subscription.user == user && subscription.topic == topic) {
-                            log.info "User ${user} already subscribed to the topic ${topic}"
-                        } else {
-                            Subscription newSubscription = new Subscription(user: user, topic: topic, seriousness:
-                                    AppConstants.SERIOUSNESS)
-                            if (newSubscription.save(flush: true, failOnError: true)) {
-                                log.info "${newSubscription} saved "
-                                subscriptions.add(newSubscription)
-                            } else {
-                                log.info "subscription not saved"
-                            }
-                        }
-                }
-
-                *//*if(topic.createdBy!=user){
-                    Subscription subscription=new Subscription(user:user,topic:topic,seriousness: AppConstants.SERIOUSNESS)
-                    if(subscription.save(flush: true,failOnError: true)){
-                        log.info "${subscription} saved "
-                        subscriptions.add(subscription)
-                    }
-                    else{
-                        log.info "subscription not saved"
-                    }
-                }*//*
-            }
-        }*/
         users.each { User user ->
             topics.each { Topic topic ->
-                if(Subscription.findByUserAndTopic(user,topic)==null){
+                if (Subscription.findByUserAndTopic(user, topic) == null) {
                     Subscription subscription = new Subscription(user: user, topic: topic, seriousness: AppConstants.SERIOUSNESS)
-                    if (subscription.save(flush: true, failOnError: true)) {
-                        log.info "${subscription} saved "
-                        subscriptions.add(subscription)
-                    } else {
-                        log.info "subscription not saved"
-                    }
-                }else {
-                    log.info "User ${user} already subsctibed to Topic ${topic}"
-                }
-                /*if (!subscriptions.user.contains(user) && !subscriptions.topic.contains(topic)) {
-                    Subscription subscription = new Subscription(user: user, topic: topic, seriousness: AppConstants.SERIOUSNESS)
-                    if (subscription.save(flush: true, failOnError: true)) {
-                        log.info "${subscription} saved "
-                        subscriptions.add(subscription)
-                    } else {
-                        log.info "subscription not saved"
+                    if (Subscription.save(subscription)) {
+                        if (Subscription.save(subscription)) {
+                            log.info "${subscription}-> ${user} subscribed for ${topic}"
+                            subscriptions.add(subscription)
+                            topic.addToSubscriptions(subscription)
+                            user.addToSubscriptions(subscription)
+                        } else {
+                            log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
+                        }
                     }
                 } else {
-                    log.info "User ${user} already subsctibed to Topic ${topic}"
-                }*/
+                    log.info "User ${user} already subscribed to Topic ${topic}"
+                }
             }
         }
         return subscriptions
     }
 
-    /*List<ReadingItem> createReadingItems(List<User> users, List<Topic> topics, List<Subscription> subscriptions,
-                                         List<Resource> resources) {
-        users.each{User user->
-            topics.each{Topic topic->
-                subscriptions.each {Subscription subscription->
-                    if(sub)
+    List<ReadingItem> createReadingItems(List<User> users, List<Topic> topics, List<Resource> resources) {
+        List<ReadingItem> readingItems = []
+        users.each { User user ->
+            topics.each { Topic topic ->
+                if (Subscription.findByUserAndTopic(user, topic)) {
+                    topic.resources.each { resource ->
+                        if (resource.createdBy != user && !user.readingItems?.contains(resource)) {
+                            ReadingItem readingItem = new ReadingItem(user: user, resource: resource, isRead: false)
+                            if (ReadingItem.save(readingItem)) {
+                                log.info "${readingItem} saved in ${user}'s list"
+                                readingItems.add(readingItem)
+                                resource.addToReadingItems(readingItem)
+                                user.addToReadingItems(readingItem)
+                            } else {
+                                log.error "${readingItem} is not saved in ${user}'s list--- ${readingItem.errors.allErrors}"
+                            }
+                        }
+                    }
                 }
             }
         }
-
-    }*/
+        return readingItems
+    }
     def destroy = {
     }
 }

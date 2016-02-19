@@ -3,7 +3,6 @@ package com.ttnd.linksharing
 abstract class Resource {
     String description
     User createdBy
-    //Topic topic
     Date dateCreated
     Date lastUpdated
 
@@ -20,5 +19,18 @@ abstract class Resource {
 
     String toString(){
         return "${topic} has resource -> ${description}"
+    }
+
+    public static Resource save(Resource resource) {
+        resource.validate()
+        if (resource.hasErrors()) {
+            resource.errors.each {
+                log.error "error while saving resource ${it}--- ${it.allErrors}"
+            }
+            return null
+        } else {
+            resource.save(flush: true,failOnError: true)
+            return resource
+        }
     }
 }
