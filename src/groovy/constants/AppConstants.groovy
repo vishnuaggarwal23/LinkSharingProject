@@ -9,4 +9,5 @@ class AppConstants {
     static final PASSWORD = "123abc"
     static final VISIBILITY = Visibility.PRIVATE
     static final SERIOUSNESS = Seriousness.VERY_SERIOUS
+    static final RATING=1
 }
