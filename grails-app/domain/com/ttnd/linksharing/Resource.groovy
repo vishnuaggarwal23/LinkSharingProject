@@ -18,7 +18,7 @@ abstract class Resource {
     static belongsTo = [topic:Topic]
 
     String toString(){
-        return "${topic} has resource -> ${description}"
+        return "${description}"
     }
 
     public static Resource save(Resource resource) {

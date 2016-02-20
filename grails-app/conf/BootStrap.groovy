@@ -10,7 +10,7 @@ class BootStrap {
         List<Resource> resources = createResources(topics)
         List<Subscription> subscriptions = createSubscription(users, topics)
         List<ReadingItem> readingItems = createReadingItems(users, topics, resources)
-        List<ResourceRating> resourceRatings = createResourceRatings(readingItems)
+        List<ResourceRating> resourceRatings = createResourceRatings(users, readingItems)
         println(grailsApplication.config.grails.sampleValue)
     }
 
@@ -150,9 +150,28 @@ class BootStrap {
         return readingItems
     }
 
-    List<ResourceRating> createResourceRatings(List<ReadingItem> readingItems) {
+    List<ResourceRating> createResourceRatings(List<User> users, List<ReadingItem> readingItems) {
         List<ResourceRating> resourceRatings = []
-        readingItems.each { ReadingItem readingItem ->
+        users.each { User user ->
+            user.readingItems?.each { ReadingItem readingItem ->
+                if (readingItem.isRead == false) {
+                    ResourceRating resourceRating = new ResourceRating(score: AppConstants.RATING, user: readingItem.user,
+                            resource: readingItem.resource)
+                    if (ResourceRating.save(resourceRating)) {
+                        log.info "${resourceRating} rating for ${readingItem.resource} by ${readingItem.user}"
+                        resourceRatings.add(resourceRating)
+                        readingItem.resource.addToResourceRating(resourceRating)
+                        readingItem.user.addToResourceRatings(resourceRating)
+                    } else {
+                        log.error "${resourceRating} rating not set for ${readingItem.resource} by ${readingItem.user}---" +
+                                " ${resourceRating.errors.allErrors}"
+                    }
+                } else {
+                    log.info "${readingItem.user} cannot rate"
+                }
+            }
+        }
+        /*readingItems.each { ReadingItem readingItem ->
             if (readingItem.isRead == false) {
                 ResourceRating resourceRating = new ResourceRating(score: AppConstants.RATING, user: readingItem.user,
                         resource: readingItem.resource)
@@ -160,12 +179,16 @@ class BootStrap {
                     log.info "${resourceRating} rating for ${readingItem.resource} by ${readingItem.user}"
                     resourceRatings.add(resourceRating)
                     readingItem.resource.addToResourceRating(resourceRating)
+                    readingItem.user.addToResourceRatings(resourceRating)
                 } else {
                     log.error "${resourceRating} rating not set for ${readingItem.resource} by ${readingItem.user}---" +
                             " ${resourceRating.errors.allErrors}"
                 }
             }
-        }
+            else{
+                log.info "${readingItem.user} cannot rate"
+            }
+        }*/
         return resourceRatings
     }
 

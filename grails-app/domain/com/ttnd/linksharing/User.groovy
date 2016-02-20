@@ -12,7 +12,7 @@ class User {
     Date dateCreated
     Date lastUpdated
 
-    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource]
+    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource, resourceRatings: ResourceRating]
 
     static mapping = {
         photo(sqlType: 'longblob')
@@ -45,7 +45,7 @@ class User {
             }
             return null
         } else {
-            user.save(flush: true,failOnError: true)
+            user.save(flush: true, failOnError: true)
             return user
         }
     }

@@ -23,4 +23,8 @@ class ResourceRating {
             return resourceRating
         }
     }
+
+    String toString(){
+        return "${user} rated ${resource} by ${score}"
+    }
 }
