@@ -45,4 +45,21 @@ class ResourceRatingSpec extends Specification {
         newResourceRating.errors.allErrors.size()
         newResourceRating.errors.getFieldError('resource')
     }
+
+    def "CheckToString"() {
+        setup:
+        User user = new User(userName: userName)
+        Resource resource = new DocumentResource(description: description)
+        ResourceRating resourceRating = new ResourceRating(user: user, resource: resource, score: score)
+
+        when:
+        result == resourceRating.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        userName          | description | score | result
+        "vishnu.aggarwal" | "grails"    | 5     | "vishnu.aggarwal rated grails by 5"
+    }
 }

@@ -66,4 +66,19 @@ class UserSpec extends Specification {
         newUser.errors.allErrors.size() == 1
         newUser.errors.getFieldErrorCount('email') == 1
     }
+
+    def "CheckToString"() {
+        setup:
+        User user = new User(userName: userName)
+
+        when:
+        result == user.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        userName          | result
+        "vishnu.aggarwal" | "vishnu.aggarwal"
+    }
 }

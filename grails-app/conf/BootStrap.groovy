@@ -154,7 +154,7 @@ class BootStrap {
         List<ResourceRating> resourceRatings = []
         users.each { User user ->
             user.readingItems?.each { ReadingItem readingItem ->
-                if (readingItem.isRead == false) {
+                if (!readingItem.isRead) {
                     ResourceRating resourceRating = new ResourceRating(score: AppConstants.RATING, user: readingItem.user,
                             resource: readingItem.resource)
                     if (ResourceRating.save(resourceRating)) {
@@ -171,24 +171,6 @@ class BootStrap {
                 }
             }
         }
-        /*readingItems.each { ReadingItem readingItem ->
-            if (readingItem.isRead == false) {
-                ResourceRating resourceRating = new ResourceRating(score: AppConstants.RATING, user: readingItem.user,
-                        resource: readingItem.resource)
-                if (ResourceRating.save(resourceRating)) {
-                    log.info "${resourceRating} rating for ${readingItem.resource} by ${readingItem.user}"
-                    resourceRatings.add(resourceRating)
-                    readingItem.resource.addToResourceRating(resourceRating)
-                    readingItem.user.addToResourceRatings(resourceRating)
-                } else {
-                    log.error "${resourceRating} rating not set for ${readingItem.resource} by ${readingItem.user}---" +
-                            " ${resourceRating.errors.allErrors}"
-                }
-            }
-            else{
-                log.info "${readingItem.user} cannot rate"
-            }
-        }*/
         return resourceRatings
     }
 

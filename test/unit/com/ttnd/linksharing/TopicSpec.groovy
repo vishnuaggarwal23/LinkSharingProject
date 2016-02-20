@@ -52,4 +52,19 @@ class TopicSpec extends Specification {
         topic.errors.allErrors.size() == 1
         topic.errors.getFieldErrorCount('name') == 1
     }
+
+    def "CheckToString"() {
+        setup:
+        Topic topic = new Topic(name: name)
+
+        when:
+        result == topic.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        name          | result
+        "grails" | "grails"
+    }
 }

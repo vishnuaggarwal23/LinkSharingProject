@@ -32,4 +32,19 @@ class LinkResourceSpec extends Specification {
         null                     | "google"    | false
         "https://www.google.com" | "google"    | true
     }
+
+    def "CheckToString"() {
+        setup:
+        LinkResource linkResource = new LinkResource(url: url)
+
+        when:
+        result == linkResource.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        url                               | result
+        "http://www.testLinkResource.com" | "http://www.testLinkResource.com"
+    }
 }

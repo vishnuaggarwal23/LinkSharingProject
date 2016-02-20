@@ -17,4 +17,5 @@ class ResourceSpec extends Specification {
 
     void "test something"() {
     }
+
 }
