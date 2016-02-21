@@ -3,7 +3,7 @@ package com.ttnd.linksharing
 class LoginController {
 
     def index() {
-        if (session.getAttribute("user")) {
+        if (session.user) {
             forward(controller: 'user', action: 'index')
         } else {
             render "Login Failed"
@@ -14,7 +14,7 @@ class LoginController {
         User user = User.findByUserNameAndPassword(username, password)
         if (user) {
             if (user.isActive) {
-                session.setAttribute("user", user)
+                session.user=user
                 redirect(action: 'index')
             } else {
                 flash.put("error", "Inactive Account")
