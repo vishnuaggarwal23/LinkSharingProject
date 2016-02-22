@@ -17,6 +17,10 @@ class Topic {
         visibility(inList: Visibility.values().toList())
     }
 
+    static mapping = {
+        sort name: 'asc'
+    }
+
     def afterInsert() {
         Topic.withNewSession {
             Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: AppConstants.SERIOUSNESS)

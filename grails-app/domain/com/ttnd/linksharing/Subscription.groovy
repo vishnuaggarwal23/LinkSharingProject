@@ -12,6 +12,10 @@ class Subscription {
     
     static belongsTo = [user:User,topic:Topic]
 
+    static mapping = {
+        seriousness defaultValue:Seriousness.SERIOUS
+    }
+
     String toString(){
         return "${user} subscribed ${topic}"
     }

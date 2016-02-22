@@ -7,7 +7,8 @@ class TopicController {
     def index() {}
 
     def show(Integer id) {
-        Topic topic = Topic.findById(id)
+        //Topic topic = Topic.findById(id)
+        Topic topic = Topic.read(id)
         if (!topic) {
             flash.put("error", "Topic do not exists")
             redirect(controller: 'login', action: 'index')
@@ -25,5 +26,25 @@ class TopicController {
                 }
             }
         }
+    }
+
+    def save(String topicName, String visibility) {
+        User user = session.user
+        Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
+        if (topic.validate()) {
+            topic.save(flush: true, failOnError: true)
+            user.addToTopics(topic)
+            addToTopicList(topic)
+            render "${topic} saved"
+        } else {
+            flash.message = "${topic} not added"
+            log.error "${topic.errors.allErrors}"
+            render "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
+        }
+    }
+
+    private void addToTopicList(Topic topic){
+        List<Topic> topics=Topic.list()
+        topics.add(topic)
     }
 }

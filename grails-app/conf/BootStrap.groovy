@@ -1,5 +1,6 @@
 import com.ttnd.linksharing.*
 import constants.AppConstants
+import enums.Seriousness
 
 class BootStrap {
     def grailsApplication
