@@ -1,6 +1,5 @@
 import com.ttnd.linksharing.*
 import constants.AppConstants
-import enums.Visibility
 
 class BootStrap {
     def grailsApplication
@@ -17,9 +16,9 @@ class BootStrap {
     List<User> createUser() {
         List<User> users = []
         User normalUser = new User(userName: "user", firstName: "fname", lastName: "lname", email: "user@ttnd.com",
-                password: AppConstants.PASSWORD, isAdmin: false,isActive: true)
+                password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD, isAdmin: false, isActive: true)
         User adminUser = new User(userName: "admin", firstName: "fname", lastName: "lname", email: "admin@ttnd.com",
-                password: AppConstants.PASSWORD, isAdmin: true)
+                password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD, isAdmin: true)
         Integer countUsers = User.count()
         if (!countUsers) {
             log.info "Creating new users "
