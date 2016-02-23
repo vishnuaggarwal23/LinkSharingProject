@@ -1,7 +1,5 @@
 package com.ttnd.linksharing
 
-import constants.AppConstants
-
 class LoginController {
 
     def index() {
