@@ -17,4 +17,21 @@ class SubscriptionControllerSpec extends Specification {
 
     void "test something"() {
     }
+
+    def "CheckSubscriptionDelete"() {
+        when:
+        controller.delete(id)
+
+        then:
+        response.text == result
+
+        where:
+        id | result
+        11 | "Resource Deleted"
+    }
+
+    def "CheckSubscriptionUpdate"(){
+        when:
+        controller.update(id,seriousness)
+    }
 }
