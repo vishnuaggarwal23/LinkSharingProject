@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import constants.AppConstants
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -17,4 +18,46 @@ class LoginControllerSpec extends Specification {
 
     void "test something"() {
     }
+
+    def "CheckIndexAction- if user's session is set, then  user should forward to user index action"() {
+        setup:
+        controller.session.user = new User()
+
+        when:
+        controller.index()
+
+        then:
+        response.forwardedUrl == "/user/index"
+    }
+
+    def "CheckIndexAction- if user's session is not set, then  error should be rendered"() {
+        when:
+        controller.index()
+
+        then:
+        response.text == "Login Failed"
+    }
+
+    def "CheckLogout- user's session is invalidated, and is redirected to the login index action"() {
+        when:
+        controller.logout()
+
+        then:
+        session.user == null
+        response.forwardedUrl == "/login/index"
+    }
+
+    def "CheckRegistration- New user registers for the application"() {
+        when:
+        controller.registration(userName, firstName, lastName, email, password, confirmPassword)
+
+        then:
+        response.text == result
+
+        where:
+        userName          | firstName | lastName   | email                          | password | confirmPassword | result
+        "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123abc" | "123abc"        | "vishnu.aggarwal saved"
+        "vishnu"          | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
+    }
+
 }
