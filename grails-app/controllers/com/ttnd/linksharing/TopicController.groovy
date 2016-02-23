@@ -34,17 +34,12 @@ class TopicController {
         if (topic.validate()) {
             topic.save(flush: true, failOnError: true)
             user.addToTopics(topic)
-            addToTopicList(topic)
             render "${topic} saved"
         } else {
             flash.message = "${topic} not added"
-            log.error "${topic.errors.allErrors}"
-            render "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
+            //log.error "${topic.errors.allErrors}"
+            log.error "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
+            render "topic not saved"
         }
-    }
-
-    private void addToTopicList(Topic topic){
-        List<Topic> topics=Topic.list()
-        topics.add(topic)
     }
 }
