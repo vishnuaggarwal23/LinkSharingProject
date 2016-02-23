@@ -30,8 +30,20 @@ class SubscriptionController {
     }
 
     def update(Integer id, String serious) {
-        Subscription subscription = Subscription.load(id)
-        Seriousness seriousness = Seriousness.checkSeriousness(serious)
+        try {
+            Subscription subscription = Subscription.load(id)
+            subscription.seriousness = Seriousness.checkSeriousness(serious)
+            if (subscription.validate()) {
+                subscription.save(flush: true, failOnError: true)
+                render "Subscription Updated"
+            } else {
+                render "Subscription not updated--- ${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+            }
+        }
+        catch(Exception e){
+            render e.message
+        }
+        /*Seriousness seriousness = Seriousness.checkSeriousness(serious)
         if (subscription && seriousness) {
             subscription.seriousness = seriousness
             if (subscription.validate()) {
@@ -42,16 +54,24 @@ class SubscriptionController {
             }
         } else {
             render "Error"
-        }
+        }*/
     }
 
     def delete(Integer id) {
-        Subscription subscription = Subscription.findById(id)
+        try{
+            Subscription subscription=Subscription.load(id)
+            subscription.delete(flush: true)
+            render "Subscription Deleted"
+        }
+        catch(Exception e){
+            render e.message
+        }
+        /*Subscription subscription = Subscription.findById(id)
         if (subscription) {
             subscription.delete(flush: true)
             render "Subscription Deleted"
         } else {
             render "Subscription not found"
-        }
+        }*/
     }
 }
