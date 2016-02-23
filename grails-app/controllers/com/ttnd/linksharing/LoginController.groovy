@@ -33,21 +33,17 @@ class LoginController {
         forward(action: 'index')
     }
 
-    def registration() {
-        User user = new User(userName: "user4", firstName: "fname2", lastName: "lname2", email: "user3@ttnd.com",
-                password: AppConstants.PASSWORD, confirmPassword: "123abc", isActive: true, isAdmin: false)
+    def registration(String userName, String firstName, String lastName, String email, String password, String
+            confirmPassword) {
+        User user = new User(userName: userName, firstName: firstName, lastName: lastName,
+                email: email, password: password, confirmPassword: confirmPassword)
         if (user.validate()) {
             user.save(flush: true, failOnError: true)
-            addToUserList(user)
             render "${user} saved"
         } else {
-            flash.message = "${user} not added--- ${user.errors.allErrors}"
-            render "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
+            //flash.message = "${user} not added--- ${user.errors.allErrors}"
+            flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
+            render "User not saved"
         }
-    }
-
-    private void addToUserList(User user) {
-        List<User> users = User.list()
-        users.add(user)
     }
 }

@@ -17,4 +17,17 @@ class UserControllerSpec extends Specification {
 
     void "test something"() {
     }
+
+    def "CheckUserIndex"() {
+        when:
+        session.user = user
+        controller.index()
+
+        then:
+        response.text == result
+
+        where:
+        user                         | result
+        new User(userName: "vishnu") | "User vishnu Dashboard"
+    }
 }

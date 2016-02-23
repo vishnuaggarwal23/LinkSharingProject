@@ -43,25 +43,21 @@ class LoginControllerSpec extends Specification {
         controller.logout()
 
         then:
+        session.user == null
         response.forwardedUrl == "/login/index"
     }
 
     def "CheckRegistration- New user registers for the application"() {
-        setup:
-        User user = new User(userName: "testUser", firstName: "test", lastName: "user", email: "testUser@ttnd.com",
-                password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD)
-
         when:
-        controller.registration()
+        controller.registration(userName, firstName, lastName, email, password, confirmPassword)
 
         then:
-        User.count == 1
-    }
+        response.text == result
 
-    def "CheckRegistration- New user is not able to register for the application"() {
-        setup:
-        User user = new User(userName: "testUser", firstName: "test", lastName: "user", email: "testUser@ttnd.com",
-                password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD)
+        where:
+        userName          | firstName | lastName   | email                          | password | confirmPassword | result
+        "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123abc" | "123abc"        | "vishnu.aggarwal saved"
+        "vishnu"          | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
     }
 
 }
