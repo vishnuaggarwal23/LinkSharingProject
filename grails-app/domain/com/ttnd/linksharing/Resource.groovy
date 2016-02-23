@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import co.ResourceSearchCO
+
 abstract class Resource {
     String description
     User createdBy
@@ -15,9 +17,9 @@ abstract class Resource {
     }
 
     static hasMany = [resourceRating: ResourceRating, readingItems: ReadingItem]
-    static belongsTo = [topic:Topic]
+    static belongsTo = [topic: Topic]
 
-    String toString(){
+    String toString() {
         return "${topic} has resource -> ${description}"
     }
 
@@ -29,8 +31,16 @@ abstract class Resource {
             }
             return null
         } else {
-            resource.save(flush: true,failOnError: true)
+            resource.save(flush: true, failOnError: true)
             return resource
+        }
+    }
+
+    static namedQueries = {
+        search { ResourceSearchCO co ->
+            if(co.topicID){
+                eq('topic.id',co.topicID)
+            }
         }
     }
 }

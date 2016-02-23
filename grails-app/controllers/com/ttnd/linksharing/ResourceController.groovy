@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import co.ResourceSearchCO
+
 class ResourceController {
 
     def index() {}
@@ -21,5 +23,10 @@ class ResourceController {
         else{
             render "Resource not deleted--- ${resource.errors.allErrors.collect { message(error: it) }.join(',')}"
         }*/
+    }
+
+    def search(ResourceSearchCO co) {
+        List<Resource> resources = Resource.search(co).list()
+        render resources
     }
 }
