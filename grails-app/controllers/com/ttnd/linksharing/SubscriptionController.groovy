@@ -7,11 +7,11 @@ class SubscriptionController {
     def index() {}
 
     def save(Integer topicID) {
-        String seriousness='serious'
+        String seriousness = 'serious'
         User user = session.user
         Topic topic = Topic.findById(topicID)
-        Subscription subscription = new Subscription(topic: topic, user: user,seriousness:Seriousness
-                .checkSeriousness(seriousness) )
+        Subscription subscription = new Subscription(topic: topic, user: user, seriousness: Seriousness
+                .checkSeriousness(seriousness))
         if (subscription.validate()) {
             subscription.save(flush: true, failOnError: true)
             topic.addToSubscriptions(subscription)
@@ -37,10 +37,10 @@ class SubscriptionController {
                 subscription.save(flush: true, failOnError: true)
                 render "Subscription Updated"
             } else {
-                render "Subscription not updated--- ${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+                render "Subscription not updated---${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             render e.message
         }
         /*Seriousness seriousness = Seriousness.checkSeriousness(serious)
@@ -58,12 +58,12 @@ class SubscriptionController {
     }
 
     def delete(Integer id) {
-        try{
-            Subscription subscription=Subscription.load(id)
+        try {
+            Subscription subscription = Subscription.load(id)
             subscription.delete(flush: true)
             render "Subscription Deleted"
         }
-        catch(Exception e){
+        catch (Exception e) {
             render e.message
         }
         /*Subscription subscription = Subscription.findById(id)
