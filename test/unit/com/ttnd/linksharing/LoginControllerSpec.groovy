@@ -1,6 +1,5 @@
 package com.ttnd.linksharing
 
-import constants.AppConstants
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -48,16 +47,22 @@ class LoginControllerSpec extends Specification {
     }
 
     def "CheckRegistration- New user registers for the application"() {
+        setup:
+        User user = new User(userName: userName, firstName: firstName, lastName: lastName, email: email, password: password,
+                confirmPassword: confirmPassword)
         when:
-        controller.registration(userName, firstName, lastName, email, password, confirmPassword)
+        controller.registration(user.userName, user.firstName, user.lastName, user.email, user.password,
+                user.confirmPassword)
+        user.save(flush: true, failOnError: true)
 
         then:
+        User.count()
         response.text == result
 
         where:
         userName          | firstName | lastName   | email                          | password | confirmPassword | result
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123abc" | "123abc"        | "vishnu.aggarwal saved"
-        "vishnu"          | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
+        "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
     }
 
 }
