@@ -23,9 +23,10 @@ abstract class Resource {
     static hasMany = [resourceRating: ResourceRating, readingItems: ReadingItem]
     static belongsTo = [topic: Topic]
 
-    def getRatingInfo(){
-
+    String toString(){
+        return "${topic} has resource -> ${description}"
     }
+
     public static Resource save(Resource resource) {
         resource.validate()
         if (resource.hasErrors()) {
