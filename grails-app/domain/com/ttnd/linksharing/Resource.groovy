@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import co.ResourceSearchCO
+import enums.Visibility
 
 abstract class Resource {
     String description
@@ -11,6 +12,8 @@ abstract class Resource {
     static mapping = {
         description(type: 'text')
     }
+
+    static transients = ['ratingInfo']
 
     static constraints = {
         description(blank: false)
@@ -38,20 +41,20 @@ abstract class Resource {
 
     static namedQueries = {
         search { ResourceSearchCO co ->
-            if (co.topicID&&co.visibility) {
+            if (co.topicID && co.visibility) {
                 eq('topic.id', co.topicID)
-                'topic'{
-                    eq('topic.visibility',co.visibility)
+                'topic' {
+                    eq('visibility', co.visibility)
                 }
             }
         }
 
         publicTopicsSearch { ResourceSearchCO co ->
             if (co.topicID) {
-                    eq('topic.id', co.topicID)
-                    eq('this.topic.visibility', "PUBLIC")
-
-
+                eq('topic.id', co.topicID)
+                topic{
+                    eq('visibility',Visibility.PRIVATE)
+                }
             }
         }
     }
