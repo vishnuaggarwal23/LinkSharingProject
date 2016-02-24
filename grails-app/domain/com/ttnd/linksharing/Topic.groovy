@@ -38,7 +38,7 @@ class Topic {
             }
             return null
         } else {
-            topic.save(flush: true, failOnError: true)
+            topic.save(flush: true)
             return topic
         }
     }
