@@ -46,8 +46,6 @@ class User {
         return userName
     }
 
-    //String getConfirmPassword() {}
-
     public static User save(User user) {
         user.validate()
         if (user.hasErrors()) {
@@ -56,7 +54,7 @@ class User {
             }
             return null
         } else {
-            user.save(flush: true, failOnError: true)
+            user.save(flush: true)
             return user
         }
     }

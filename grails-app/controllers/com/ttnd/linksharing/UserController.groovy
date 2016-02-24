@@ -4,6 +4,6 @@ class UserController {
 
     def index() {
         User user=session.user;
-        render "User ${user.userName} Dashboard"
+        render "User ${user} Dashboard"
     }
 }
