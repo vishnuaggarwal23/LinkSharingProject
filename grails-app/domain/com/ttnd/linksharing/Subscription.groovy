@@ -28,7 +28,7 @@ class Subscription {
             }
             return null
         } else {
-            subscription.save(flush: true,failOnError: true)
+            subscription.save(flush: true)
             return subscription
         }
     }

@@ -36,10 +36,9 @@ class LoginController {
         User user = new User(userName: userName, firstName: firstName, lastName: lastName,
                 email: email, password: password, confirmPassword: confirmPassword)
         if (user.validate()) {
-            user.save(flush: true, failOnError: true)
+            user.save(flush: true)
             render "${user} saved"
         } else {
-            //flash.message = "${user} not added--- ${user.errors.allErrors}"
             flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
             render "User not saved"
         }
