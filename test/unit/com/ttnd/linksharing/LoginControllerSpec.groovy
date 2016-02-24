@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import constants.AppConstants
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -63,6 +64,44 @@ class LoginControllerSpec extends Specification {
         userName          | firstName | lastName   | email                          | password | confirmPassword | result
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123abc" | "123abc"        | "vishnu.aggarwal saved"
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
+    }
+
+    def "CheckLoginHandler- User is able to login "() {
+        setup:
+        User user = new User(firstName: "vishnu", lastName: "aggarwal", email: "vishnu.aggarwal@tothenew.com",
+                password: AppConstants.PASSWORD, username: "vishnu", confirmPassword: AppConstants.PASSWORD, active: true)
+        user.save(flush: true)
+
+        when:
+        controller.login(user.userName, user.password)
+
+        then:
+        response.redirectedUrl == '/login/index'
+    }
+
+    def "CheckLoginHandler- User is not Active"() {
+        setup:
+        User user = new User(userName: "user", password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD,
+                firstName: "Name", lastName: "Lname", email: "user@gmail.com")
+        user.save(flush: true)
+
+        when:
+        controller.login(user.userName, user.password)
+
+        then:
+        response.text == "Inactive Account"
+    }
+
+    def "CheckLoginHandler- User is not Found"() {
+        setup:
+        User user = new User(userName: "user", password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD,
+                firstName: "Name", lastName: "Lname", email: "user@gmail.com")
+
+        when:
+        controller.login(user.userName, user.password)
+
+        then:
+        response.text == "Account not Found"
     }
 
 }
