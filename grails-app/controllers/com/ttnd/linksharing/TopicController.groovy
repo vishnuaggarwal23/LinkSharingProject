@@ -6,7 +6,7 @@ class TopicController {
 
     def index() {}
 
-    def show(Integer id) {
+    def show(Long id) {
         Topic topic = Topic.findById(id)
         if (!topic) {
             flash.put("error", "Topic do not exists")
