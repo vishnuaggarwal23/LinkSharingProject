@@ -53,7 +53,7 @@ class LoginControllerSpec extends Specification {
         when:
         controller.registration(user.userName, user.firstName, user.lastName, user.email, user.password,
                 user.confirmPassword)
-        user.save(flush: true, failOnError: true)
+        user.save(flush: true)
 
         then:
         User.count()
