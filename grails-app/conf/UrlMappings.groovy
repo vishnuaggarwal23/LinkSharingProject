@@ -9,7 +9,8 @@ class UrlMappings {
 
         "/"(controller: 'login', action: 'index')
         "/registration"(controller: 'login', action: 'registration')
-        "/logout"(controller: 'login',action: 'logout')
+        "/login"(controller: 'login', action: 'login')
+        "/logout"(controller: 'login', action: 'logout')
         "500"(view: '/error')
 
 
