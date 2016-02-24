@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import constants.AppConstants
 import enums.Visibility
+import vo.TopicVO
 
 class Topic {
     String name
@@ -49,5 +50,19 @@ class Topic {
 
     String toString() {
         return name
+    }
+
+    public static List<TopicVO> getTrendingTopics(){
+        List<TopicVO> trendingTopicsList=Resource.createCriteria().list(max:5) {
+            projections{
+                createAlias('topic','t')
+                groupProperty('t')
+                count('id','count')
+            }
+            eq('visibility',Visibility.PUBLIC)
+
+        }
+
+        return trendingTopicsList
     }
 }

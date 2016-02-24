@@ -4,7 +4,11 @@ class ReadingItemController {
 
     def index() {}
 
-    def changeIsRead(Long id, Boolean isRead){
-        ReadingItem.executeUpdate("update readingItem as r set isRead")
+    def changeIsRead(Long id, Boolean isRead) {
+        if (ReadingItem.executeUpdate("update ReadingItem set isRead=:isRead where id=:id", [isRead: isRead, id: id])) {
+            render "error"
+        } else {
+            render "success"
+        }
     }
 }

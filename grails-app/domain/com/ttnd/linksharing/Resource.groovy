@@ -55,17 +55,18 @@ abstract class Resource {
                 }
             }
         }
+    }
 
-        ratingInfo { ResourceSearchCO co,RatingInfoVO vo ->
-            if(co.topicID){
-                eq('topic.id',co.topicID)
-                resourceRating.each{
-                    eq('resource.id',this.id)
-                }
-                topic{
-                    eq('id',co.topicID)
-                }
+    RatingInfoVO getRatingInfo() {
+        List result = ResourceRating.createCriteria().get {
+            projections {
+                count('id', 'totalVotes')
+                avg('score')
+                sum('score')
             }
+            eq('resources', this)
+            order('totalVotes', 'desc')
         }
+        new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
     }
 }
