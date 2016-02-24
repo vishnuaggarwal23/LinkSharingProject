@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
+import vo.RatingInfoVO
 
 abstract class Resource {
     String description
@@ -26,6 +27,9 @@ abstract class Resource {
         return "${topic} has resource -> ${description}"
     }
 
+    def getRatingInfo(){
+
+    }
     public static Resource save(Resource resource) {
         resource.validate()
         if (resource.hasErrors()) {
@@ -38,6 +42,7 @@ abstract class Resource {
             return resource
         }
     }
+
 
     static namedQueries = {
         search { ResourceSearchCO co ->
@@ -52,8 +57,20 @@ abstract class Resource {
         publicTopicsSearch { ResourceSearchCO co ->
             if (co.topicID) {
                 eq('topic.id', co.topicID)
+                topic {
+                    eq('visibility', Visibility.PRIVATE)
+                }
+            }
+        }
+
+        ratingInfo { ResourceSearchCO co,RatingInfoVO vo ->
+            if(co.topicID){
+                eq('topic.id',co.topicID)
+                resourceRating.each{
+                    eq('resource.id',this.id)
+                }
                 topic{
-                    eq('visibility',Visibility.PRIVATE)
+                    eq('id',co.topicID)
                 }
             }
         }
