@@ -1,3 +1,5 @@
+import org.apache.log4j.DailyRollingFileAppender
+
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -117,9 +119,11 @@ log4j.main = {
             'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
             'org.springframework',
             'org.hibernate',
-            'net.sf.ehcache.hibernate'
+            'net.sf.ehcache.hibernate',
             'com.ttnd.LinkSharing'
 
     info 'grails.app'
-    debug 'grails.app'
+    debug 'grails.app',
+            'org.hibernate.SQL'
+    trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }

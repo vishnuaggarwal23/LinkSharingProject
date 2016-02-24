@@ -19,6 +19,8 @@ class ResourceController {
 
     def search(ResourceSearchCO co) {
         List<Resource> resources = Resource.search(co).list()
+        List<Resource> publicResources=Resource.publicTopicsSearch(co).list()
         render resources
+        render publicResources
     }
 }
