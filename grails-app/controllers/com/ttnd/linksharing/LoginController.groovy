@@ -7,6 +7,9 @@ class LoginController {
             forward(controller: 'user', action: 'index')
         } else {
             render "Login Failed"
+
+            def result=Resource.getTopPosts()
+            render "${result}"
         }
     }
 

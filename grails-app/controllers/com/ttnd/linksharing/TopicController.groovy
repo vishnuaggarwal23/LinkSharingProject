@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import enums.Visibility
+import vo.TopicVO
 
 class TopicController {
 
@@ -41,5 +42,11 @@ class TopicController {
             log.error "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
             render "topic not saved"
         }
+    }
+
+    def getTrendingTopics(){
+        TopicVO topicList=Resource.trendingTopics
+
+        render "${topicList}"
     }
 }

@@ -2,7 +2,9 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
+import org.xhtmlrenderer.css.parser.property.PrimitivePropertyBuilders
 import vo.RatingInfoVO
+import vo.TopicVO
 
 abstract class Resource {
     String description
@@ -64,9 +66,56 @@ abstract class Resource {
                 avg('score')
                 sum('score')
             }
-            eq('resources', this)
+            eq('resource', this)
             order('totalVotes', 'desc')
         }
         new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
+    }
+
+    public static List<Resource> getTopPosts() {
+
+        List<Resource> resources = []
+
+        def result = ResourceRating.createCriteria().list(max: 5) {
+            projections {
+                property('resource.id')
+            }
+
+            groupProperty('resource.id')
+            count('id', 'totalVotes')
+            order('totalVotes', 'desc')
+        }
+
+        List list = result.collect { it[0] }
+        resources = Resource.getAll(list)
+
+        return resources
+    }
+
+    public static List<TopicVO> getTrendingTopics() {
+        List<TopicVO> trendingTopicsList
+        def result = Resource.createCriteria().list() {
+            projections {
+                createAlias('topic', 't')
+                groupProperty('t')
+                property('t.name')
+                property('t.visibility')
+                count('id', 'totalResources')
+                property('t.createdBy')
+            }
+            'topic'{
+                eq('visibility',Visibility.PUBLIC)
+            }
+            //eq('t.visibility', Visibility.PUBLIC)
+            order('totalResources', 'desc')
+            'topic'{
+                order('name','desc')
+            }
+            //order('t.name', 'desc')
+            maxResults 5
+            firstResult 0
+        }
+        List list=result.collect {it}
+        trendingTopicsList=Topic.getAll(list)
     }
 }

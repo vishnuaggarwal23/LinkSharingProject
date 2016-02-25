@@ -52,17 +52,23 @@ class Topic {
         return name
     }
 
-    public static List<TopicVO> getTrendingTopics(){
-        List<TopicVO> trendingTopicsList=Resource.createCriteria().list(max:5) {
+    /*public static List<TopicVO> getTrendingTopics(){
+        List<TopicVO> trendingTopicsList=Resource.createCriteria().list() {
             projections{
                 createAlias('topic','t')
                 groupProperty('t')
-                count('id','count')
+                property('t.name')
+                property('t.visibility')
+                count('id','totalResources')
+                property('t.createdBy')
             }
-            eq('visibility',Visibility.PUBLIC)
-
+            eq('t.visibility',Visibility.PUBLIC)
+            order('totalResources','desc')
+            order('name','desc')
+            maxResults 5
+            firstResult 0
         }
 
         return trendingTopicsList
-    }
+    }*/
 }
