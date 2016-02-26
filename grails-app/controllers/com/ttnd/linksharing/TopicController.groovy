@@ -34,7 +34,7 @@ class TopicController {
         Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
         if (topic.validate()) {
             topic.save(flush: true, failOnError: true)
-            user.addToTopics(topic)
+            //user.addToTopics(topic)
             render "${topic} saved"
         } else {
             flash.message = "${topic} not added"
