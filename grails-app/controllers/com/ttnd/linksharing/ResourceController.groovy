@@ -40,4 +40,9 @@ class ResourceController {
         RatingInfoVO vo=resource.getRatingInfo()
         render vo
     }
+
+    def getTrendingTopics() {
+        List result = Topic.getTrendingTopics()
+        render "${result}"
+    }
 }
