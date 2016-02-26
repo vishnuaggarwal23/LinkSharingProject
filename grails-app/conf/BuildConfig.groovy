@@ -63,6 +63,8 @@ grails.project.dependency.resolution = {
         // asset-pipeline 2.0+ requires Java 7, use version 1.9.x with Java 6
         compile ":asset-pipeline:2.5.7"
 
+        compile "org.grails.plugins:console:1.5.7"
+
         //code coverage plugin
         test "org.grails.plugins:code-coverage:2.0.3-3"
 

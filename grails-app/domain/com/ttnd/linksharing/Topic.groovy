@@ -27,8 +27,8 @@ class Topic {
             Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: AppConstants.SERIOUSNESS)
             if (Subscription.save(subscription)) {
                 log.info "${subscription}-> ${this.createdBy} subscribed for ${this}"
-                this.addToSubscriptions(subscription)
-                this.createdBy.addToSubscriptions(subscription)
+                //this.addToSubscriptions(subscription)
+                //this.createdBy.addToSubscriptions(subscription)
             } else {
                 log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
             }
@@ -52,8 +52,9 @@ class Topic {
         return name
     }
 
-    /*public static List<TopicVO> getTrendingTopics(){
-        List<TopicVO> trendingTopicsList=Resource.createCriteria().list() {
+    public static List<TopicVO> getTrendingTopics(){
+        List<TopicVO> topicVOList
+        List result=Resource.createCriteria().list() {
             projections{
                 createAlias('topic','t')
                 groupProperty('t')
@@ -62,13 +63,22 @@ class Topic {
                 count('id','totalResources')
                 property('t.createdBy')
             }
-            eq('t.visibility',Visibility.PUBLIC)
-            order('totalResources','desc')
-            order('name','desc')
             maxResults 5
-            firstResult 0
+            order('t.name','desc')
+            order('totalResources','desc')
         }
 
-        return trendingTopicsList
-    }*/
+        result.each{list->
+            topicVOList.add(new TopicVO(id: list[0],name: list[1],visibility: list[2],count: list[3],createdBy:
+                    list[4]))
+        }
+
+        return topicVOList
+    }
+
+    static List getTopicsOfAUser(User user){
+        List<Topic> topicList=Topic.findAllByCreatedBy(user)
+        List topicNames = topicList.collect{it.name}
+        return topicNames
+    }
 }

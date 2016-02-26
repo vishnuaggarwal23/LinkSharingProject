@@ -3,6 +3,7 @@ package com.ttnd.linksharing
 import co.ResourceSearchCO
 import enums.Visibility
 import vo.RatingInfoVO
+import vo.TopicVO
 
 class ResourceController {
 
@@ -39,5 +40,43 @@ class ResourceController {
         Resource resource=Resource.get(id)
         RatingInfoVO vo=resource.getRatingInfo()
         render vo
+    }
+
+    def getTrendingTopics(){
+        List<TopicVO> list=Topic.getTrendingTopics()
+        render list
+    }
+
+    def saveLinkResource(String url, String description, String topicName){
+        User user=session.user
+        Topic topic=Topic.findByNameAndCreatedBy(topicName,user)
+        Resource linkResource=new LinkResource(url: url,description: description,createdBy: user,topic: topic)
+        if(linkResource.validate()){
+            linkResource.save(flush: true)
+            flash.message="Link Resource Saved"
+            render flash.message
+        }
+        else{
+            flash.error="Link Resource not Saved"
+            redirect(controller: 'user',action: 'index')
+            render flash.error
+        }
+    }
+
+    def saveDocumentResource(String filePath, String description, String topicName){
+        User user=session.user
+        Topic topic=Topic.findByNameAndCreatedBy(topicName,user)
+        Resource documentResource=new DocumentResource(filePath: filePath,description: description,createdBy:
+                user,topic: topic)
+        if(documentResource.validate()){
+            documentResource.save(flush: true)
+            flash.message="Document Resource Saved"
+            render flash.message
+        }
+        else{
+            flash.error="Document Resource not Saved"
+            redirect(controller: 'user',action: 'index')
+            render flash.error
+        }
     }
 }

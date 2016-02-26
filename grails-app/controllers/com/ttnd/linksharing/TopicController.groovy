@@ -33,20 +33,14 @@ class TopicController {
         User user = session.user
         Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
         if (topic.validate()) {
-            topic.save(flush: true, failOnError: true)
-            user.addToTopics(topic)
-            render "${topic} saved"
+            topic.save(flush: true)
+            flash.message="${topic} Saved"
+            //user.addToTopics(topic)
+            //render "${topic} Saved"
         } else {
-            flash.message = "${topic} not added"
-            //log.error "${topic.errors.allErrors}"
+            flash.error = "${topic} Not Saved"
             log.error "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
-            render "topic not saved"
+            //render "${topic} Not Saved"
         }
-    }
-
-    def getTrendingTopics(){
-        TopicVO topicList=Resource.trendingTopics
-
-        render "${topicList}"
     }
 }

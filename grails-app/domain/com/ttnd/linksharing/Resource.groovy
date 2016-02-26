@@ -91,31 +91,4 @@ abstract class Resource {
 
         return resources
     }
-
-    public static List<TopicVO> getTrendingTopics() {
-        List<TopicVO> trendingTopicsList
-        def result = Resource.createCriteria().list() {
-            projections {
-                createAlias('topic', 't')
-                groupProperty('t')
-                property('t.name')
-                property('t.visibility')
-                count('id', 'totalResources')
-                property('t.createdBy')
-            }
-            'topic'{
-                eq('visibility',Visibility.PUBLIC)
-            }
-            //eq('t.visibility', Visibility.PUBLIC)
-            order('totalResources', 'desc')
-            'topic'{
-                order('name','desc')
-            }
-            //order('t.name', 'desc')
-            maxResults 5
-            firstResult 0
-        }
-        List list=result.collect {it}
-        trendingTopicsList=Topic.getAll(list)
-    }
 }

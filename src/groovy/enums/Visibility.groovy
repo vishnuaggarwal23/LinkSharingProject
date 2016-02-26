@@ -7,6 +7,8 @@ enum Visibility {
     PUBLIC,
     PRIVATE
 
+    final String value
+
     static checkVisibility(String visibility) {
         switch (visibility) {
             case "public":
@@ -19,4 +21,16 @@ enum Visibility {
                 break
         }
     }
+
+////    Visibility(String value){
+////        this.value=value
+////    }
+//
+//    String toString(){
+//        return value
+//    }
+//
+//    String getKey(){
+//        return name()
+//    }
 }

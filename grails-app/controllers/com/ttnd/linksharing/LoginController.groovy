@@ -4,34 +4,36 @@ class LoginController {
 
     def index() {
         if (session.user) {
+            flash.message="Logged In"
             forward(controller: 'user', action: 'index')
-        } else {
-            render "Login Failed"
 
-            def result=Resource.getTopPosts()
-            render "${result}"
+        } else {
+            flash.error="Login Failed"
+
+//            def result=Resource.getTopPosts()
+//            render "${result}"
         }
     }
 
-    def login(String username, String password) {
-        User user = User.findByUserNameAndPassword(username, password)
+    def login(String loginUserName, String loginPassword) {
+        User user = User.findByUserNameAndPassword(loginUserName, loginPassword)
         if (user) {
             if (user.isActive) {
                 session.user = user
                 redirect(action: 'index')
             } else {
-                flash.put("error", "Inactive Account")
-                render flash.get("error")
+                flash.error="Inactive Account"
+                render flash.error
             }
         } else {
-            flash.put("error", "Account not Found")
-            render flash.get("error")
+            flash.error="Account Not Found"
+            render flash.error
         }
     }
 
     def logout() {
         session.invalidate()
-        forward(action: 'index')
+        redirect(action: 'index')
     }
 
     def registration(String userName, String firstName, String lastName, String email, String password, String
