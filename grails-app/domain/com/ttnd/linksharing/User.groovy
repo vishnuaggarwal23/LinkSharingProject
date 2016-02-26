@@ -13,7 +13,7 @@ class User {
     Date lastUpdated
     String confirmPassword
 
-    static transients = ['confirmPassword']
+    static transients = ['confirmPassword','subscribedTopics']
 
     static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource]
 
@@ -57,5 +57,15 @@ class User {
             user.save(flush: true)
             return user
         }
+    }
+
+    List<Topic> getSubscribedTopics() {
+        List<Topic> topicList = Subscription.createCriteria().list() {
+            projections {
+                property('topic')
+            }
+            eq('user.id', id)
+        }
+        return topicList
     }
 }

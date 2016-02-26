@@ -52,33 +52,25 @@ class Topic {
         return name
     }
 
-    public static List<TopicVO> getTrendingTopics(){
-        List<TopicVO> topicVOList
-        List result=Resource.createCriteria().list() {
-            projections{
-                createAlias('topic','t')
-                groupProperty('t')
+    static List<TopicVO> getTrendingTopics() {
+        List<TopicVO> trendingTopics = []
+        Resource.createCriteria().list {
+            projections {
+                createAlias('topic', 't')
+                groupProperty('t.id')
                 property('t.name')
                 property('t.visibility')
-                count('id','totalResources')
+                count('t.id', 'topicCount')
                 property('t.createdBy')
             }
-            maxResults 5
-            order('t.name','desc')
-            order('totalResources','desc')
+
+            order('topicCount', 'desc')
+            order('t.name', 'asc')
+            maxResults(5)
+        }?.each {
+            trendingTopics.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: it[3], createdBy: it[4]))
         }
 
-        result.each{list->
-            topicVOList.add(new TopicVO(id: list[0],name: list[1],visibility: list[2],count: list[3],createdBy:
-                    list[4]))
-        }
-
-        return topicVOList
-    }
-
-    static List getTopicsOfAUser(User user){
-        List<Topic> topicList=Topic.findAllByCreatedBy(user)
-        List topicNames = topicList.collect{it.name}
-        return topicNames
+        return trendingTopics
     }
 }

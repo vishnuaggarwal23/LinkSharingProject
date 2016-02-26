@@ -4,20 +4,20 @@
     </div>
 
     <div class="panel-body">
-        <form class="form-horizontal">
+        <g:form name="userRegistrationForm" controller="login" action="registration" class="form-horizontal">
             <div class="form-group row">
-                <label for="firstname" class="col-sm-4 form-control-label">First Name *</label>
+                <label for="firstName" class="col-sm-4 form-control-label">First Name *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="firstname">
+                    <g:textField name="firstName" type="text" class="form-control" id="firstName" required="required"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="lastname" class="col-sm-4 form-control-label">Last Name *</label>
+                <label for="lastName" class="col-sm-4 form-control-label">Last Name *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="lastname">
+                    <g:textField name="lastName" type="text" class="form-control" id="lastName" required="required"/>
                 </div>
             </div>
 
@@ -25,7 +25,7 @@
                 <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
                 <div class="col-sm-8">
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" class="form-control" id="email" required="required">
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
                 <label for="usernameReg" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="usernameReg">
+                    <input type="text" class="form-control" id="usernameReg" required="required">
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                 <label for="password" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="password">
+                    <input type="password" class="form-control" id="password" required="required">
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                 <label for="userNameTxt" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="userNameTxt">
+                    <input type="text" class="form-control" id="userNameTxt" required="required">
                 </div>
             </div>
 
@@ -57,7 +57,7 @@
                 <label for="passwordReg" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="passwordReg">
+                    <input type="password" class="form-control" id="passwordReg" required="required">
                 </div>
             </div>
 
@@ -66,7 +66,7 @@
                 *</label>
 
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="confirmpasswordReg">
+                    <input type="password" class="form-control" id="confirmpasswordReg" required="required">
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                 <label for="fileSelector" class="col-sm-4 form-control-label">Photo *</label>
 
                 <div class="col-sm-8">
-                    <input type="file" id="fileSelector">
+                    <input type="file" id="fileSelector" required="required">
                     <span class="file-custom"></span>
                 </div>
             </div>
@@ -84,6 +84,6 @@
                     <button type="button" class="btn btn-primary btn-block">Submit</button>
                 </div>
             </div>
-        </form>
+        </g:form>
     </div>
 </div>

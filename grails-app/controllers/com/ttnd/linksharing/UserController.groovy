@@ -1,11 +1,11 @@
 package com.ttnd.linksharing
 
+import vo.TopicVO
+
 class UserController {
 
     def index() {
-        User user=session.user
-        List topicsOfUserList=Topic.getTopicsOfAUser(user)
-        render (view:'index',model:[topicsOfUser:topicsOfUserList])
-        //render "User ${user} Dashboard"
+        List<TopicVO> topicVOList=Topic.getTrendingTopics()
+        render (view:'index', model:[subscribedTopics:session.user.subscribedTopics,topicVOList:topicVOList])
     }
 }

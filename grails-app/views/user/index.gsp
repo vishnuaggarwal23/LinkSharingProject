@@ -172,7 +172,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="panel panel-default panel-primary">
+            <g:render template="/templates/trendingTopics"/>
+            %{--<div class="panel panel-default panel-primary">
                 <div class="panel-heading">
                     Trending Topics
                 </div>
@@ -285,7 +286,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--}%
         </div>
     </div>
     <div class="col-md-7 col-md-push-1">

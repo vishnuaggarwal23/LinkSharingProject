@@ -21,61 +21,54 @@ class ResourceController {
     }
 
     def search(ResourceSearchCO co) {
-        if(co.q){
-            co.visibility=Visibility.PUBLIC
+        if (co.q) {
+            co.visibility = Visibility.PUBLIC
         }
         List<Resource> resources = Resource.search(co).list()
-        List<Resource> publicResources=Resource.publicTopicsSearch(co).list()
+        List<Resource> publicResources = Resource.publicTopicsSearch(co).list()
         render "Resources"
-        resources.each{
+        resources.each {
             render "${it}->${it.topic}\n"
         }
         render "\n\n\nPublic Topic Resources"
-        publicResources.each{
+        publicResources.each {
             render "${it}->${it.topic}\n"
         }
     }
 
-    def show(Long id){
-        Resource resource=Resource.get(id)
-        RatingInfoVO vo=resource.getRatingInfo()
+    def show(Long id) {
+        Resource resource = Resource.get(id)
+        RatingInfoVO vo = resource.getRatingInfo()
         render vo
     }
 
-    def getTrendingTopics(){
-        List<TopicVO> list=Topic.getTrendingTopics()
-        render list
+    def getTrendingTopics() {
+        List result = Topic.getTrendingTopics()
+        render "${result}"
     }
 
-    def saveLinkResource(String url, String description, String topicName){
-        User user=session.user
-        Topic topic=Topic.findByNameAndCreatedBy(topicName,user)
-        Resource linkResource=new LinkResource(url: url,description: description,createdBy: user,topic: topic)
-        if(linkResource.validate()){
-            linkResource.save(flush: true)
-            flash.message="Link Resource Saved"
-            render flash.message
+    def saveLinkResource(LinkResource linkResource) {
+        linkResource.createdBy = session.user
+        if (linkResource.save(flush: true)) {
+            flash.message = "Link Resource Saved"
+        } else {
+            flash.error = linkResource.errors.allErrors.collect { message(error: it) }
         }
-        else{
-            flash.error="Link Resource not Saved"
-            redirect(controller: 'user',action: 'index')
-            render flash.error
-        }
+        redirect(controller: 'user', action: 'index')
     }
 
-    def saveDocumentResource(String filePath, String description, String topicName){
-        User user=session.user
-        Topic topic=Topic.findByNameAndCreatedBy(topicName,user)
-        Resource documentResource=new DocumentResource(filePath: filePath,description: description,createdBy:
-                user,topic: topic)
-        if(documentResource.validate()){
+    def saveDocumentResource(String filePath, String description, String topicName) {
+        User user = session.user
+        Topic topic = Topic.findByNameAndCreatedBy(topicName, user)
+        Resource documentResource = new DocumentResource(filePath: filePath, description: description, createdBy:
+                user, topic: topic)
+        if (documentResource.validate()) {
             documentResource.save(flush: true)
-            flash.message="Document Resource Saved"
+            flash.message = "Document Resource Saved"
             render flash.message
-        }
-        else{
-            flash.error="Document Resource not Saved"
-            redirect(controller: 'user',action: 'index')
+        } else {
+            flash.error = "Document Resource not Saved"
+            redirect(controller: 'user', action: 'index')
             render flash.error
         }
     }

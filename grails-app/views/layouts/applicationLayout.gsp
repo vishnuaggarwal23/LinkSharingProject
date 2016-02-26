@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: vishnu
-  Date: 25/2/16
-  Time: 3:38 PM
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
@@ -38,22 +31,26 @@
             </button>
             <a class="navbar-brand" href="#">Link Sharing</a>
         </div>
+
         <div id="linksharingnavbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <form class="navbar-form form-inline">
                         <div class="form-group">
                             <label class="sr-only" for="searchboxTxt">Search</label>
+
                             <div class="input-group">
                                 <div class="input-group-addon"><span class="glyphicon glyphicon-search"
                                                                      style="font-size: large"></span></div>
                                 <input type="text" class="form-control" id="searchboxTxt" placeholder="Search">
+
                                 <div class="input-group-addon"><span class="glyphicon glyphicon-remove"
                                                                      style="font-size: large"></span></div>
                             </div>
                         </div>
                     </form>
                 </li>
+                <g:if test="${session.user}">
                 <li>
                     <span>
                         <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
@@ -73,7 +70,7 @@
                 <li>
                     <div class="dropdown">
                         <a class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-user" style="font-size: large"></span>Vishnu
+                            <span class="glyphicon glyphicon-user" style="font-size: large"></span>${session.user.getName()}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
@@ -82,24 +79,29 @@
                             <li><a href="#">Topics</a></li>
                             <li><a href="#">Posts</a></li>
                             <li><g:link controller="login" action="logout">Logout</g:link></li>
-                            <li><a href="#">Logout</a></li>
                         </ul>
                     </div>
                 </li>
+                </g:if>
             </ul>
         </div>
     </div>
 </nav>
+
 <div class="container">
-    <g:render template="/topic/create"/>
-    <g:render template="/topic/email"/>
-    <g:render template="/resource/linkResourceCreate"/>
-    <g:render template="/resource/documentResourceCreate"/>
-    <g:if test="${flash.message}">
+    <g:if test="${session.user}">
+        <g:render template="/topic/create"/>
+        <g:render template="/topic/email"/>
+        <g:render template="/resource/linkResourceCreate"/>
+        <g:render template="/resource/documentResourceCreate"/>
 
     </g:if>
-    <g:if test="${flash.error}">
 
+    <g:if test="${flash.message}">
+        ${flash.message}
+    </g:if>
+    <g:if test="${flash.error}">
+        ${flash.error}
     </g:if>
     <g:layoutBody/>
 </div>

@@ -6,15 +6,12 @@
             </div>
 
             <div class="modal-body">
-                <g:form class="form-horizontal" controller="resource" action="saveDocumentResource">
+                <g:uploadForm class="form-horizontal" controller="resource" action="saveDocumentResource">
                     <div class="form-group row">
                         <label for="doc" class="col-sm-4 form-control-label">Document *</label>
 
                         <div class="col-sm-8">
-                            <g:uploadForm name="filePath">
-                                <input type="file" id="doc" name="filePath" required>
-                            </g:uploadForm>
-
+                            <input type="file" id="doc" name="filePath" required>
                         </div>
                     </div>
 
@@ -45,11 +42,11 @@
                         </div>
 
                         <div class="col-sm-8">
-                            <g:submitButton type="submit" name="saveResource" class="btn btn-primary btn-block"
+                            <g:submitButton type="submit" name="saveResourceBtn" class="btn btn-primary btn-block"
                                             value="Save Resource" formaction="/resource/saveDocumentResource"/>
                         </div>
                     </div>
-                </g:form>
+                </g:uploadForm>
             </div>
         </div>
     </div>

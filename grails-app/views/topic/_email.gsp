@@ -6,12 +6,12 @@
             </div>
 
             <div class="modal-body">
-                <form class="form-horizontal">
+                <g:form name="inviteForm" class="form-horizontal">
                     <div class="form-group row">
                         <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
                         <div class="col-sm-8">
-                            <input type="email" class="form-control" id="email">
+                            <g:field name="email" type="email" class="form-control" id="email"/>
                         </div>
                     </div>
 
@@ -20,13 +20,8 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                <button class="btn dropdown-toggle" id="topic" type="button" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-user"></span>Public
-                                    <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">.....</a></li>
-                                    <li><a href="#">.....</a></li>
-                                </ul>
+                                <g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topic"
+                                          id="linkTopic" from="${subscribedTopics}" optionKey="id"/>
                             </div>
                         </div>
                     </div>
@@ -37,10 +32,11 @@
                         </div>
 
                         <div class="col-sm-8">
-                            <button type="button" class="btn btn-primary btn-block">Invite</button>
+                            <g:submitButton name="emailBtn" type="submit"
+                                            class="btn btn-primary btn-block" value="Invite"/>
                         </div>
                     </div>
-                </form>
+                </g:form>
             </div>
         </div>
     </div>

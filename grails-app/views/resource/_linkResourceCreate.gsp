@@ -28,8 +28,8 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                <g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topicName"
-                                          id="linkTopic" from="${topicsOfUser}"/>
+                                <g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topic"
+                                          id="linkTopic" from="${subscribedTopics}" optionKey="id"/>
                             </div>
                         </div>
                     </div>

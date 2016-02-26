@@ -7,12 +7,11 @@ class LoginController {
             flash.message="Logged In"
             forward(controller: 'user', action: 'index')
 
-        } else {
-            flash.error="Login Failed"
+        }
+            //flash.error="Login Failed"
 
 //            def result=Resource.getTopPosts()
 //            render "${result}"
-        }
     }
 
     def login(String loginUserName, String loginPassword) {
@@ -23,12 +22,11 @@ class LoginController {
                 redirect(action: 'index')
             } else {
                 flash.error="Inactive Account"
-                render flash.error
             }
         } else {
             flash.error="Account Not Found"
-            render flash.error
         }
+        //redirect(uri: "/")
     }
 
     def logout() {

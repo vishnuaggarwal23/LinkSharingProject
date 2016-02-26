@@ -35,12 +35,15 @@ class TopicController {
         if (topic.validate()) {
             topic.save(flush: true)
             flash.message="${topic} Saved"
+            //render flash.message
             //user.addToTopics(topic)
             //render "${topic} Saved"
         } else {
             flash.error = "${topic} Not Saved"
             log.error "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
+            //render flash.error
             //render "${topic} Not Saved"
         }
+        redirect(uri: "/")
     }
 }

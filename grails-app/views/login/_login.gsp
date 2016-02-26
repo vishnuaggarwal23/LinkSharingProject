@@ -9,7 +9,7 @@
                 <label for="loginUserName" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <g:textField name="loginUserName" class="form-control" id="loginUserName"/>
+                    <g:textField name="loginUserName" class="form-control" id="loginUserName" required="required"/>
                 </div>
             </div>
 
@@ -17,7 +17,7 @@
                 <label for="loginPassword" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <g:field name="loginPassword" type="password" class="form-control" id="loginPassword"/>
+                    <g:field name="loginPassword" type="password" class="form-control" id="loginPassword" required="required"/>
                 </div>
             </div>
 

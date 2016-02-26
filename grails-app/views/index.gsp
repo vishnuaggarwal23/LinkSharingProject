@@ -166,11 +166,11 @@
 
     <div class="col-md-4 col-md-offset-1">
         <div class="row">
-            <g:render template="/templates/login"/>
+            <g:render template="/login/login"/>
         </div>
 
         <div class="row">
-            <g:render template="/templates/register"/>
+            <g:render template="/login/register"/>
         </div>
     </div>
 </div>
