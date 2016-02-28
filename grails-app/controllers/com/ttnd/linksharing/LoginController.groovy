@@ -52,4 +52,9 @@ class LoginController {
             render "User not saved"
         }
     }
+
+    List<Resource> getTopPosts(){
+        def result=Resource.getTopPosts()
+        return result
+    }
 }

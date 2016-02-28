@@ -17,10 +17,10 @@ class SubscriptionController {
             topic.addToSubscriptions(subscription)
             user.addToSubscriptions(subscription)
             addToSubscriptionList(subscription)
-            render "${subscription} saved"
+            render "subscription saved"
         } else {
-            flash.error = "${subscription} not added--- ${subscription.errors.allErrors}"
-            render "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+            flash.error = "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+            render "Subscription not saved"
         }
     }
 
@@ -37,7 +37,8 @@ class SubscriptionController {
                 subscription.save(flush: true, failOnError: true)
                 render "Subscription Updated"
             } else {
-                render "Subscription not updated---${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+                render "Subscription not updated"
+                flash.error = "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
             }
         }
         catch (Exception e) {

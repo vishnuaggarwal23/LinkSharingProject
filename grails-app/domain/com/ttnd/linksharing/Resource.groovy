@@ -2,7 +2,9 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
+import org.xhtmlrenderer.css.parser.property.PrimitivePropertyBuilders
 import vo.RatingInfoVO
+import vo.TopicVO
 import vo.TopPostVO
 
 abstract class Resource {
@@ -103,6 +105,32 @@ abstract class Resource {
                     it[4], topicName: it[5], userID: it[6], userName: it[7], userFirstName: it[8], userLastName: it[9],
                     userPhoto: it[10]))
         }
-        return topPostVOList
+    }
+
+    public static List<TopicVO> getTrendingTopics() {
+        List<TopicVO> trendingTopicsList
+        def result = Resource.createCriteria().list() {
+            projections {
+                createAlias('topic', 't')
+                groupProperty('t')
+                property('t.name')
+                property('t.visibility')
+                count('id', 'totalResources')
+                property('t.createdBy')
+            }
+            'topic'{
+                eq('visibility',Visibility.PUBLIC)
+            }
+            //eq('t.visibility', Visibility.PUBLIC)
+            order('totalResources', 'desc')
+            'topic'{
+                order('name','desc')
+            }
+            //order('t.name', 'desc')
+            maxResults 5
+            firstResult 0
+        }
+        List list=result.collect {it}
+        trendingTopicsList=Topic.getAll(list)
     }
 }

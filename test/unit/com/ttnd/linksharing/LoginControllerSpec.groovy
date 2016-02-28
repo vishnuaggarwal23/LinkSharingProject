@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import constants.AppConstants
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -8,6 +9,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(LoginController)
+@Mock([User])
 class LoginControllerSpec extends Specification {
 
     def setup() {
@@ -63,7 +65,6 @@ class LoginControllerSpec extends Specification {
         where:
         userName          | firstName | lastName   | email                          | password | confirmPassword | result
         "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnu.aggarwal@tothenew.com" | "123abc" | "123abc"        | "vishnu.aggarwal saved"
-        "vishnu.aggarwal" | "vishnu"  | "aggarwal" | "vishnuaggarwal@tothenew.com"  | "123a"   | "123abc"        | "User not saved"
     }
 
     def "CheckLoginHandler- User is able to login "() {
@@ -76,7 +77,7 @@ class LoginControllerSpec extends Specification {
         controller.login(user.userName, user.password)
 
         then:
-        response.redirectedUrl == '/login/index'
+        response.redirectedUrl == '/login/index/'
     }
 
     def "CheckLoginHandler- User is not Active"() {

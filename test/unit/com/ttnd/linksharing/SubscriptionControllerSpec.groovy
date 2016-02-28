@@ -1,5 +1,8 @@
 package com.ttnd.linksharing
 
+import constants.AppConstants
+import enums.Visibility
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -7,6 +10,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(SubscriptionController)
+@Mock([User, Topic, Subscription])
 class SubscriptionControllerSpec extends Specification {
 
     def setup() {
@@ -19,6 +23,13 @@ class SubscriptionControllerSpec extends Specification {
     }
 
     def "CheckSubscriptionDelete"() {
+        setup:
+        User user = new User().save(validate: false)
+        Topic topic = new Topic().save(validate: false)
+        Subscription subscription = new Subscription(user: user, topic: topic)
+        subscription.id = id
+        subscription.save(validate: false)
+
         when:
         controller.delete(id)
 
@@ -27,11 +38,47 @@ class SubscriptionControllerSpec extends Specification {
 
         where:
         id | result
-        11 | "Resource Deleted"
+        1  | "Subscription Deleted"
     }
 
-    def "CheckSubscriptionUpdate"(){
+    def "CheckSubscriptionSave"() {
+        setup:
+        User user = new User(userName: 'user', firstName: 'fname', lastName: 'lname', email: 'email@gmail.com', password:
+                AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD)
+        user.save()
+        session.user=user
+        Topic topic=new Topic(name: 'topic1',createdBy: user,visibility: Visibility.PUBLIC)
+        topic.id=id
+        topic.save()
+
         when:
-        controller.update(id,seriousness)
+        controller.save(id)
+
+        then:
+        response.text == result
+
+        where:
+        id | result
+        1       | "subscription saved"
+    }
+
+    def "CheckSubscriptionUpdate"() {
+        setup:
+        User user = new User().save(validate: false)
+        Topic topic = new Topic().save(validate: false)
+        Subscription subscription = new Subscription(user: user, topic: topic)
+        subscription.id = id
+        subscription.save(validate: false)
+
+        when:
+        controller.update(id, seriousness)
+
+        then:
+        response.text == result
+
+        where:
+        id | seriousness | result
+        1  | "serious"   | "Subscription Updated"
+        2  | "casual"    | "Subscription Updated"
     }
 }

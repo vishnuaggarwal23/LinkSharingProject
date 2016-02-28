@@ -50,4 +50,10 @@ class TopicController {
         }
         redirect(uri: "/")
     }
+
+    def getTrendingTopics(){
+        TopicVO topicList=Resource.trendingTopics
+
+        render "${topicList}"
+    }
 }
