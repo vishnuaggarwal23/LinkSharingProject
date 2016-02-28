@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -7,6 +8,7 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
  */
 @TestFor(ResourceController)
+@Mock([Resource, LinkResource])
 class ResourceControllerSpec extends Specification {
 
     def setup() {
@@ -19,6 +21,9 @@ class ResourceControllerSpec extends Specification {
     }
 
     def "CheckResourceDelete"() {
+        setup:
+        Resource resource = new LinkResource(id: id).save(validate: false)
+
         when:
         controller.delete(id)
 
@@ -27,6 +32,6 @@ class ResourceControllerSpec extends Specification {
 
         where:
         id | result
-        11 | "Resource Deleted"
+        1  | "Resource Deleted"
     }
 }
