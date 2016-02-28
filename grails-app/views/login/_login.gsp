@@ -23,7 +23,8 @@
 
             <div class="form-group row">
                 <div class="col-sm-4 form-control-label">
-                    <g:link name="forgotPasswordLink" controller="login" action="forgotPassword">Forgot
+                    <g:link name="forgotPasswordLink" class="btn" data-toggle="modal"
+                            data-target="#forgotPasswordModal">Forgot
                                 Password</g:link>
                 </div>
 

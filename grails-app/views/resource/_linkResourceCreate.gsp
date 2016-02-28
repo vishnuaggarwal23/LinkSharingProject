@@ -6,7 +6,7 @@
             </div>
 
             <div class="modal-body">
-                <g:form class="form-horizontal" controller="resource" action="saveLinkResource">
+                <g:form class="form-horizontal" controller="linkResource" action="save">
                     <div class="form-group row">
                         <label for="link" class="col-sm-4 form-control-label">Link *</label>
 
@@ -41,7 +41,7 @@
 
                         <div class="col-sm-8">
                             <g:submitButton type="submit" name="saveResource" class="btn btn-primary btn-block"
-                                            action="/resource/saveLinkResource"
+                                            action="/linkresource/save"
                                             value="Save Resource"/>
                         </div>
                     </div>

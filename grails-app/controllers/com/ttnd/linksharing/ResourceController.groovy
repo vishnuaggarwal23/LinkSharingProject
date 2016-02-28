@@ -47,16 +47,6 @@ class ResourceController {
         render "${result}"
     }
 
-    def saveLinkResource(LinkResource linkResource) {
-        linkResource.createdBy = session.user
-        if (linkResource.save(flush: true)) {
-            flash.message = "Link Resource Saved"
-        } else {
-            flash.error = linkResource.errors.allErrors.collect { message(error: it) }
-        }
-        redirect(controller: 'user', action: 'index')
-    }
-
     def saveDocumentResource(String filePath, String description, String topicName) {
         User user = session.user
         Topic topic = Topic.findByNameAndCreatedBy(topicName, user)

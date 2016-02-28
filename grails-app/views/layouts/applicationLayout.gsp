@@ -51,37 +51,38 @@
                     </form>
                 </li>
                 <g:if test="${session.user}">
-                <li>
-                    <span>
-                        <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
-                            <span class="fa fa-weixin"></span>
-                        </a>
-                        <a class="btn" role="button" data-toggle="modal" data-target="#sendinviteModal">
-                            <span class="glyphicon glyphicon-envelope"></span>
-                        </a>
-                        <a class="btn" role="button" data-toggle="modal" data-target="#sharelinkModal">
-                            <span class="fa fa-link"></span>
-                        </a>
-                        <a class="btn" role="button" data-toggle="modal" data-target="#sharedocModal">
-                            <span class="fa fa-file-o"></span>
-                        </a>
-                    </span>
-                </li>
-                <li>
-                    <div class="dropdown">
-                        <a class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-user" style="font-size: large"></span>${session.user.getName()}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Profile</a></li>
-                            <li><a href="#">Users</a></li>
-                            <li><a href="#">Topics</a></li>
-                            <li><a href="#">Posts</a></li>
-                            <li><g:link controller="login" action="logout">Logout</g:link></li>
-                        </ul>
-                    </div>
-                </li>
+                    <li>
+                        <span>
+                            <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
+                                <span class="fa fa-weixin"></span>
+                            </a>
+                            <a class="btn" role="button" data-toggle="modal" data-target="#sendinviteModal">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </a>
+                            <a class="btn" role="button" data-toggle="modal" data-target="#sharelinkModal">
+                                <span class="fa fa-link"></span>
+                            </a>
+                            <a class="btn" role="button" data-toggle="modal" data-target="#sharedocModal">
+                                <span class="fa fa-file-o"></span>
+                            </a>
+                        </span>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-user"
+                                      style="font-size: large"></span>${session.user.getName()}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Profile</a></li>
+                                <li><a href="#">Users</a></li>
+                                <li><a href="#">Topics</a></li>
+                                <li><a href="#">Posts</a></li>
+                                <li><g:link controller="login" action="logout">Logout</g:link></li>
+                            </ul>
+                        </div>
+                    </li>
                 </g:if>
             </ul>
         </div>
@@ -97,12 +98,28 @@
 
     </g:if>
 
+    <g:if test="${!session.user}">
+        <g:render template="/login/forgotPassword"/>
+    </g:if>
+
     <g:if test="${flash.message}">
-        ${flash.message}
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            ${flash.message}
+        </div>
     </g:if>
+
+
     <g:if test="${flash.error}">
-        ${flash.error}
+        <div class="alert alert-danger alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            ${flash.error}
+        </div>
     </g:if>
+
+
     <g:layoutBody/>
 </div>
 <asset:javascript src="jquery.js"/>

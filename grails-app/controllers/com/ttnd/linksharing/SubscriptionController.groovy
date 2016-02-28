@@ -43,18 +43,6 @@ class SubscriptionController {
         catch (Exception e) {
             render e.message
         }
-        /*Seriousness seriousness = Seriousness.checkSeriousness(serious)
-        if (subscription && seriousness) {
-            subscription.seriousness = seriousness
-            if (subscription.validate()) {
-                subscription.save(flush: true, failOnError: true)
-                render "Subscription Updated"
-            } else {
-                render "Subscription not updated--- ${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
-            }
-        } else {
-            render "Error"
-        }*/
     }
 
     def delete(Integer id) {
@@ -66,12 +54,5 @@ class SubscriptionController {
         catch (Exception e) {
             render e.message
         }
-        /*Subscription subscription = Subscription.findById(id)
-        if (subscription) {
-            subscription.delete(flush: true)
-            render "Subscription Deleted"
-        } else {
-            render "Subscription not found"
-        }*/
     }
 }
