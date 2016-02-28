@@ -105,6 +105,7 @@ abstract class Resource {
                     it[4], topicName: it[5], userID: it[6], userName: it[7], userFirstName: it[8], userLastName: it[9],
                     userPhoto: it[10]))
         }
+        return topPostVOList
     }
 
     public static List<TopicVO> getTrendingTopics() {
