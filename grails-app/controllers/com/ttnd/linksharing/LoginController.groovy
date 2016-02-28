@@ -7,9 +7,10 @@ class LoginController {
             forward(controller: 'user', action: 'index')
         } else {
             render "Login Failed"
-
-            def result=Resource.getTopPosts()
-            render "${result}"
+            List topPosts=getTopPosts()
+            topPosts.each {
+                render "${it} <br/>"
+            }
         }
     }
 
@@ -45,5 +46,10 @@ class LoginController {
             flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
             render "User not saved"
         }
+    }
+
+    List<Resource> getTopPosts(){
+        def result=Resource.getTopPosts()
+        return result
     }
 }

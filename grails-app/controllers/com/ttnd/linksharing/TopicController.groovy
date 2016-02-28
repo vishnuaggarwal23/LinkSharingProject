@@ -43,10 +43,4 @@ class TopicController {
             render "topic not saved"
         }
     }
-
-    def getTrendingTopics(){
-        TopicVO topicList=Resource.trendingTopics
-
-        render "${topicList}"
-    }
 }
