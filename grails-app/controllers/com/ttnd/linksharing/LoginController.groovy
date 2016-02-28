@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import vo.TopPostVO
+
 class LoginController {
 
     def index() {
@@ -7,6 +9,10 @@ class LoginController {
             flash.message="Logged In"
             forward(controller: 'user', action: 'index')
 
+        }
+        else {
+            List<TopPostVO> topPostVOList = Resource.getTopPosts()
+            render(view: 'index',model: [topPosts:topPostVOList])
         }
             //flash.error="Login Failed"
 

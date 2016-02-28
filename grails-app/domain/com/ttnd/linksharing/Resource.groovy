@@ -2,9 +2,8 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
-import org.xhtmlrenderer.css.parser.property.PrimitivePropertyBuilders
 import vo.RatingInfoVO
-import vo.TopicVO
+import vo.TopPostVO
 
 abstract class Resource {
     String description
@@ -72,23 +71,38 @@ abstract class Resource {
         new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
     }
 
-    public static List<Resource> getTopPosts() {
-
-        List<Resource> resources = []
-
-        def result = ResourceRating.createCriteria().list(max: 5) {
+    public static List<TopPostVO> getTopPosts() {
+        List<TopPostVO> topPostVOList = []
+        ResourceRating.createCriteria().list(max: 5) {
             projections {
                 property('resource.id')
+                'resource' {
+                    property('description')
+                    property('url')
+                    property('filePath')
+                    'topic' {
+                        property('id')
+                        property('name')
+                        eq('visibility',enums.Visibility.PRIVATE)
+                    }
+                    'createdBy' {
+                        property('id')
+                        property('userName')
+                        property('firstName')
+                        property('lastName')
+                        property('photo')
+                    }
+                }
             }
 
             groupProperty('resource.id')
             count('id', 'totalVotes')
             order('totalVotes', 'desc')
+        }?.each {
+            topPostVOList.add(new TopPostVO(resourceID: it[0], description: it[1], url: it[2], filePath: it[3], topicID:
+                    it[4], topicName: it[5], userID: it[6], userName: it[7], userFirstName: it[8], userLastName: it[9],
+                    userPhoto: it[10]))
         }
-
-        List list = result.collect { it[0] }
-        resources = Resource.getAll(list)
-
-        return resources
+        return topPostVOList
     }
 }

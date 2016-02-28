@@ -7,7 +7,14 @@ import vo.TopicVO
 
 class ResourceController {
 
-    def index() {}
+    def index() {
+        List<TopicVO> topicVOList=Topic.getTrendingTopics()
+        render (view:'index', model:[topicVOList:topicVOList])
+    }
+
+    def show(Long id){
+
+    }
 
     def delete(Integer id) {
         try {
@@ -36,18 +43,20 @@ class ResourceController {
         }
     }
 
-    def show(Long id) {
+    def getRatingInfo(Long id) {
         Resource resource = Resource.get(id)
         RatingInfoVO vo = resource.getRatingInfo()
         render vo
     }
 
+/*
     def getTrendingTopics() {
         List result = Topic.getTrendingTopics()
         render "${result}"
     }
+*/
 
-    def saveDocumentResource(String filePath, String description, String topicName) {
+    /*def saveDocumentResource(String filePath, String description, String topicName) {
         User user = session.user
         Topic topic = Topic.findByNameAndCreatedBy(topicName, user)
         Resource documentResource = new DocumentResource(filePath: filePath, description: description, createdBy:
@@ -61,5 +70,5 @@ class ResourceController {
             redirect(controller: 'user', action: 'index')
             render flash.error
         }
-    }
+    }*/
 }

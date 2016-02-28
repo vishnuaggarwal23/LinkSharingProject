@@ -29,7 +29,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Link Sharing</a>
+            <g:if test="${session.user}">
+                <g:link class="navbar-brand" uri="/user">LinkSharing
+                </g:link>
+            </g:if>
+            <g:else>
+                <g:link uri="/" class="navbar-brand">LinkSharing
+                </g:link>
+            </g:else>
+
         </div>
 
         <div id="linksharingnavbar" class="navbar-collapse collapse">
@@ -95,12 +103,10 @@
         <g:render template="/topic/email"/>
         <g:render template="/resource/linkResourceCreate"/>
         <g:render template="/resource/documentResourceCreate"/>
-
     </g:if>
-
-    <g:if test="${!session.user}">
+    <g:else>
         <g:render template="/login/forgotPassword"/>
-    </g:if>
+    </g:else>
 
     <g:if test="${flash.message}">
         <div class="alert alert-success alert-dismissable">
