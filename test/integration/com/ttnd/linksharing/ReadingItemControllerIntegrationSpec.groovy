@@ -13,7 +13,7 @@ class ReadingItemControllerIntegrationSpec extends IntegrationSpec {
     void "test something"() {
     }
 
-    def "Check-ChangeIsRead"() {
+    def "check-ChangeIsRead"() {
         setup:
         ReadingItemController readingItemController = new ReadingItemController()
 
@@ -28,6 +28,6 @@ class ReadingItemControllerIntegrationSpec extends IntegrationSpec {
         where:
         id | isRead
         1  | false
-        2  | false
+        2  | true
     }
 }

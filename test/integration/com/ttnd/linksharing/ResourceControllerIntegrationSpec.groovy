@@ -14,7 +14,7 @@ class ResourceControllerIntegrationSpec extends IntegrationSpec {
     void "test something"() {
     }
 
-    def "Check-GetTrendingTopics"() {
+    def "check-GetTrendingTopics"() {
         when:
         List list = Topic.getTrendingTopics()
 
@@ -22,7 +22,7 @@ class ResourceControllerIntegrationSpec extends IntegrationSpec {
         !list.isEmpty()
     }
 
-    def "Check-getRatingInfo"() {
+    def "check-getRatingInfo"() {
         setup:
         Resource resource = Resource.get(id)
 
