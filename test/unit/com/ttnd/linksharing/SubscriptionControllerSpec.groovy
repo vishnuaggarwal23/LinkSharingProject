@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import constants.AppConstants
+import enums.Seriousness
 import enums.Visibility
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -80,5 +81,21 @@ class SubscriptionControllerSpec extends Specification {
         id | seriousness | result
         1  | "serious"   | "Subscription Updated"
         2  | "casual"    | "Subscription Updated"
+    }
+
+    def "checkSubscriptionNotFoundInDeletion"(){
+        when:
+        controller.delete(1)
+
+        then:
+        response.text=="Subscription not Deleted"
+    }
+
+    def "checkSubscriptionNotFoundInUpdation"(){
+        when:
+        controller.update(1,"CASUAL")
+
+        then:
+        response.text=="Subscription not Found"
     }
 }

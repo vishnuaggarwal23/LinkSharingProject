@@ -30,8 +30,8 @@ class SubscriptionController {
     }
 
     def update(Integer id, String serious) {
+        Subscription subscription = Subscription.load(id)
         try {
-            Subscription subscription = Subscription.load(id)
             subscription.seriousness = Seriousness.checkSeriousness(serious)
             if (subscription.validate()) {
                 subscription.save(flush: true, failOnError: true)
@@ -42,18 +42,20 @@ class SubscriptionController {
             }
         }
         catch (Exception e) {
-            render e.message
+            log.info e.message
+            render "Subscription not Found"
         }
     }
 
     def delete(Integer id) {
+        Subscription subscription = Subscription.load(id)
         try {
-            Subscription subscription = Subscription.load(id)
             subscription.delete(flush: true)
             render "Subscription Deleted"
         }
         catch (Exception e) {
-            render e.message
+            log.info e.message
+            render "Subscription not Deleted"
         }
     }
 }
