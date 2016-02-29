@@ -34,4 +34,12 @@ class ResourceControllerSpec extends Specification {
         id | result
         1  | "Resource Deleted"
     }
+
+    def "checkResourceDoesNotExists"(){
+        when:
+        controller.delete(1)
+
+        then:
+        response.text=="Resource not Deleted"
+    }
 }
