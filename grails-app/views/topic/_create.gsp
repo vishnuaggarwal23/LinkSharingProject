@@ -21,8 +21,9 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                <g:select class="btn dropdown-toggle" data-toggle="dropdown" name="visibility"
-                                          id="visibility" from="${enums.Visibility.values()}"/>
+                                %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="visibility"
+                                          id="visibility" from="${enums.Visibility.values()}"/>--}%
+                                <g:render name="visibility" class="btn dropdown-toggle" id="visibility" template="/templates/visibilitySelect"/>
                             </div>
                         </div>
                     </div>

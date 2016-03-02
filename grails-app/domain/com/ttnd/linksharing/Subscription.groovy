@@ -3,20 +3,20 @@ package com.ttnd.linksharing
 import enums.Seriousness
 
 class Subscription {
-    Seriousness seriousness=Seriousness.SERIOUS
+    Seriousness seriousness = Seriousness.SERIOUS
     Date dateCreated
     Date lastUpdated
     static constraints = {
         topic(unique: ['user'])
     }
-    
-    static belongsTo = [user:User,topic:Topic]
+
+    static belongsTo = [user: User, topic: Topic]
 
     static mapping = {
-        seriousness defaultValue:Seriousness.SERIOUS
+        seriousness defaultValue: Seriousness.SERIOUS
     }
 
-    String toString(){
+    String toString() {
         return "${user} subscribed ${topic}"
     }
 
@@ -31,5 +31,24 @@ class Subscription {
             subscription.save(flush: true)
             return subscription
         }
+    }
+
+    public static List<Subscription> getUsersSubscribedList(User user) {
+        /*Subscription.createCriteria().list {
+            'user' {
+                property('userName')
+                property('firstName')
+                property('lastName')
+                property('photo')
+            }
+            'topic'{
+                property('id')
+                property('name')
+                'resource'{
+
+                }
+            }
+            eq('user.id',user.id)
+        }*/
     }
 }

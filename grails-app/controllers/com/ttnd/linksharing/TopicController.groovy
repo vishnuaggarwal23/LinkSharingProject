@@ -14,11 +14,11 @@ class TopicController {
             flash.put("error", "Topic do not exists")
             redirect(controller: 'login', action: 'index')
         } else {
-            TopicVO topicDetails=Topic.getTopicDetails(topic)
-            List<UserVO> subscribedUsers=Topic.getSubscribedUsers(topic)
+            TopicVO topicDetails = Topic.getTopicDetails(topic)
+            List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
             if (topic.visibility == Visibility.PUBLIC) {
                 //render "Success, Subscribed to Public Topic"
-                render(view:'show', model: [topicDetails:topicDetails,subscribedUsers:subscribedUsers])
+                render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers])
             } else if (topic.visibility == Visibility.PRIVATE) {
                 User user = session.user
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
@@ -26,7 +26,7 @@ class TopicController {
                     flash.put("error", "Topic is Private, User is not Subscribed to it")
                     //redirect(controller: 'login', action: 'index')
                 } else {
-                    render(view:'show', model:[topicDetails: topicDetails,subscribedUsers:subscribedUsers])
+                    render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers])
                     //render "Success, Subscribed to Private Topic"
                 }
             }
@@ -38,7 +38,7 @@ class TopicController {
         Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
         if (topic.validate()) {
             topic.save(flush: true)
-            flash.message="${topic} Saved"
+            flash.message = "${topic} Saved"
             //render flash.message
             //user.addToTopics(topic)
             //render "${topic} Saved"
@@ -51,8 +51,8 @@ class TopicController {
         redirect(uri: "/")
     }
 
-    def getTrendingTopics(){
-        TopicVO topicList=Resource.trendingTopics
+    def getTrendingTopics() {
+        TopicVO topicList = Resource.trendingTopics
 
         render "${topicList}"
     }

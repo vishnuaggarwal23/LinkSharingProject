@@ -1,20 +1,20 @@
 package com.ttnd.linksharing
 
-import vo.TopPostVO
+import vo.PostVO
 
 class LoginController {
 
     def index() {
         if (session.user) {
-            flash.message="Logged In"
+            flash.message = "Logged In"
             forward(controller: 'user', action: 'index')
 
+        } else {
+            List<PostVO> topPostVOList = Resource.getTopPosts()
+            List<PostVO> recentPostVOList = Resource.getRecentPosts()
+            render(view: 'index', model: [topPosts: topPostVOList, recentPosts: recentPostVOList])
         }
-        else {
-            List<TopPostVO> topPostVOList = Resource.getTopPosts()
-            render(view: 'index',model: [topPosts:topPostVOList])
-        }
-            //flash.error="Login Failed"
+        //flash.error="Login Failed"
 
 //            def result=Resource.getTopPosts()
 //            render "${result}"
@@ -25,14 +25,14 @@ class LoginController {
         if (user) {
             if (user.isActive) {
                 session.user = user
-                redirect(action: 'index')
+                //redirect(action: 'index')
             } else {
-                flash.error="Inactive Account"
+                flash.error = "Inactive Account"
             }
         } else {
-            flash.error="Account Not Found"
+            flash.error = "Account Not Found"
         }
-        //redirect(uri: "/")
+        redirect(controller: 'login', action: 'index')
     }
 
     def logout() {
@@ -53,8 +53,8 @@ class LoginController {
         }
     }
 
-    List<Resource> getTopPosts(){
-        def result=Resource.getTopPosts()
+    List<Resource> getTopPosts() {
+        def result = Resource.getTopPosts()
         return result
     }
 }

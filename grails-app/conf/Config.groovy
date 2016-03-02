@@ -107,6 +107,11 @@ log4j.main = {
         console name: 'stdout', layout: pattern(conversionPattern: '%d{yyy-MM-dd HH:mm:ss,SSS} %p %c{2} %m%n')
     }
 
+    logger {
+        trace "org.hibernate.SQL",
+                "org.hibernate.type"
+    }
+
     error 'org.codehaus.groovy.grails.web.servlet',        // controllers
             'org.codehaus.groovy.grails.web.pages',          // GSP
             'org.codehaus.groovy.grails.web.sitemesh',       // layouts

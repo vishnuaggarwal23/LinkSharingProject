@@ -24,13 +24,15 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="docTopic" class="col-sm-4 form-control-label">Topic *</label>
+                        <label for="topic" class="col-sm-4 form-control-label">Topic *</label>
 
                         <div class="col-sm-8">
                             <div class="dropdown">
                                 <div class="dropdown">
-                                    <g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topicName"
-                                              id="docTopic" from="${topicsOfUser}"/>
+                                    %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topicName"
+                                              id="docTopic" from="${topicsOfUser}"/>--}%
+                                    <g:render name="topic" id="docTopic" class="btn dropdown-toggle"
+                                              template="/templates/topicSelect"/>
                                 </div>
                             </div>
                         </div>

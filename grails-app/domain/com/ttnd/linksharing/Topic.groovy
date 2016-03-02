@@ -99,7 +99,7 @@ class Topic {
                     property('isAdmin')
                     property('isActive')
                 }
-                eq('topic.id',topic.id)
+                eq('topic.id', topic.id)
             }
         }?.each {
             subscribedUsers.add(new UserVO(id: it[0], name: it[1], firstName: it[2], lastName: it[3], email: it[4], photo:

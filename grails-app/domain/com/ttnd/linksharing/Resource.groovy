@@ -2,10 +2,9 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
-import org.xhtmlrenderer.css.parser.property.PrimitivePropertyBuilders
+import vo.PostVO
 import vo.RatingInfoVO
 import vo.TopicVO
-import vo.TopPostVO
 
 abstract class Resource {
     String description
@@ -73,8 +72,8 @@ abstract class Resource {
         new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
     }
 
-    public static List<TopPostVO> getTopPosts() {
-        List<TopPostVO> topPostVOList = []
+    public static List<PostVO> getTopPosts() {
+        List<PostVO> topPostVOList = []
         ResourceRating.createCriteria().list(max: 5) {
             projections {
                 property('resource.id')
@@ -85,7 +84,7 @@ abstract class Resource {
                     'topic' {
                         property('id')
                         property('name')
-                        eq('visibility',enums.Visibility.PRIVATE)
+                        eq('visibility', enums.Visibility.PRIVATE)
                     }
                     'createdBy' {
                         property('id')
@@ -101,7 +100,7 @@ abstract class Resource {
             count('id', 'totalVotes')
             order('totalVotes', 'desc')
         }?.each {
-            topPostVOList.add(new TopPostVO(resourceID: it[0], description: it[1], url: it[2], filePath: it[3], topicID:
+            topPostVOList.add(new PostVO(resourceID: it[0], description: it[1], url: it[2], filePath: it[3], topicID:
                     it[4], topicName: it[5], userID: it[6], userName: it[7], userFirstName: it[8], userLastName: it[9],
                     userPhoto: it[10]))
         }
@@ -119,19 +118,48 @@ abstract class Resource {
                 count('id', 'totalResources')
                 property('t.createdBy')
             }
-            'topic'{
-                eq('visibility',Visibility.PUBLIC)
+            'topic' {
+                eq('visibility', Visibility.PUBLIC)
             }
-            //eq('t.visibility', Visibility.PUBLIC)
             order('totalResources', 'desc')
-            'topic'{
-                order('name','desc')
+            'topic' {
+                order('name', 'desc')
             }
-            //order('t.name', 'desc')
             maxResults 5
             firstResult 0
         }
-        List list=result.collect {it}
-        trendingTopicsList=Topic.getAll(list)
+        List list = result.collect { it }
+        trendingTopicsList = Topic.getAll(list)
+        return trendingTopicsList
+    }
+
+    public static List<PostVO> getRecentPosts() {
+        List<PostVO> recentPostsList = []
+        Resource.createCriteria().list(max: 5) {
+            projections {
+                property('id')
+                property('description')
+                property('url')
+                property('filePath')
+                'topic' {
+                    property('id')
+                    property('name')
+                    eq('visibility', enums.Visibility.PRIVATE)
+                }
+                'createdBy' {
+                    property('id')
+                    property('userName')
+                    property('firstName')
+                    property('lastName')
+                    property('photo')
+                }
+            }
+            order('lastUpdated', 'desc')
+        }?.each {
+            recentPostsList.add(new PostVO(resourceID: it[0], description: it[1], url: it[2], filePath: it[3], topicID:
+                    it[4], topicName: it[5], userID: it[6], userName: it[7], userFirstName: it[8], userLastName: it[9],
+                    userPhoto: it[10]))
+        }
+        return recentPostsList
     }
 }

@@ -3,7 +3,7 @@ package vo
 /**
  * Created by vishnu on 28/2/16.
  */
-class TopPostVO {
+class PostVO {
     Long resourceID
     Long topicID
     Long userID

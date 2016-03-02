@@ -13,63 +13,63 @@
                 <div class="panel-heading">
                     Topics: ${topicDetails.name}
                 </div>
+                <g:render template="/templates/topicPanel" model="[topic: topicDetails]"/>
+                %{--                <div class="panel-body">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <img src="male-silhouette.jpg" class="img-thumbnail img-responsive" alt="Image"
+                                                     id="uimg" style="width:75px;height:75px">
+                                            </div>
 
-                <div class="panel-body">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <img src="male-silhouette.jpg" class="img-thumbnail img-responsive" alt="Image"
-                                     id="uimg" style="width:75px;height:75px">
-                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
 
-                            <div class="col-md-9">
-                                <div class="row">
+                                                    <div class="col-md-6 col-xs-6">
+                                                        <span class="text-primary"><ins>${topicDetails.name}</ins></span>
+                                                        <span class="text-muted"><ins>(${topicDetails.visibility})</ins></span>
+                                                    </div>
+                                                </div>
 
-                                    <div class="col-md-6 col-xs-6">
-                                        <span class="text-primary"><ins>${topicDetails.name}</ins></span>
-                                        <span class="text-muted"><ins>(${topicDetails.visibility})</ins></span>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <span class="text-muted">@${topicDetails.createdBy}</span><br/>
+                                                        <a href="#">
+                                                            <ins>Unsubscribe</ins>
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="col-md-4 col-xs-6">
+                                                        <span class="text-muted">Subscriptions</span><br/>
+                                                        <span class="text-primary">50</span>
+                                                    </div>
+
+                                                    <div class="col-md-4 col-xs-6">
+                                                        <span class="text-muted">Topics</span><br/>
+                                                        <span class="text-primary">30</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <span class="text-muted">@${topicDetails.createdBy}</span><br/>
-                                        <a href="#">
-                                            <ins>Unsubscribe</ins>
-                                        </a>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-md-4 col-md-push-4">
+                                                <div class="dropdown">
+                                                    <g:select name="seriousness" from="${enums.Seriousness.values()}"
+                                                              class="btn btn-xs btn-default dropdown-toggle"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8 col-md-push-5">
+                                                <a href="#"><span class="glyphicon glyphicon-envelope"
+                                                                  style="font-size:20px"></span></a>
+
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-4 col-xs-6">
-                                        <span class="text-muted">Subscriptions</span><br/>
-                                        <span class="text-primary">50</span>
-                                    </div>
-
-                                    <div class="col-md-4 col-xs-6">
-                                        <span class="text-muted">Topics</span><br/>
-                                        <span class="text-primary">30</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-md-4 col-md-push-4">
-                                <div class="dropdown">
-                                    <g:select name="seriousness" from="${enums.Seriousness.values()}"
-                                              class="btn btn-xs btn-default dropdown-toggle"/>
-                                </div>
-                            </div>
-
-                            <div class="col-md-8 col-md-push-5">
-                                <a href="#"><span class="glyphicon glyphicon-envelope"
-                                                  style="font-size:20px"></span></a>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                </div>--}%
             </div>
         </div>
 
@@ -79,31 +79,7 @@
                     Users: ${topicDetails.name}
                 </div>
                 <g:each in="${subscribedUsers}" var="subscribedUser">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <img src="male-silhouette.jpg" class="img img-thumbnail img-responsive" alt="Image"
-                                     id="uimg" style="width:75px;height:75px">
-                            </div>
-
-                            <div class="col-md-9">
-                                <span class="text-primary">${subscribedUser.firstName} ${subscribedUser.lastName}</span><br/>
-                                <span class="text-muted">@${subscribedUser.name}</span>
-
-                                <div class="row">
-                                    <div class="col-md-4 col-xs-6">
-                                        <span class="text-muted">Subscriptions</span><br/>
-                                        <span class="text-primary">50</span>
-                                    </div>
-
-                                    <div class="col-md-4 col-md-offset-2 col-xs-6">
-                                        <span class="text-muted">Posts</span><br/>
-                                        <span class="text-primary">30</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <g:render template="/templates/userPanel" model="[userDetails: subscribedUser]"/>
                 </g:each>
 
             </div>
