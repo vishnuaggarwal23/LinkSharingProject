@@ -1,6 +1,5 @@
 import com.ttnd.linksharing.*
 import constants.AppConstants
-import enums.Seriousness
 
 class BootStrap {
     def grailsApplication
@@ -16,9 +15,9 @@ class BootStrap {
 
     List<User> createUser() {
         List<User> users = []
-        User normalUser = new User(userName: "user", firstName: "fname", lastName: "lname", email: "user@ttnd.com",
+        User normalUser = new User(userName: "user", firstName: "Vishnu", lastName: "Aggarwal", email: "user@ttnd.com",
                 password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD, isAdmin: false, isActive: true)
-        User adminUser = new User(userName: "admin", firstName: "fname", lastName: "lname", email: "admin@ttnd.com",
+        User adminUser = new User(userName: "admin", firstName: "Vishnu", lastName: "Aggarwal", email: "admin@ttnd.com",
                 password: AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD, isAdmin: true)
         Integer countUsers = User.count()
         if (!countUsers) {
@@ -49,7 +48,7 @@ class BootStrap {
             if (!countTopics) {
                 log.info "Creating 5 Topics for ${user}"
                 (1..5).each {
-                    Topic topic = new Topic(name: "${user}->Topic${it}", visibility: AppConstants.VISIBILITY,
+                    Topic topic = new Topic(name: "Topic${it}", visibility: AppConstants.VISIBILITY,
                             createdBy: user)
                     if (Topic.save(topic)) {
                         log.info "${topic} saved for ${user}"

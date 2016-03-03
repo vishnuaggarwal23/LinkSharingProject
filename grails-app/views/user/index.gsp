@@ -107,8 +107,8 @@
                     <div class="panel-heading">
                         Recent Shares
                     </div>
-                    <g:each in="${recentPosts}" var="recentPost">
-                        <g:render template="/templates/postPanel" model="[post: recentPost]"/>
+                    <g:each in="${readingItems}" var="readingItem">
+                        <g:render template="/templates/postPanel" model="[post: readingItem]"/>
                     </g:each>
                     %{--<div class="panel-body">
                         <div class="row">

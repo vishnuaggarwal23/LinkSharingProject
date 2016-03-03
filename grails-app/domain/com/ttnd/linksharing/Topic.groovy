@@ -50,7 +50,7 @@ class Topic {
     }
 
     String toString() {
-        return name
+        return "${name}, ${createdBy}"
     }
 
     static List<TopicVO> getTrendingTopics() {
@@ -64,7 +64,6 @@ class Topic {
                 count('t.id', 'topicCount')
                 property('t.createdBy')
             }
-
             order('topicCount', 'desc')
             order('t.name', 'asc')
             maxResults(5)

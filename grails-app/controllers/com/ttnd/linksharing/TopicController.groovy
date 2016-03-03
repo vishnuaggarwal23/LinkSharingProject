@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import enums.Visibility
+import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
 
@@ -16,9 +17,11 @@ class TopicController {
         } else {
             TopicVO topicDetails = Topic.getTopicDetails(topic)
             List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
+            List<PostVO> topicPosts=Resource.getTopicPosts(topic.id)
             if (topic.visibility == Visibility.PUBLIC) {
                 //render "Success, Subscribed to Public Topic"
-                render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers])
+                render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
+                                             topicPosts:topicPosts])
             } else if (topic.visibility == Visibility.PRIVATE) {
                 User user = session.user
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
@@ -26,7 +29,8 @@ class TopicController {
                     flash.put("error", "Topic is Private, User is not Subscribed to it")
                     //redirect(controller: 'login', action: 'index')
                 } else {
-                    render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers])
+                    render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
+                                                 topicPosts: topicPosts])
                     //render "Success, Subscribed to Private Topic"
                 }
             }

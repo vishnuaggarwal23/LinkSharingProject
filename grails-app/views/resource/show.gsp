@@ -1,35 +1,35 @@
-%{--<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="layout" content="applicationLayout">
     <title></title>
 </head>
 
-<body>--}%
+<body>
 <div class="row">
     <div class="col-md-7">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-3">
-                        <img src="male-silhouette.jpg" class="img-thumbnail img-responsive" alt="Image"
+                        <img src="${post.userPhoto}" class="img-thumbnail img-responsive" alt="Image"
                              id="uimg" style="width:75px;height:75px">
                     </div>
 
                     <div class="col-md-9">
                         <div class="row">
                             <div class="col-md-6">
-                                <span class="text-primary">Vishnu Aggarwal</span>
+                                <span class="text-primary">${post.userFirstName} ${post.userLastName}</span>
                             </div>
 
                             <div class="col-md-4 col-md-offset-1">
-                                <span class="text-primary"><ins>Grails</ins></span>
+                                <span class="text-primary"><ins>${post.topicName}</ins></span>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
-                                <span class="text-muted">@vishnu</span>
+                                <span class="text-muted">@${post.userName}</span>
                             </div>
 
                             <div class="col-md-4 col-md-offset-1">
@@ -48,7 +48,7 @@
             </div>
 
             <div class="panel-body">
-                <span class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis</span>
+                <span class="text-justify">${post.description}</span>
             </div>
 
             <div class="panel-footer">
@@ -99,9 +99,10 @@
     </div>
 
     <div class="col-md-5">
-        <g:render template="/templates/trendingTopics"/>
+        %{--<g:each in="${trendingTopics}" var="trendingTopic">--}%
+            <g:render template="/templates/trendingTopics" model="[]"/>
+        %{--</g:each>--}%
     </div>
 </div>
-%{--
 </body>
-</html>--}%
+</html>

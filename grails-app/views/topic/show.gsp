@@ -92,8 +92,10 @@
                 <div class="panel-heading">
                     Posts: ${topicDetails.name}
                 </div>
-
-                <div class="panel-body">
+                <g:each in="${topicPosts}" var="topicPost">
+                    <g:render template="/templates/postPanel" model="[post: topicPost]"/>
+                </g:each>
+                %{--<div class="panel-body">
                     <div class="row">
                         <div class="col-md-2">
                             <img src="#" class="img img-thumbnail img-responsive" alt="Image" id="uimg"
@@ -132,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>--}%
             </div>
         </div>
     </div>

@@ -2,18 +2,21 @@ package com.ttnd.linksharing
 
 import co.ResourceSearchCO
 import enums.Visibility
+import vo.PostVO
 import vo.RatingInfoVO
 import vo.TopicVO
 
 class ResourceController {
 
     def index() {
-        List<TopicVO> topicVOList=Topic.getTrendingTopics()
-        render (view:'index', model:[topicVOList:topicVOList])
+        List<TopicVO> topicVOList = Topic.getTrendingTopics()
+        render(view: 'index1', model: [topicVOList: topicVOList])
     }
 
-    def show(Long id){
-
+    def show(Long id) {
+        List<TopicVO> topicVOList = Topic.getTrendingTopics()
+        PostVO post = Resource.getPost(id)
+        render(view: 'show', model: [trendingTopics: topicVOList, post: post])
     }
 
     def delete(Integer id) {

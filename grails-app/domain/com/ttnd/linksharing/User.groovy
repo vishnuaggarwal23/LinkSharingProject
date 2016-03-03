@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import vo.PostVO
 import vo.UserVO
 
 class User {
@@ -45,7 +46,7 @@ class User {
     }
 
     String toString() {
-        return userName
+        return this.userName
     }
 
     public static User save(User user) {
@@ -73,5 +74,17 @@ class User {
 
     UserVO getUserDetails() {
         return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
+    }
+
+    static List<PostVO> getReadingItems(User user) {
+        List<ReadingItem> readingItems = ReadingItem.findAllByUserAndIsRead(user, false)
+        List<PostVO> readingItemsList = []
+        readingItems.each {
+            readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
+                    .resource.topic.id, topicName: it.resource.topic.name, userID: it.resource.createdBy.id, userName:
+                    it.resource.createdBy.userName, userFirstName: it.resource.createdBy.firstName, userLastName: it
+                    .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: "", filePath: ""))
+        }
+        return readingItemsList
     }
 }
