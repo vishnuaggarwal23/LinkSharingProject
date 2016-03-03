@@ -23,9 +23,9 @@
 
             <div class="form-group row">
                 <div class="col-sm-4 form-control-label">
-                    <g:link name="forgotPasswordLink" class="btn" data-toggle="modal"
+                    <a name="forgotPasswordLink" class="btn btn-default" data-toggle="modal"
                             data-target="#forgotPasswordModal">Forgot
-                                Password</g:link>
+                                Password</a>
                 </div>
 
                 <div class="col-sm-8">
