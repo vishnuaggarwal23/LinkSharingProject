@@ -11,6 +11,9 @@ class User {
     boolean isActive
     Date dateCreated
     Date lastUpdated
+    String confirmPassword
+
+    static transients = ['confirmPassword']
 
     static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource, resourceRatings: ResourceRating]
 
@@ -23,10 +26,15 @@ class User {
         password(blank: false, minSize: 5)
         firstName(blank: false)
         lastName(blank: false)
-        userName(blank: false)
+        userName(blank: false,unique: true)
         photo(nullable: true)
         isAdmin(nullable: true)
         isActive(nullable: true)
+        confirmPassword(bindable: true, nullable: true, blank: true, validator: { val, obj ->
+            if (!obj.id && (obj.password != val || !val)) {
+                return 'password.do.not.match.confirm.password'
+            }
+        })
     }
 
     String getName() {
@@ -45,7 +53,7 @@ class User {
             }
             return null
         } else {
-            user.save(flush: true, failOnError: true)
+            user.save(flush: true)
             return user
         }
     }

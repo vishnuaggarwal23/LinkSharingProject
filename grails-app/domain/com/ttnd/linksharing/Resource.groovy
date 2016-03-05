@@ -29,7 +29,7 @@ abstract class Resource {
             }
             return null
         } else {
-            resource.save(flush: true,failOnError: true)
+            resource.save(flush: true)
             return resource
         }
     }

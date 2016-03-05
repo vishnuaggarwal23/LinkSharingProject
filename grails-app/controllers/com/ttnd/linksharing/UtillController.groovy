@@ -7,6 +7,7 @@ class UtillController {
         log.error("Sample Error")
         log.warn("Sample Warn")
         log.fatal("Sample Fatal")
+        render "hello"
         
     }
 }
