@@ -7,7 +7,7 @@ import enums.*
  */
 class AppConstants {
     static final PASSWORD = "123abc"
-    static final VISIBILITY = Visibility.PRIVATE
+    static final VISIBILITY = Visibility.PUBLIC
     static final SERIOUSNESS = Seriousness.VERY_SERIOUS
-    static final RATING=1
+    static final RATING=3
 }

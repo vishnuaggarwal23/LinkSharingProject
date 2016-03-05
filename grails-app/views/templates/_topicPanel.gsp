@@ -22,18 +22,18 @@
                 <div class="col-md-4">
                     <span class="text-muted">@${topic.createdBy}</span><br/>
                     <a href="#">
-                        <ins>Subscribe</ins>
+                        <ins><ls:showSubscribe topicID="${topic.id}"/></ins>
                     </a>
                 </div>
 
                 <div class="col-md-4 col-xs-6">
                     <span class="text-muted">Subscriptions</span><br/>
-                    <span class="text-primary">50</span>
+                    <span class="text-primary"><ls:subscriptionCount topicId="${topic.id}"/> </span>
                 </div>
 
                 <div class="col-md-4 col-xs-6">
                     <span class="text-muted">Posts</span><br/>
-                    <span class="text-primary">${topic.count}</span>
+                    <span class="text-primary"><ls:resourceCount topicId="${topic.id}"/> </span>
                 </div>
             </div>
         </div>

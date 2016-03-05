@@ -84,9 +84,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Profile</a></li>
-                                <li><a href="#">Users</a></li>
-                                <li><a href="#">Topics</a></li>
-                                <li><a href="#">Posts</a></li>
+                                <g:if test="${session.user.isAdmin}">
+                                    <li><a href="#">Users</a></li>
+                                    <li><a href="#">Topics</a></li>
+                                    <li><a href="#">Posts</a></li>
+                                </g:if>
                                 <li><g:link controller="login" action="logout">Logout</g:link></li>
                             </ul>
                         </div>

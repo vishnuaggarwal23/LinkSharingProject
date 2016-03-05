@@ -7,6 +7,6 @@ class LinkResource extends Resource {
     }
 
     String toString(){
-        return "${url}->${description}"
+        return url
     }
 }

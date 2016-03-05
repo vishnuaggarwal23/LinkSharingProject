@@ -83,8 +83,29 @@ class User {
             readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
                     .resource.topic.id, topicName: it.resource.topic.name, userID: it.resource.createdBy.id, userName:
                     it.resource.createdBy.userName, userFirstName: it.resource.createdBy.firstName, userLastName: it
-                    .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: "", filePath: ""))
+                    .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: it
+                    .resource, filePath: it.resource))
         }
         return readingItemsList
+    }
+
+    public static Boolean canDeleteResource(User user, Long resourceID) {
+        Resource resource = Resource.read(resourceID)
+        if (user.isAdmin || resource.createdBy.id == user.id)
+            return true
+        return false
+    }
+
+    public Integer getScore(Resource resource) {
+        ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
+        return resourceRating.score
+    }
+
+    public Boolean isSubscribed(Long topicId) {
+        if (Subscription.findByUserAndTopic(this, Topic.load(topicId))) {
+            return true
+        } else {
+            return false
+        }
     }
 }

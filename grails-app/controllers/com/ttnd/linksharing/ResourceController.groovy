@@ -14,21 +14,45 @@ class ResourceController {
     }
 
     def show(Long id) {
-        List<TopicVO> topicVOList = Topic.getTrendingTopics()
-        PostVO post = Resource.getPost(id)
-        render(view: 'show', model: [trendingTopics: topicVOList, post: post])
-    }
-
-    def delete(Integer id) {
         Resource resource = Resource.load(id)
         try {
-            resource.delete(flush: true)
-            render "Resource Deleted"
+            if (resource.canViewBy(session.user)) {
+                List<TopicVO> topicVOList = Topic.getTrendingTopics()
+                PostVO post = Resource.getPost(id)
+                post.resourceRating = session.user.getScore(resource)
+                //Integer resourceScore =
+                def resourceType = Resource.checkResourceType(id)
+                flash.message = "User Can Access the Resource"
+                render(view: 'show', model: [trendingTopics: topicVOList, post: post])
+            } else {
+                flash.error = "User Access not Permitted"
+                redirect(uri: '/')
+            }
         }
         catch (Exception e) {
-            log.info e.message
-            render "Resource not Deleted"
+            log.error e.message
+            flash.error = "Resource does not Exists"
+            //redirect(uri: '/')
         }
+    }
+
+    def delete(Long id) {
+        if (User.canDeleteResource(session.user, id)) {
+            Resource resource = Resource.load(id)
+            try {
+                resource.delete(flush: true)
+                flash.message = "Resource Deleted"
+                //render "Resource Deleted"
+            }
+            catch (Exception e) {
+                log.info e.message
+                flash.error = "Resource Not Deleted"
+                //render "Resource not Deleted"
+            }
+        } else {
+            flash.error = "Deletion Not Permissible"
+        }
+        redirect(uri: '/')
     }
 
     def search(ResourceSearchCO co) {

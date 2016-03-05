@@ -105,7 +105,7 @@
             <div class="row">
                 <div class="panel panel-default panel-primary">
                     <div class="panel-heading">
-                        Recent Shares
+                        Inbox
                     </div>
                     <g:each in="${readingItems}" var="readingItem">
                         <g:render template="/templates/postPanel" model="[post: readingItem]"/>

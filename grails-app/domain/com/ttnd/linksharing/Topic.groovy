@@ -106,4 +106,36 @@ class Topic {
         }
         return subscribedUsers
     }
+
+    public Boolean isTopicPublic() {
+        if (visibility == Visibility.PUBLIC)
+            return true
+        return false
+    }
+
+    public Boolean canViewedBy(User user) {
+        /*if (this.isTopicPublic()) {
+            return true
+        } else {
+            if (user.isAdmin) {
+                return true
+            } else if (this.createdBy.id == user.id) {
+                return true
+            } else {
+                Subscription subscription = Subscription.findByUserAndTopic(user, this)
+                if (subscription) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }*/
+
+        if (this.isTopicPublic() || user.isAdmin || Subscription.findByUserAndTopic(user, this)) {
+            return true
+        }
+
+        return false
+
+    }
 }

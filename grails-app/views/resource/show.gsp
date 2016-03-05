@@ -39,8 +39,12 @@
 
                         <div class="row">
                             <div class="col-md-10 col-md-offset-7">
-                                <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
-                                          optionValue="${it}"/>
+                                <g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
+                                    <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
+                                              optionValue="${it}" value="${post.resourceRating}"/>
+                                    <g:submitButton name="saveResourceScoreBtn" formaction="/resourceRating/save"
+                                                    value="Save" type="submit"/>
+                                </g:form>
                             </div>
                         </div>
                     </div>
@@ -71,9 +75,10 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        <a href="#">
+                        %{--<a href="#">
                             <ins>Delete</ins>
-                        </a>
+                        </a>--}%
+                        <ls:canDeleteResource resourceID="${post.resourceID}"/>
                     </div>
 
                     <div class="col-md-2 col-xs-6">
@@ -83,15 +88,16 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        <a href="#">
-                            <ins>Download</ins>
-                        </a>
+                        %{-- <a href="#">
+                             <ins>Download</ins>
+                         </a>--}%
                     </div>
 
                     <div class="col-md-3 col-xs-6">
-                        <a href="#">
+                        %{--<a href="#">
                             <ins>View Full Site</ins>
-                        </a>
+                        </a>--}%
+                        <ls:resourceType resourceID="${post.resourceID}" url="${post.url}" filePath="${post.filePath}"/>
                     </div>
                 </div>
             </div>
@@ -100,7 +106,7 @@
 
     <div class="col-md-5">
         %{--<g:each in="${trendingTopics}" var="trendingTopic">--}%
-            <g:render template="/templates/trendingTopics" model="[]"/>
+        <g:render template="/templates/trendingTopics" model="[]"/>
         %{--</g:each>--}%
     </div>
 </div>
