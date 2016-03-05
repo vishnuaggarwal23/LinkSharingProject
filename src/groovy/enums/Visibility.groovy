@@ -6,4 +6,17 @@ package enums
 enum Visibility {
     PUBLIC,
     PRIVATE
+
+    static checkVisibility(String visibility) {
+        switch (visibility) {
+            case "public":
+            case "PUBLIC":
+                return Visibility.PUBLIC
+                break
+            case "private":
+            case "PRIVATE":
+                return Visibility.PRIVATE
+                break
+        }
+    }
 }

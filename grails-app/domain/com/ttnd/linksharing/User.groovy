@@ -19,6 +19,7 @@ class User {
 
     static mapping = {
         photo(sqlType: 'longblob')
+        sort id: 'desc'
     }
 
     static constraints = {
@@ -26,7 +27,7 @@ class User {
         password(blank: false, minSize: 5)
         firstName(blank: false)
         lastName(blank: false)
-        userName(blank: false,unique: true)
+        userName(blank: false, unique: true)
         photo(nullable: true)
         isAdmin(nullable: true)
         isActive(nullable: true)
