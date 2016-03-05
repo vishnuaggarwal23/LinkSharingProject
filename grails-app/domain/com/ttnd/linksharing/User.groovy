@@ -18,7 +18,7 @@ class User {
 
     static transients = ['confirmPassword', 'subscribedTopics']
 
-    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource]
+    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource, resourceRatings: ResourceRating]
 
     static mapping = {
         photo(sqlType: 'longblob')

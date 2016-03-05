@@ -45,4 +45,21 @@ class SubscriptionSpec extends Specification {
         newSubscription.errors.allErrors.size()
         newSubscription.errors.getFieldError('user')
     }
+
+    def "CheckToString"() {
+        setup:
+        User user = new User(userName: userName)
+        Topic topic = new Topic(name: topicName)
+        Subscription subscription = new Subscription(topic: topic, user: user, seriousness: Seriousness.CASUAL)
+
+        when:
+        result == subscription.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        userName          | topicName | result
+        "vishnu.aggarwal" | "grails"  | "vishnu.aggarwal subscribed grails"
+    }
 }

@@ -26,4 +26,21 @@ class ReadingItemSpec extends Specification {
         newReadingItem.errors.getFieldError('resource')
 
     }
+
+    def "CheckToString"() {
+        setup:
+        User user = new User(userName: userName)
+        Resource resource = new DocumentResource(description: description)
+        ReadingItem readingItem = new ReadingItem(user: user, resource: resource, isRead: isRead)
+
+        when:
+        result == readingItem.toString()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        userName          | description | isRead | result
+        "vishnu.aggarwal" | "grails"    | true     | "vishnu.aggarwal read the grails: true"
+    }
 }

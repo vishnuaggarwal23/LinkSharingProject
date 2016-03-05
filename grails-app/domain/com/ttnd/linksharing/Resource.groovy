@@ -25,6 +25,10 @@ abstract class Resource {
     static hasMany = [resourceRating: ResourceRating, readingItems: ReadingItem]
     static belongsTo = [topic: Topic]
 
+    String toString(){
+        return "${description}"
+    }
+
     public static Resource save(Resource resource) {
         resource.validate()
         if (resource.hasErrors()) {

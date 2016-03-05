@@ -22,4 +22,8 @@ class ReadingItem {
             return readingItem
         }
     }
+
+    String toString(){
+        return "${user} read the ${resource}: ${isRead}"
+    }
 }
