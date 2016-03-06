@@ -17,4 +17,5 @@ class PostVO {
     byte[] userPhoto
     boolean isRead
     Integer resourceRating
+    Date postDate
 }

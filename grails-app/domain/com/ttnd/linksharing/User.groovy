@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import vo.PostVO
+import vo.TopicVO
 import vo.UserVO
 
 class User {
@@ -84,7 +85,7 @@ class User {
                     .resource.topic.id, topicName: it.resource.topic.name, userID: it.resource.createdBy.id, userName:
                     it.resource.createdBy.userName, userFirstName: it.resource.createdBy.firstName, userLastName: it
                     .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: it
-                    .resource, filePath: it.resource))
+                    .resource, filePath: it.resource, postDate: it.resource.lastUpdated))
         }
         return readingItemsList
     }
@@ -107,5 +108,24 @@ class User {
         } else {
             return false
         }
+    }
+
+    public List<TopicVO> getUserSubscriptions() {
+        List<TopicVO> userSubscriptions = []
+        Subscription.createCriteria().list(max: 5) {
+            projections {
+                'topic' {
+                    property('id')
+                    property('name')
+                    property('visibility')
+                }
+                'user' {
+                    eq('id', this.id)
+                }
+            }
+        }.each {
+            userSubscriptions.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: 0, createdBy: this))
+        }
+        return userSubscriptions
     }
 }

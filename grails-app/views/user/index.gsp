@@ -30,7 +30,11 @@
                     </div>
                 </div>
 
-                <div class="panel-body">
+                <g:each in="${subscriptions}">
+                    <g:render template="/templates/topicPanel" model="[topic:it]"/>
+                </g:each>
+
+                %{--<div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
                             <img src="male-silhouette.jpg" class="img-thumbnail img-responsive" alt="Image"
@@ -91,7 +95,7 @@
                             <a href="#"><span class="fa fa-trash" style="font-size:20px"></span></a>
                         </div>
                     </div>
-                </div>
+                </div>--}%
             </div>
         </div>
 

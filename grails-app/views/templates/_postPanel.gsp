@@ -50,7 +50,7 @@
             </div>
 
             <div class="col-md-2">
-                <span class="text-muted">5 min</span>
+                <span class="text-muted">${post.postDate}</span>
             </div>
 
             <div class="col-md-2 col-md-offset-3">

@@ -14,12 +14,29 @@ class ResourceController {
     }
 
     def show(Long id) {
-        Resource resource = Resource.load(id)
-        try {
-            if (resource.canViewBy(session.user)) {
+        Resource resource = Resource.get(id)
+        User user = session.user
+        if (resource) {
+            if (resource.canViewBy(user)) {
                 List<TopicVO> topicVOList = Topic.getTrendingTopics()
                 PostVO post = Resource.getPost(id)
-                post.resourceRating = session.user.getScore(resource)
+                if(session.user)
+                post.resourceRating = user.getScore(resource)
+                flash.message = "User Can Access the Resource"
+                render(view: 'show', model: [trendingTopics: topicVOList, post: post])
+            } else {
+                flash.error = "User Access not Permitted"
+                redirect(uri: '/')
+            }
+        } else {
+            flash.error = "Resource does not Exists"
+            redirect(uri: '/')
+        }
+        /*try {
+            if (resource.canViewBy(user)) {
+                List<TopicVO> topicVOList = Topic.getTrendingTopics()
+                PostVO post = Resource.getPost(id)
+                post.resourceRating = user.getScore(resource)
                 //Integer resourceScore =
                 def resourceType = Resource.checkResourceType(id)
                 flash.message = "User Can Access the Resource"
@@ -32,8 +49,8 @@ class ResourceController {
         catch (Exception e) {
             log.error e.message
             flash.error = "Resource does not Exists"
-            //redirect(uri: '/')
-        }
+            redirect(uri: '/')
+        }*/
     }
 
     def delete(Long id) {

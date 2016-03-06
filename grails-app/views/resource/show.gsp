@@ -33,20 +33,21 @@
                             </div>
 
                             <div class="col-md-4 col-md-offset-1">
-                                <span class="text-muted">9:21 PM 9 Feb 2016</span>
+                                <span class="text-muted">${post.postDate}</span>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-7">
-                                <g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
-                                    <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
-                                              optionValue="${it}" value="${post.resourceRating}"/>
-                                    <g:submitButton name="saveResourceScoreBtn" formaction="/resourceRating/save"
-                                                    value="Save" type="submit"/>
-                                </g:form>
+                        <g:if test="${session.user}">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-7">
+                                    <g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
+                                        <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
+                                                  value="${post.resourceRating}"/>
+                                        <g:submitButton name="saveResourceScoreBtn" class="btn btn-default btn-primary"
+                                                        value="Save" type="submit"/>
+                                    </g:form>
+                                </div>
                             </div>
-                        </div>
+                        </g:if>
                     </div>
                 </div>
             </div>
