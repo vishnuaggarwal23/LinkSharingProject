@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import co.UserCO
 import vo.PostVO
 
 class LoginController {
@@ -40,7 +41,7 @@ class LoginController {
         redirect(action: 'index')
     }
 
-    def registration(String userName, String firstName, String lastName, String email, String password, String
+    /*def registration(String userName, String firstName, String lastName, String email, String password, String
             confirmPassword) {
         User user = new User(userName: userName, firstName: firstName, lastName: lastName,
                 email: email, password: password, confirmPassword: confirmPassword)
@@ -51,6 +52,33 @@ class LoginController {
             flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
             render "User not saved"
         }
+    }*/
+
+    def registration(UserCO userCo) {
+        User user = User.findByUserNameAndEmail(userCo.userName, userCo.email)
+        if (user == null) {
+            if(userCo.hasErrors()){
+                flash.error=""
+            }
+            else{
+                user = userCo.properties
+                user.isActive=true
+                /*if (userCo.photo != null) {
+                    MultipartFile uploadPhoto = userCo.photo
+                    File uploadFile = new File("${grailsApplication.config.grails.serverPath}/" + "${uploadPhoto.originalFilename}")
+                }*/
+                if (user.validate()) {
+                    user.save(flush: true)
+                    flash.message = "User registered"
+                    forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
+                } else {
+                    flash.error = "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
+                }
+            }
+        } else {
+            flash.error = "User already exists"
+        }
+        redirect(controller: 'login', action: 'index')
     }
 
     List<Resource> getTopPosts() {

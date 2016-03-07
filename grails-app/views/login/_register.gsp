@@ -4,7 +4,7 @@
     </div>
 
     <div class="panel-body">
-        <g:form name="userRegistrationForm" controller="login" action="registration" class="form-horizontal">
+        <g:uploadForm name="registration" controller="login" action="registration" class="form-horizontal">
             <div class="form-group row">
                 <label for="firstName" class="col-sm-4 form-control-label">First Name *</label>
 
@@ -25,15 +25,15 @@
                 <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
                 <div class="col-sm-8">
-                    <input type="email" class="form-control" id="email" required="required">
+                    <g:field name="email" type="email" class="form-control" id="email" required="required"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="usernameReg" class="col-sm-4 form-control-label">User Name *</label>
+                <label for="userName" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="usernameReg" required="required">
+                    <g:textField name="userName" type="text" class="form-control" id="userName" required="required"/>
                 </div>
             </div>
 
@@ -41,49 +41,34 @@
                 <label for="password" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="password" required="required">
+                    <g:field name="password" type="password" class="form-control" id="password" required="required"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="userNameTxt" class="col-sm-4 form-control-label">User Name *</label>
+                <label for="confirmPassword" class="col-sm-4 form-control-label">Confirm Password *</label>
 
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="userNameTxt" required="required">
+                    <g:field name="confirmPassword" type="password" class="form-control" id="confirmPassword"
+                             required="required"/>
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="passwordReg" class="col-sm-4 form-control-label">Password *</label>
+                <label for="photo" class="col-sm-4 form-control-label">Photo</label>
 
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="passwordReg" required="required">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="confirmpasswordReg" class="col-sm-4 form-control-label">Confirm Password
-                *</label>
-
-                <div class="col-sm-8">
-                    <input type="password" class="form-control" id="confirmpasswordReg" required="required">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="fileSelector" class="col-sm-4 form-control-label">Photo *</label>
-
-                <div class="col-sm-8">
-                    <input type="file" id="fileSelector" required="required">
+                    <input type="file" name="photo" id="photo">
                     <span class="file-custom"></span>
                 </div>
             </div>
 
             <div class="form-group row">
                 <div class="col-sm-offset-4 col-sm-8">
-                    <button type="button" class="btn btn-primary btn-block">Submit</button>
+                    <g:submitButton type="submit" name="submit" value="Register"
+                                    class="btn btn-primary btn-block"/>
                 </div>
             </div>
-        </g:form>
+        </g:uploadForm>
     </div>
 </div>

@@ -275,4 +275,9 @@ abstract class Resource {
         }
         return false
     }
+
+    Boolean deleteFile(){
+        log.info "Implemented in Sub Classes"
+        return false
+    }
 }
