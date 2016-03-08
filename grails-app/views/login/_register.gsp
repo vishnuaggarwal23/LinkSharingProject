@@ -58,7 +58,7 @@
                 <label for="photo" class="col-sm-4 form-control-label">Photo</label>
 
                 <div class="col-sm-8">
-                    <input type="file" name="photo" id="photo">
+                    <input type="file" name="file" id="photo">
                     <span class="file-custom"></span>
                 </div>
             </div>

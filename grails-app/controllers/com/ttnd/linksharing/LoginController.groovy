@@ -15,10 +15,6 @@ class LoginController {
             List<PostVO> recentPostVOList = Resource.getRecentPosts()
             render(view: 'index', model: [topPosts: topPostVOList, recentPosts: recentPostVOList])
         }
-        //flash.error="Login Failed"
-
-//            def result=Resource.getTopPosts()
-//            render "${result}"
     }
 
     def login(String loginUserName, String loginPassword) {
@@ -26,7 +22,6 @@ class LoginController {
         if (user) {
             if (user.isActive) {
                 session.user = user
-                //redirect(action: 'index')
             } else {
                 flash.error = "Inactive Account"
             }
@@ -41,32 +36,18 @@ class LoginController {
         redirect(action: 'index')
     }
 
-    /*def registration(String userName, String firstName, String lastName, String email, String password, String
-            confirmPassword) {
-        User user = new User(userName: userName, firstName: firstName, lastName: lastName,
-                email: email, password: password, confirmPassword: confirmPassword)
-        if (user.validate()) {
-            user.save(flush: true)
-            render "${user} saved"
-        } else {
-            flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
-            render "User not saved"
-        }
-    }*/
-
     def registration(UserCO userCo) {
-        User user = User.findByUserNameAndEmail(userCo.userName, userCo.email)
+        User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
         if (user == null) {
-            if(userCo.hasErrors()){
-                flash.error=""
-            }
-            else{
+            if (userCo.hasErrors()) {
+                flash.error = "${userCo.errors.allErrors}"
+            } else {
                 user = userCo.properties
-                user.isActive=true
-                /*if (userCo.photo != null) {
-                    MultipartFile uploadPhoto = userCo.photo
-                    File uploadFile = new File("${grailsApplication.config.grails.serverPath}/" + "${uploadPhoto.originalFilename}")
-                }*/
+                def file = params.file
+                if (!file.empty) {
+                    user.photo = params.file.bytes
+                }
+                user.isActive = true
                 if (user.validate()) {
                     user.save(flush: true)
                     flash.message = "User registered"

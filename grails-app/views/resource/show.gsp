@@ -12,8 +12,8 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-3">
-                        <img src="${post.userPhoto}" class="img-thumbnail img-responsive" alt="Image"
-                             id="uimg" style="width:75px;height:75px">
+                        <ls:userImage userId="${post.userID}" class="img img-responsive img-thumbnail" height="75px"
+                                      width="75px"/>
                     </div>
 
                     <div class="col-md-9">
@@ -76,28 +76,17 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        %{--<a href="#">
-                            <ins>Delete</ins>
-                        </a>--}%
                         <ls:canDeleteResource resourceID="${post.resourceID}"/>
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        <a href="#">
-                            <ins>Edit</ins>
-                        </a>
+                        <ls:editResourceDetails topicId="${post.topicID}" resourceId="${post.resourceID}"/>
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        %{-- <a href="#">
-                             <ins>Download</ins>
-                         </a>--}%
                     </div>
 
                     <div class="col-md-3 col-xs-6">
-                        %{--<a href="#">
-                            <ins>View Full Site</ins>
-                        </a>--}%
                         <ls:resourceType resourceID="${post.resourceID}" url="${post.url}" filePath="${post.filePath}"/>
                     </div>
                 </div>
@@ -106,9 +95,7 @@
     </div>
 
     <div class="col-md-5">
-        %{--<g:each in="${trendingTopics}" var="trendingTopic">--}%
         <g:render template="/templates/trendingTopics" model="[]"/>
-        %{--</g:each>--}%
     </div>
 </div>
 </body>
