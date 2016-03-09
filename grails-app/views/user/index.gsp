@@ -14,6 +14,12 @@
 
 <body>
 <div class="row">
+    <div>
+        <g:if test="${jsonResponse}">
+            ${jsonResponse}
+        </g:if>
+    </div>
+
     <div class="col-md-4">
         <div class="row">
             <div class="panel panel-default panel-primary">
@@ -31,7 +37,7 @@
                 </div>
 
                 <g:each in="${subscriptions}">
-                    <g:render template="/templates/topicPanel" model="[topic:it]"/>
+                    <g:render template="/templates/topicPanel" model="[topic: it]"/>
                 </g:each>
 
                 %{--<div class="panel-body">

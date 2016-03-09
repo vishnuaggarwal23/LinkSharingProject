@@ -41,7 +41,7 @@
                                 <div class="col-md-10 col-md-offset-7">
                                     <g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
                                         <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
-                                                  value="${post.resourceRating}"/>
+                                                  value="${post?.resourceRating}"/>
                                         <g:submitButton name="saveResourceScoreBtn" class="btn btn-default btn-primary"
                                                         value="Save" type="submit"/>
                                     </g:form>

@@ -21,7 +21,7 @@ class ResourceController {
                 List<TopicVO> topicVOList = Topic.getTrendingTopics()
                 PostVO post = Resource.getPost(id)
                 if (session.user)
-                    post.resourceRating = user.getScore(resource)
+                    post.resourceRating = user?.getScore(resource)
                 flash.message = "User Can Access the Resource"
                 render(view: 'show', model: [trendingTopics: topicVOList, post: post])
             } else {
@@ -118,13 +118,25 @@ class ResourceController {
     }*/
 
     void addToReadingItems(Resource resource) {
+        /*Topic topic = Resource.createCriteria().get {
+            projections {
+                property('topic')
+            }
+            eq('topic', resource.topic)
+        }
+        List<User> subscribedUserList = Topic.getSubscribedUsers(topic)*/
         Topic topic = Resource.createCriteria().get {
             projections {
                 property('topic')
             }
             eq('topic', resource.topic)
         }
-        List<User> subscribedUserList = topic.getSubscribedUsers()
+        List<User> subscribedUserList = Subscription.createCriteria().list {
+            projections {
+                property('user')
+            }
+            eq('topic', topic)
+        }
         subscribedUserList.each { user ->
             if (user.id == session.user?.id)
                 resource.addToReadingItems(new ReadingItem(user: user, resource: resource, isRead: true))
