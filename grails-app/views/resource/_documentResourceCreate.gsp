@@ -1,4 +1,4 @@
-<div class="modal fade" id="sharedocModal" tabindex="-1" role="dialog" aria-labelledby="sharedocModal">
+<div class="modal fade openModal" id="sharedocModal" tabindex="-1" role="dialog" aria-labelledby="sharedocModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -31,8 +31,9 @@
                                 <div class="dropdown">
                                     %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topicName"
                                               id="docTopic" from="${topicsOfUser}"/>--}%
-                                    <g:render name="topic" id="docTopic" class="btn dropdown-toggle"
-                                              template="/templates/topicSelect"/>
+                                    %{--<g:render name="topic" id="docTopic" class="btn dropdown-toggle"
+                                              template="/templates/topicSelect"/>--}%
+                                    <ls:showSubscribedTopics/>
                                 </div>
                             </div>
                         </div>

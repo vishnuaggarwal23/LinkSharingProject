@@ -128,4 +128,12 @@ class User {
         }
         return userSubscriptions
     }
+
+    public Subscription getSubscription(Long topicId) {
+        return Subscription.findByUserAndTopic(this, Topic.load(topicId))
+    }
+
+    public Boolean equals(Long topicId) {
+        return this.id == Topic.get(topicId).createdBy.id
+    }
 }

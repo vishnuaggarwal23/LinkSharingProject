@@ -64,13 +64,14 @@
                             <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
                                 <span class="fa fa-weixin"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sendinviteModal">
+                            <a class="btn" id="inviteModalBtn" role="button" data-toggle="modal"
+                               data-target="#sendinviteModal">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sharelinkModal">
+                            <a class="btn" id="linkResourceModalBtn" role="button" data-toggle="modal" data-target="#sharelinkModal">
                                 <span class="fa fa-link"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sharedocModal">
+                            <a class="btn" id="documentResourceModalBtn" role="button" data-toggle="modal" data-target="#sharedocModal">
                                 <span class="fa fa-file-o"></span>
                             </a>
                         </span>
@@ -127,10 +128,19 @@
         </div>
     </g:if>
 
+    <div class="jsonObjectResponse" style="display: none">
+
+    </div>
+
 
     <g:layoutBody/>
 </div>
+<g:javascript>
+    var seriousnessUrl= "${createLink(controller: "subscription", action: "update")}"
+    var visibilityUrl="${createLink(controller: 'topic', action: 'save')}"
+</g:javascript>
 <asset:javascript src="jquery.js"/>
 <asset:javascript src="bootstrap.min.js"/>
+<asset:javascript src="application.js"/>
 </body>
 </html>
