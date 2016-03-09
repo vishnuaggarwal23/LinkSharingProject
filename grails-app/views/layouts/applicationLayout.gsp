@@ -142,5 +142,7 @@
 <asset:javascript src="jquery.js"/>
 <asset:javascript src="bootstrap.min.js"/>
 <asset:javascript src="application.js"/>
+<asset:javascript src="jquery.validate.min.js"/>
+<asset:javascript src="additional-methods.min.js"/>
 </body>
 </html>

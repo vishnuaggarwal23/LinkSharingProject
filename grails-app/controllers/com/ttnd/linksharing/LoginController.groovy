@@ -37,12 +37,15 @@ class LoginController {
     }
 
     def registration(UserCO userCo) {
-        User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
-        if (user == null) {
+        /*User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
+        if (user == null) {*/
             if (userCo.hasErrors()) {
-                flash.error = "${userCo.errors.allErrors}"
+                //flash.error=userCo.errors.allErrors
+                render(view: '/login/index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource
+                        .getRecentPosts(), userCo            : userCo])
+
             } else {
-                user = userCo.properties
+                User user = userCo.properties
                 def file = params.file
                 if (!file.empty) {
                     user.photo = params.file.bytes
@@ -50,20 +53,32 @@ class LoginController {
                 user.isActive = true
                 if (user.validate()) {
                     user.save(flush: true)
-                    flash.message = "User registered"
                     forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
                 } else {
-                    flash.error = "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
+                    //flash.error=user.errors.allErrors
+                    render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), userCo: user])
                 }
             }
-        } else {
+        /*} else {
             flash.error = "User already exists"
-        }
-        redirect(controller: 'login', action: 'index')
+            redirect(controller: 'login', action: 'index')
+        }*/
     }
 
     List<Resource> getTopPosts() {
         def result = Resource.getTopPosts()
         return result
+    }
+
+    def validateEmail() {
+        String valid = User.countByEmail(params.email) ? "false" : "true"
+        response.setContentType("text/json;charset=UTF-8")
+        render valid
+    }
+
+    def validateUserName() {
+        String valid = User.countByName(params.userName) ? "false" : "true"
+        response.setContentType("text/json;charset=UTF-8")
+        render valid
     }
 }

@@ -9,7 +9,10 @@
                 <label for="firstName" class="col-sm-4 form-control-label">First Name *</label>
 
                 <div class="col-sm-8">
-                    <g:textField name="firstName" type="text" class="form-control" id="firstName" required="required"/>
+                    <g:textField name="firstName" type="text" class="form-control" id="firstName" value="${userCo?.firstName}"/>
+                </div>
+                <div class="alert-danger">
+                    <g:fieldError field="firstName" bean="${userCo}"/>
                 </div>
             </div>
 
@@ -17,31 +20,34 @@
                 <label for="lastName" class="col-sm-4 form-control-label">Last Name *</label>
 
                 <div class="col-sm-8">
-                    <g:textField name="lastName" type="text" class="form-control" id="lastName" required="required"/>
+                    <g:textField name="lastName" type="text" class="form-control" id="lastName" value="${userCo?.lastName}" />
                 </div>
+                <div class="alert-danger"> <g:fieldError field="lastName" bean="${userCo}"/></div>
             </div>
-
             <div class="form-group row">
                 <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
                 <div class="col-sm-8">
-                    <g:field name="email" type="email" class="form-control" id="email" required="required"/>
+                    <g:field name="email" type="email" class="form-control" id="email" value="${userCo?.email}"/>
                 </div>
+                <div class="alert-danger"> <g:fieldError field="email" bean="${userCo}"/></div>
             </div>
 
             <div class="form-group row">
                 <label for="userName" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <g:textField name="userName" type="text" class="form-control" id="userName" required="required"/>
+                    <g:textField name="userName" type="text" class="form-control" id="userName" value="${userCo?.userName}"/>
                 </div>
+                <div class="alert-danger"> <g:fieldError field="userName" bean="${userCo}"/></div>
             </div>
 
             <div class="form-group row">
                 <label for="password" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <g:field name="password" type="password" class="form-control" id="password" required="required"/>
+                    <g:field name="password" type="password" class="form-control" id="password"
+                             value="${userCo?.password}" />
                 </div>
             </div>
 
@@ -50,7 +56,7 @@
 
                 <div class="col-sm-8">
                     <g:field name="confirmPassword" type="password" class="form-control" id="confirmPassword"
-                             required="required"/>
+                             />
                 </div>
             </div>
 
