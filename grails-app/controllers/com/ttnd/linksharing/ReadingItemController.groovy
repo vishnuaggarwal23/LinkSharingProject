@@ -5,10 +5,13 @@ class ReadingItemController {
     def index() {}
 
     def changeIsRead(Long id, Boolean isRead) {
-        if (ReadingItem.executeUpdate("update ReadingItem set isRead=:isRead where id=:id", [isRead: isRead, id: id])) {
-            render "success"
+        User user = session.user
+        if (ReadingItem.executeUpdate("update ReadingItem set isRead=:isRead where resource.id=:id and user" +
+                ".id=:userID", [isRead: isRead, id: id, userID: user.id])) {
+            flash.message = "Reading Item Status Changed"
         } else {
-            render "error"
+            flash.error = "Reading Item Status not Changed"
         }
+        redirect(uri: '/')
     }
 }

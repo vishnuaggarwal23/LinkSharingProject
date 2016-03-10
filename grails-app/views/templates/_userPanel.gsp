@@ -12,12 +12,12 @@
             <div class="row">
                 <div class="col-md-4 col-xs-6">
                     <span class="text-muted">Subscriptions</span><br/>
-                    <span class="text-primary">50</span>
+                    <span class="text-primary"><ls:subscriptionCount userId="${userDetails.id}"/></span>
                 </div>
 
                 <div class="col-md-4 col-md-offset-2 col-xs-6">
                     <span class="text-muted">Topics</span><br/>
-                    <span class="text-primary">30</span>
+                    <span class="text-primary"><ls:topicCount/></span>
                 </div>
             </div>
         </div>

@@ -30,7 +30,11 @@
                     </div>
                 </div>
 
-                <div class="panel-body">
+                <g:each in="${subscriptions}">
+                    <g:render template="/templates/topicPanel" model="[topic:it]"/>
+                </g:each>
+
+                %{--<div class="panel-body">
                     <div class="row">
                         <div class="col-md-3">
                             <img src="male-silhouette.jpg" class="img-thumbnail img-responsive" alt="Image"
@@ -91,7 +95,7 @@
                             <a href="#"><span class="fa fa-trash" style="font-size:20px"></span></a>
                         </div>
                     </div>
-                </div>
+                </div>--}%
             </div>
         </div>
 
@@ -105,10 +109,10 @@
             <div class="row">
                 <div class="panel panel-default panel-primary">
                     <div class="panel-heading">
-                        Recent Shares
+                        Inbox
                     </div>
-                    <g:each in="${recentPosts}" var="recentPost">
-                        <g:render template="/templates/postPanel" model="[post: recentPost]"/>
+                    <g:each in="${readingItems}" var="readingItem">
+                        <g:render template="/templates/postPanel" model="[post: readingItem]"/>
                     </g:each>
                     %{--<div class="panel-body">
                         <div class="row">

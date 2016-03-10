@@ -50,7 +50,7 @@ class Topic {
     }
 
     String toString() {
-        return name
+        return "${name}, ${createdBy}"
     }
 
     static List<TopicVO> getTrendingTopics() {
@@ -64,7 +64,6 @@ class Topic {
                 count('t.id', 'topicCount')
                 property('t.createdBy')
             }
-
             order('topicCount', 'desc')
             order('t.name', 'asc')
             maxResults(5)
@@ -106,5 +105,37 @@ class Topic {
                     it[5], isAdmin: it[6], isActive: it[7]))
         }
         return subscribedUsers
+    }
+
+    public Boolean isTopicPublic() {
+        if (visibility == Visibility.PUBLIC)
+            return true
+        return false
+    }
+
+    public Boolean canViewedBy(User user) {
+        /*if (this.isTopicPublic()) {
+            return true
+        } else {
+            if (user.isAdmin) {
+                return true
+            } else if (this.createdBy.id == user.id) {
+                return true
+            } else {
+                Subscription subscription = Subscription.findByUserAndTopic(user, this)
+                if (subscription) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }*/
+
+        if (this.isTopicPublic() || user.isAdmin || Subscription.findByUserAndTopic(user, this)) {
+            return true
+        }
+
+        return false
+
     }
 }

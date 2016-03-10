@@ -126,7 +126,7 @@ log4j.main = {
             'com.ttnd.LinkSharing'
 
     info 'grails.app'
-    debug 'grails.app',
+    debug 'grails.app'/*,
             'org.hibernate.SQL'
-    trace 'org.hibernate.type.descriptor.sql.BasicBinder'
+    trace 'org.hibernate.type.descriptor.sql.BasicBinder'*/
 }

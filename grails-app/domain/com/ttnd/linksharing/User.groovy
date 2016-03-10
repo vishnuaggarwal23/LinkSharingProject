@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import vo.PostVO
+import vo.TopicVO
 import vo.UserVO
 
 class User {
@@ -45,7 +47,7 @@ class User {
     }
 
     String toString() {
-        return userName
+        return this.userName
     }
 
     public static User save(User user) {
@@ -73,5 +75,57 @@ class User {
 
     UserVO getUserDetails() {
         return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
+    }
+
+    static List<PostVO> getReadingItems(User user) {
+        List<ReadingItem> readingItems = ReadingItem.findAllByUserAndIsRead(user, false)
+        List<PostVO> readingItemsList = []
+        readingItems.each {
+            readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
+                    .resource.topic.id, topicName: it.resource.topic.name, userID: it.resource.createdBy.id, userName:
+                    it.resource.createdBy.userName, userFirstName: it.resource.createdBy.firstName, userLastName: it
+                    .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: it
+                    .resource, filePath: it.resource, postDate: it.resource.lastUpdated))
+        }
+        return readingItemsList
+    }
+
+    public static Boolean canDeleteResource(User user, Long resourceID) {
+        Resource resource = Resource.read(resourceID)
+        if (user.isAdmin || resource.createdBy.id == user.id)
+            return true
+        return false
+    }
+
+    public Integer getScore(Resource resource) {
+        ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
+        return resourceRating.score
+    }
+
+    public Boolean isSubscribed(Long topicId) {
+        if (Subscription.findByUserAndTopic(this, Topic.load(topicId))) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    public List<TopicVO> getUserSubscriptions() {
+        List<TopicVO> userSubscriptions = []
+        Subscription.createCriteria().list(max: 5) {
+            projections {
+                'topic' {
+                    property('id')
+                    property('name')
+                    property('visibility')
+                }
+                'user' {
+                    eq('id', this.id)
+                }
+            }
+        }.each {
+            userSubscriptions.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: 0, createdBy: this))
+        }
+        return userSubscriptions
     }
 }

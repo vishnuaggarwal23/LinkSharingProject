@@ -15,4 +15,7 @@ class PostVO {
     String userFirstName
     String userLastName
     byte[] userPhoto
+    boolean isRead
+    Integer resourceRating
+    Date postDate
 }

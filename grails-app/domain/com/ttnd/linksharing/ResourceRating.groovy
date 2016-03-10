@@ -5,11 +5,11 @@ class ResourceRating {
     Date dateCreated
     Date lastUpdated
     static constraints = {
-        score(min:1,max:5)
+        score(min: 1, max: 5)
         resource(unique: ['user'])
     }
 
-    static belongsTo = [user:User,resource:Resource]
+    static belongsTo = [user: User, resource: Resource]
 
     public static ResourceRating save(ResourceRating resourceRating) {
         resourceRating.validate()
