@@ -13,7 +13,7 @@ class LoginControllerIntegrationSpec extends IntegrationSpec {
     void "test something"() {
     }
 
-    def "Check-TopPosts"(){
+    def "check-TopPosts"(){
         setup:
         LoginController loginController=new LoginController()
 

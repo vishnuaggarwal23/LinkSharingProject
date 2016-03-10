@@ -1,7 +1,6 @@
 package com.ttnd.linksharing
 
 import constants.AppConstants
-import enums.Seriousness
 import enums.Visibility
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
@@ -42,14 +41,14 @@ class SubscriptionControllerSpec extends Specification {
         1  | "Subscription Deleted"
     }
 
-    def "CheckSubscriptionSave"() {
+    def "checkSubscriptionSave"() {
         setup:
         User user = new User(userName: 'user', firstName: 'fname', lastName: 'lname', email: 'email@gmail.com', password:
                 AppConstants.PASSWORD, confirmPassword: AppConstants.PASSWORD)
         user.save()
-        session.user=user
-        Topic topic=new Topic(name: 'topic1',createdBy: user,visibility: Visibility.PUBLIC)
-        topic.id=id
+        session.user = user
+        Topic topic = new Topic(name: 'topic1', createdBy: user, visibility: Visibility.PUBLIC)
+        topic.id = id
         topic.save()
 
         when:
@@ -60,7 +59,7 @@ class SubscriptionControllerSpec extends Specification {
 
         where:
         id | result
-        1       | "subscription saved"
+        1  | "subscription saved"
     }
 
     def "CheckSubscriptionUpdate"() {
@@ -83,19 +82,19 @@ class SubscriptionControllerSpec extends Specification {
         2  | "casual"    | "Subscription Updated"
     }
 
-    def "checkSubscriptionNotFoundInDeletion"(){
+    def "checkSubscriptionNotFoundInDeletion"() {
         when:
         controller.delete(1)
 
         then:
-        response.text=="Subscription not Deleted"
+        response.text == "Subscription not Deleted"
     }
 
-    def "checkSubscriptionNotFoundInUpdation"(){
+    def "checkSubscriptionNotFoundInUpdation"() {
         when:
-        controller.update(1,"CASUAL")
+        controller.update(1, "CASUAL")
 
         then:
-        response.text=="Subscription not Found"
+        response.text == "Subscription not Found"
     }
 }

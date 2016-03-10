@@ -1,0 +1,1 @@
+<g:select data-toggle="dropdown" name="topic" from="${subscribedTopics}" optionKey="id"/>

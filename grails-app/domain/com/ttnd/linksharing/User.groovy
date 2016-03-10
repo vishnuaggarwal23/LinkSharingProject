@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import vo.UserVO
+
 class User {
     String userName
     String password
@@ -13,7 +15,7 @@ class User {
     Date lastUpdated
     String confirmPassword
 
-    static transients = ['confirmPassword']
+    static transients = ['confirmPassword', 'subscribedTopics']
 
     static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource, resourceRatings: ResourceRating]
 
@@ -57,5 +59,19 @@ class User {
             user.save(flush: true)
             return user
         }
+    }
+
+    List<Topic> getSubscribedTopics() {
+        List<Topic> topicList = Subscription.createCriteria().list() {
+            projections {
+                property('topic')
+            }
+            eq('user.id', id)
+        }
+        return topicList
+    }
+
+    UserVO getUserDetails() {
+        return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
     }
 }

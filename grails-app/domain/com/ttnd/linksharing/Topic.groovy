@@ -3,6 +3,7 @@ package com.ttnd.linksharing
 import constants.AppConstants
 import enums.Visibility
 import vo.TopicVO
+import vo.UserVO
 
 class Topic {
     String name
@@ -72,5 +73,38 @@ class Topic {
         }
 
         return trendingTopics
+    }
+
+    static TopicVO getTopicDetails(Topic topic) {
+        TopicVO topicDetails = new TopicVO()
+        topicDetails.id = topic.id
+        topicDetails.name = topic.name
+        topicDetails.visibility = topic.visibility
+        topicDetails.createdBy = topic.createdBy
+        //topicDetails.count=topic.resources.count()
+        return topicDetails
+    }
+
+    static List<UserVO> getSubscribedUsers(Topic topic) {
+        List<UserVO> subscribedUsers = []
+        Subscription.createCriteria().list {
+            projections {
+                'user' {
+                    property('id')
+                    property('userName')
+                    property('firstName')
+                    property('lastName')
+                    property('email')
+                    property('photo')
+                    property('isAdmin')
+                    property('isActive')
+                }
+                eq('topic.id', topic.id)
+            }
+        }?.each {
+            subscribedUsers.add(new UserVO(id: it[0], name: it[1], firstName: it[2], lastName: it[3], email: it[4], photo:
+                    it[5], isAdmin: it[6], isActive: it[7]))
+        }
+        return subscribedUsers
     }
 }

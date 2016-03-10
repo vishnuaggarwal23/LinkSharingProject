@@ -5,9 +5,9 @@ class SessionCheckFilters {
     def filters = {
         notLogin(controller: 'login', invert: true) {
             before = {
-                if (!session.user) {
+                /*if (!session.user) {
                     redirect(controller: 'login', action: 'index')
-                }
+                }*/
             }
             after = { Map model ->
 

@@ -1,38 +1,43 @@
 package com.ttnd.linksharing
 
+import vo.PostVO
+
 class LoginController {
 
     def index() {
         if (session.user) {
+            flash.message = "Logged In"
             forward(controller: 'user', action: 'index')
+
         } else {
-            render "Login Failed"
-            List topPosts=getTopPosts()
-            topPosts.each {
-                render "${it} <br/>"
-            }
+            List<PostVO> topPostVOList = Resource.getTopPosts()
+            List<PostVO> recentPostVOList = Resource.getRecentPosts()
+            render(view: 'index', model: [topPosts: topPostVOList, recentPosts: recentPostVOList])
         }
+        //flash.error="Login Failed"
+
+//            def result=Resource.getTopPosts()
+//            render "${result}"
     }
 
-    def login(String username, String password) {
-        User user = User.findByUserNameAndPassword(username, password)
+    def login(String loginUserName, String loginPassword) {
+        User user = User.findByUserNameAndPassword(loginUserName, loginPassword)
         if (user) {
             if (user.isActive) {
                 session.user = user
-                redirect(action: 'index')
+                //redirect(action: 'index')
             } else {
-                flash.put("error", "Inactive Account")
-                render flash.get("error")
+                flash.error = "Inactive Account"
             }
         } else {
-            flash.put("error", "Account not Found")
-            render flash.get("error")
+            flash.error = "Account Not Found"
         }
+        redirect(controller: 'login', action: 'index')
     }
 
     def logout() {
         session.invalidate()
-        forward(action: 'index')
+        redirect(action: 'index')
     }
 
     def registration(String userName, String firstName, String lastName, String email, String password, String
@@ -48,8 +53,8 @@ class LoginController {
         }
     }
 
-    List<Resource> getTopPosts(){
-        def result=Resource.getTopPosts()
+    List<Resource> getTopPosts() {
+        def result = Resource.getTopPosts()
         return result
     }
 }
