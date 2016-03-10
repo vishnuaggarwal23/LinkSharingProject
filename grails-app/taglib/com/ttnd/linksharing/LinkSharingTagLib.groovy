@@ -9,12 +9,15 @@ class LinkSharingTagLib {
     def markRead = { attrs, body ->
         User user = session.user
         if (user) {
-            String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: true])}"
             Boolean isRead = Boolean.valueOf(attrs.isRead)
             if (isRead) {
-                out << "<p class='pull-right'>Post Read</p>"
+                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: false])}"
+                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
+                        "isRead='${!isRead}'>Mark as Unread</a>"
             } else {
-                out << "<a href=$link class='pull-right'>Mark as Read</a>"
+                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: true])}"
+                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
+                        "isRead='${!isRead}'>Mark as Read</a> "
             }
         }
     }

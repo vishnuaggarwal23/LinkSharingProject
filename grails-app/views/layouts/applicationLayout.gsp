@@ -137,10 +137,6 @@
 
     <g:layoutBody/>
 </div>
-<g:javascript>
-    var seriousnessUrl= "${createLink(controller: "subscription", action: "update")}"
-    var visibilityUrl="${createLink(controller: 'topic', action: 'save')}"
-</g:javascript>
 <asset:javascript src="jquery.js"/>
 <asset:javascript src="bootstrap.min.js"/>
 <asset:javascript src="application.js"/>

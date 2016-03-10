@@ -28,21 +28,37 @@ $(document).ready(function () {
         }
     }
 
+    function ajaxResponse(jsonObject) {
+
+        success(jsonObject)
+        error(jsonObject)
+    }
+
+    $('.toggleIsRead').on('click', function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            context: this,
+            url: "/readingItem/changeIsRead",
+            data: {id: $(this).attr('resourceId'), isRead: $(this).attr('isRead')},
+            success: ajaxResponse,
+            complete: location.reload()
+        });
+    });
+
     $('.seriousness').change(function () {
         $.ajax({
-            url: seriousnessUrl,
+            url: "/subscription/update",
             data: {id: $(this).attr('topicId'), serious: $(this).val()},
-            success: success
-            //error: error
+            success: ajaxResponse
         });
     });
 
     $('.visibility').change(function () {
         $.ajax({
-            url: visibilityUrl,
+            url: "/topic/save",
             data: {topicName: $(this).attr('topicName'), visibility: $(this).val()},
-            success: success,
-            error: error
+            success: ajaxResponse
         });
     });
 
@@ -50,8 +66,8 @@ $(document).ready(function () {
         $.ajax({
             url: "/topic/save",
             data: {topicName: $('#topicName').val(), visibility: $('#visibility').val()},
-            success: location.reload(),
-            error: error
+            success: ajaxResponse,
+            complete:location.reload()
         });
     });
 
@@ -139,11 +155,11 @@ $(document).ready(function () {
         location.reload()
     });
 
-    $('.topicPostSearchBtn').on('click',function(){
+    $('.topicPostSearchBtn').on('click', function () {
         $.ajax({
-            url:"/resource/search",
-            data: {q: $('#topicPostSearchBox').val(), topicID: $('.topicPostSearchHiddenTopicID').val() },
-            success:function(searchPosts){
+            url: "/resource/search",
+            data: {q: $('#topicPostSearchBox').val(), topicID: $('.topicPostSearchHiddenTopicID').val()},
+            success: function (searchPosts) {
                 $('.postPanelBody').html(searchPosts)
             }
         })

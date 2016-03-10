@@ -15,7 +15,7 @@ class UserController {
         List<PostVO> readingResource = User.getReadingItems(session.user)
         render(view: 'index', model: [subscribedTopics                      : session.user.subscribedTopics, trendingTopics: trendingTopics,
                                       userDetails                           : userDetail, recentPosts: recentPostVOList, readingItems:
-                                              readingResource, subscriptions: session.user.getUserSubscriptions(),jsonResponse: params.jsonResponse])
+                                              readingResource, subscriptions: session.user.getUserSubscriptions()])
     }
 
     def image(Long id) {

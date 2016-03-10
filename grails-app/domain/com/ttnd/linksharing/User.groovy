@@ -78,7 +78,7 @@ class User {
     }
 
     static List<PostVO> getReadingItems(User user) {
-        List<ReadingItem> readingItems = ReadingItem.findAllByUserAndIsRead(user, false)
+        List<ReadingItem> readingItems = ReadingItem.findAllByUser(user)
         List<PostVO> readingItemsList = []
         readingItems.each {
             readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
