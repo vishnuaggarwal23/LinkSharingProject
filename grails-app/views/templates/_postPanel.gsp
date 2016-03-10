@@ -34,9 +34,8 @@
 
 <div class="panel-body">
     <div class="col-md-2">
-        <img src="${post.userPhoto}" class="img img-thumbnail img-responsive" alt="Image"
-             id="uimg"
-             style="width:75px;height:75px">
+        <ls:userImage userId="${post.userID}" class="img img-responsive img-thumbnail" height="75px"
+                      width="75px"/>
     </div>
 
     <div class="col-md-10">

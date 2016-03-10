@@ -10,4 +10,5 @@ class AppConstants {
     static final VISIBILITY = Visibility.PUBLIC
     static final SERIOUSNESS = Seriousness.VERY_SERIOUS
     static final RATING=3
+    static final String  DOCUMENT_CONTENT_TYPE="application/pdf"
 }

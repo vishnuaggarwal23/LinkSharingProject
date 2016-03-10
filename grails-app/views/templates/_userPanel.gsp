@@ -1,8 +1,8 @@
 <div class="panel-body">
     <div class="row">
         <div class="col-md-3">
-            <img src="${userDetails.photo}" class="img img-thumbnail img-responsive" alt="Image"
-                 id="uimg" style="width:75px;height:75px">
+            <ls:userImage userId="${userDetails.id}" class="img img-responsive img-thumbnail" height="75px"
+                          width="75px"/>
         </div>
 
         <div class="col-md-9">

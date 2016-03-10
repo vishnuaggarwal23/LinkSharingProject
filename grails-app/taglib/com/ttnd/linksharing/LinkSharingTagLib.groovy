@@ -27,7 +27,7 @@ class LinkSharingTagLib {
         if (resourceType == "LinkResource") {
             out << "<a href='${resourceLink}' class='pull-right' target='_blank'>View Full Site</a>"
         } else if (resourceType == "DocumentResource") {
-            out << "<a href='#' class='pull-right'>Download</a>"
+            out << "<a href='${createLink(controller: 'documentResource', action: 'download', params: [resourceId: resourceID])}' class='pull-right'>Download</a>"
         }
     }
 
@@ -78,6 +78,84 @@ class LinkSharingTagLib {
         Long userId = session.user.id
         if (userId) {
             out << Topic.countByCreatedBy(User.load(userId))
+        }
+    }
+
+    def userImage = { attrs, body ->
+        println "In Tag----- ${attrs.userId}"
+        Long userId = attrs.userId
+        def height = attrs.height
+        def width = attrs.width
+        def tagClass = attrs.class
+        out << "<img src='${createLink(controller: 'user', action: 'image', params: [id: userId])}' " +
+                "class='${tagClass}' height='${height}' width='${width}'>"
+    }
+
+    def canDeleteTopic = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user && topic) {
+            if (user.isAdmin || topic.createdBy.id == user.id) {
+                out << "<a href='#'><span class='fa fa-trash' style='font-size:20px'></span></a>"
+            }
+        }
+    }
+
+    def editTopicVisibility = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user && topic) {
+            if (user.isAdmin || topic.createdBy.id == user.id) {
+                out << g.render(template: '/templates/visibilitySelect')
+            }
+        }
+    }
+
+    def editTopicSeriousness = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user && topic) {
+            if (user.isAdmin || topic.createdBy.id == user.id || Subscription.findByUserAndTopic(user, topic)) {
+                out << g.render(template: '/templates/seriousnessSelect')
+            }
+        }
+    }
+
+    def sendTopicInvite = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user && topic) {
+            if (user.isAdmin || topic.createdBy.id == user.id || Subscription.findByUserAndTopic(user, topic)) {
+                out << "<a href='#'><span class='glyphicon glyphicon-envelope' style='font-size:20px'></span></a>"
+            }
+        }
+    }
+
+    def editTopicDetails = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user && topic) {
+            if (user.isAdmin || topic.createdBy.id == user.id) {
+                out << "<a href='#'><span class='fa fa-file-o' style='font-size:20px'></span></a>"
+            }
+        }
+    }
+
+    def editResourceDetails = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Long resourceId = attrs.resourceId
+        Topic topic = Topic.get(topicId)
+        Resource resource = Resource.get(resourceId)
+        if (user && topic && resource) {
+            if (user.isAdmin || resource.createdBy.id == user.id) {
+                out << "<a href='#'><ins>Edit</ins></a>"
+            }
         }
     }
 

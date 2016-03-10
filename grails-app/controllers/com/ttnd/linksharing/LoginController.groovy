@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import co.UserCO
 import vo.PostVO
 
 class LoginController {
@@ -14,10 +15,6 @@ class LoginController {
             List<PostVO> recentPostVOList = Resource.getRecentPosts()
             render(view: 'index', model: [topPosts: topPostVOList, recentPosts: recentPostVOList])
         }
-        //flash.error="Login Failed"
-
-//            def result=Resource.getTopPosts()
-//            render "${result}"
     }
 
     def login(String loginUserName, String loginPassword) {
@@ -25,7 +22,6 @@ class LoginController {
         if (user) {
             if (user.isActive) {
                 session.user = user
-                //redirect(action: 'index')
             } else {
                 flash.error = "Inactive Account"
             }
@@ -40,17 +36,30 @@ class LoginController {
         redirect(action: 'index')
     }
 
-    def registration(String userName, String firstName, String lastName, String email, String password, String
-            confirmPassword) {
-        User user = new User(userName: userName, firstName: firstName, lastName: lastName,
-                email: email, password: password, confirmPassword: confirmPassword)
-        if (user.validate()) {
-            user.save(flush: true)
-            render "${user} saved"
+    def registration(UserCO userCo) {
+        User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
+        if (user == null) {
+            if (userCo.hasErrors()) {
+                flash.error = "${userCo.errors.allErrors}"
+            } else {
+                user = userCo.properties
+                def file = params.file
+                if (!file.empty) {
+                    user.photo = params.file.bytes
+                }
+                user.isActive = true
+                if (user.validate()) {
+                    user.save(flush: true)
+                    flash.message = "User registered"
+                    forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
+                } else {
+                    flash.error = "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
+                }
+            }
         } else {
-            flash.error "${user.errors.allErrors.collect { message(error: it) }.join(',')}"
-            render "User not saved"
+            flash.error = "User already exists"
         }
+        redirect(controller: 'login', action: 'index')
     }
 
     List<Resource> getTopPosts() {

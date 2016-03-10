@@ -1,8 +1,8 @@
 <div class="panel-body">
     <div class="row">
         <div class="col-md-3">
-            <img src="${topic.createdBy.photo}" class="img-thumbnail img-responsive" alt="Image"
-                 id="uimg" style="width:75px;height:75px">
+            <ls:userImage userId="${topic.createdBy.id}" class="img img-responsive img-thumbnail" height="75px"
+                          width="75px"/>
         </div>
 
         <div class="col-md-9">
@@ -43,21 +43,20 @@
     <div class="row">
         <div class="col-md-4">
             <div class="dropdown">
-                <g:render template="/templates/seriousnessSelect"/>
+                <ls:editTopicSeriousness topicId="${topic.id}"/>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="dropdown">
-                <g:render template="/templates/visibilitySelect"/>
+                <ls:editTopicVisibility topicId="${topic.id}"/>
             </div>
         </div>
 
         <div class="col-md-4">
-            <a href="#"><span class="glyphicon glyphicon-envelope"
-                              style="font-size:20px"></span></a>
-            <a href="#"><span class="fa fa-file-o" style="font-size:20px"></span></a>
-            <a href="#"><span class="fa fa-trash" style="font-size:20px"></span></a>
+            <ls:sendTopicInvite topicId="${topic.id}"/>
+            <ls:editTopicDetails topicId="${topic.id}"/>
+            <ls:canDeleteTopic topicId="${topic.id}"/>
         </div>
     </div>
 </div>

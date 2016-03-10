@@ -11,6 +11,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 grails.sampleValue = "Sample Text Inside config.groovy"
+grails.serverPath="/var/www/linksharing"
 grails.project.groupId = "com.ttnd.LinkSharing" // change this to alter the default package name and Maven publishing destination
 grails.config.locations = ["file:${userHome}/.grails/config.groovy"]
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
@@ -105,11 +106,6 @@ log4j.main = {
 
     appenders {
         console name: 'stdout', layout: pattern(conversionPattern: '%d{yyy-MM-dd HH:mm:ss,SSS} %p %c{2} %m%n')
-    }
-
-    logger {
-        trace "org.hibernate.SQL",
-                "org.hibernate.type"
     }
 
     error 'org.codehaus.groovy.grails.web.servlet',        // controllers

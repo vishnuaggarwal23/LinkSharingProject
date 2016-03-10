@@ -20,8 +20,8 @@ class ResourceController {
             if (resource.canViewBy(user)) {
                 List<TopicVO> topicVOList = Topic.getTrendingTopics()
                 PostVO post = Resource.getPost(id)
-                if(session.user)
-                post.resourceRating = user.getScore(resource)
+                if (session.user)
+                    post.resourceRating = user?.getScore(resource)
                 flash.message = "User Can Access the Resource"
                 render(view: 'show', model: [trendingTopics: topicVOList, post: post])
             } else {
@@ -57,14 +57,14 @@ class ResourceController {
         if (User.canDeleteResource(session.user, id)) {
             Resource resource = Resource.load(id)
             try {
-                resource.delete(flush: true)
-                flash.message = "Resource Deleted"
-                //render "Resource Deleted"
+                if (resource.deleteFile())
+                    flash.message = "Resource Deleted"
+                else
+                    flash.error = "Resource not Deleted"
             }
             catch (Exception e) {
                 log.info e.message
-                flash.error = "Resource Not Deleted"
-                //render "Resource not Deleted"
+                flash.error = "Resource Not Found"
             }
         } else {
             flash.error = "Deletion Not Permissible"
@@ -116,4 +116,32 @@ class ResourceController {
             render flash.error
         }
     }*/
+
+    void addToReadingItems(Resource resource) {
+        /*Topic topic = Resource.createCriteria().get {
+            projections {
+                property('topic')
+            }
+            eq('topic', resource.topic)
+        }
+        List<User> subscribedUserList = Topic.getSubscribedUsers(topic)*/
+        Topic topic = Resource.createCriteria().get {
+            projections {
+                property('topic')
+            }
+            eq('topic', resource.topic)
+        }
+        List<User> subscribedUserList = Subscription.createCriteria().list {
+            projections {
+                property('user')
+            }
+            eq('topic', topic)
+        }
+        subscribedUserList.each { user ->
+            if (user.id == session.user?.id)
+                resource.addToReadingItems(new ReadingItem(user: user, resource: resource, isRead: true))
+            else
+                resource.addToReadingItems(new ReadingItem(user: user, resource: resource, isRead: false))
+        }
+    }
 }
