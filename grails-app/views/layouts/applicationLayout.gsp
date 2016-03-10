@@ -14,6 +14,7 @@
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="bootstrap-theme.min.css"/>
     <asset:stylesheet src="font-awesome.min.css"/>
+    <asset:stylesheet src="application.css"/>
     <g:layoutHead/>
 </head>
 

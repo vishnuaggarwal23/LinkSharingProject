@@ -67,9 +67,33 @@ $(document).ready(function () {
         });
     });
 
+    jQuery.validator.addMethod("passwordCheck", function (value, element) {
+        var result = false;
+        var password = $('#password').val();
+        if (password === value) {
+            result = true;
+        }
+        return result;
+    }, "Password Fields Do Not Match");
+
     $(function () {
         $('#registration').validate({
             rules: {
+                'firstName': {
+                    required: true
+                },
+                'lastName': {
+                    required: true
+                },
+                'password': {
+                    required: true,
+                    minlength: 5
+                },
+                'confirmPassword': {
+                    required: true,
+                    minlength: 5,
+                    passwordCheck: true
+                },
                 'email': {
                     required: true,
                     remote: {
@@ -96,12 +120,26 @@ $(document).ready(function () {
                 }
             },
             messages: {
+                'firstName': {
+                    required: "First Name Field Cannot Be Blank"
+                },
+                'lastName': {
+                    required: "First Name Field Cannot Be Blank"
+                },
+                'password': {
+                    required: "Password Field Cannot Be Blank",
+                    minlength: "Minimum Password Size Is Of 5 Characters"
+                },
+                'confirmPassword': {
+                    required: "Confirm Password Field Cannot Be Blank",
+                    minlength: "Minimum Password Size Is Of 5 Characters"
+                },
                 'email': {
-                    required: "Please enter an email address. It can't be blank",
+                    required: "E-Mail Address Field Cannot Be Blank",
                     remote: "Email address entered is already used"
                 },
                 'userName': {
-                    required: "Please enter an user name. It can't be blank",
+                    required: "User Name Field Cannot Be Blank",
                     remote: "Username entered is already used"
                 }
             }

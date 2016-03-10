@@ -71,14 +71,14 @@ class LoginController {
     }
 
     def validateEmail() {
-        String valid = User.countByEmail(params.email) ? "false" : "true"
-        response.setContentType("text/json;charset=UTF-8")
+        Boolean valid = User.countByEmail(params.email) ? false:true
+        /*response.setContentType("text/json;charset=UTF-8")*/
         render valid
     }
 
     def validateUserName() {
-        String valid = User.countByName(params.userName) ? "false" : "true"
-        response.setContentType("text/json;charset=UTF-8")
+        Boolean valid = User.countByUserName(params.userName) ? false:true
+        /*response.setContentType("text/json;charset=UTF-8")*/
         render valid
     }
 }
