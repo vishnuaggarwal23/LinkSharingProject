@@ -75,7 +75,7 @@ class LinkSharingTagLib {
     }
 
     def topicCount = { attrs, body ->
-        Long userId = session.user.id
+        Long userId = attrs.userId
         if (userId) {
             out << Topic.countByCreatedBy(User.load(userId))
         }
@@ -87,7 +87,6 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user) {
             if (topic) {
-                //Subscription subscription = Subscription.findByUserAndTopic(user, topic)
                 Subscription subscription = user.getSubscription(topicId)
                 if (subscription) {
                     out << "${g.select(name: 'seriousness', id: 'seriousness', from: enums.Seriousness.values(), class: 'btn btn-xs btn-default dropdown-toggle seriousness', value: subscription.seriousness, topicId: topicId)}"

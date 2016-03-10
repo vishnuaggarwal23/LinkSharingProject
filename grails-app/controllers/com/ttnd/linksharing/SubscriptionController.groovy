@@ -51,8 +51,12 @@ class SubscriptionController {
     def delete(Long userId, Long topicId) {
         Subscription subscription = Subscription.findByUserAndTopic(User.load(userId), Topic.load(topicId))
         try {
-            subscription.delete(flush: true)
-            flash.message = "Subscription Deleted"
+            if (Topic.get(topicId).createdBy.id != User.get(userId).id) {
+                subscription.delete(flush: true)
+                flash.message = "Subscription Deleted"
+            } else {
+                flash.error = "Topic Creator Cannot Unsubscribe From Its Own Topic"
+            }
         }
         catch (Exception e) {
             log.error e.message

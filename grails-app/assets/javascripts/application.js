@@ -32,8 +32,8 @@ $(document).ready(function () {
         $.ajax({
             url: seriousnessUrl,
             data: {id: $(this).attr('topicId'), serious: $(this).val()},
-            success: success,
-            error: error
+            success: success
+            //error: error
         });
     });
 
@@ -45,18 +45,6 @@ $(document).ready(function () {
             error: error
         });
     });
-    /*
-     $('#inviteModalBtn').click(function () {
-     $('#sendinviteModal').modal();
-     });
-
-     $('#linkResourceModalBtn').click(function () {
-     $('#sharelinkModal').modal();
-     });
-
-     $('#documentResourceModalBtn').click(function () {
-     $('#sharedocModal').modal();
-     });*/
 
     $('#createTopicBtn').click(function () {
         $.ajax({
@@ -145,4 +133,19 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('.topicPostSearchCancelBtn').on('click', function () {
+        $('#topicPostSearchBox').val("");
+        location.reload()
+    });
+
+    $('.topicPostSearchBtn').on('click',function(){
+        $.ajax({
+            url:"/resource/search",
+            data: {q: $('#topicPostSearchBox').val(), topicID: $('.topicPostSearchHiddenTopicID').val() },
+            success:function(searchPosts){
+                $('.postPanelBody').html(searchPosts)
+            }
+        })
+    })
 });

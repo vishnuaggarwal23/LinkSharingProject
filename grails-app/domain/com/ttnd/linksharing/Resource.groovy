@@ -53,7 +53,7 @@ abstract class Resource {
 
 
     static namedQueries = {
-        search { ResourceSearchCO co ->
+        /*search { ResourceSearchCO co ->
             if (co.topicID && co.visibility) {
                 eq('topic.id', co.topicID)
                 'topic' {
@@ -68,6 +68,12 @@ abstract class Resource {
                 topic {
                     eq('visibility', Visibility.PRIVATE)
                 }
+            }
+        }*/
+        search { ResourceSearchCO resourceSearchCO ->
+            if (resourceSearchCO.q && resourceSearchCO.topicID) {
+                ilike('description', "%${resourceSearchCO.q}%")
+                eq('topic.id', resourceSearchCO.topicID)
             }
         }
     }
@@ -276,7 +282,7 @@ abstract class Resource {
         return false
     }
 
-    Boolean deleteFile(){
+    Boolean deleteFile() {
         log.info "Implemented in Sub Classes"
         return false
     }
