@@ -17,7 +17,7 @@
 
                 <div class="col-md-4 col-md-offset-2 col-xs-6">
                     <span class="text-muted">Topics</span><br/>
-                    <span class="text-primary"><ls:topicCount/></span>
+                    <span class="text-primary"><ls:topicCount userId = "${userDetails.id}"/></span>
                 </div>
             </div>
         </div>

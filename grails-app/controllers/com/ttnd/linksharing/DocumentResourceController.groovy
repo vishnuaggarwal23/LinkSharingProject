@@ -52,7 +52,7 @@ class DocumentResourceController extends ResourceController {
         if (file.empty) {
             flash.error = "File is Empty"
         } else {
-            String path = "/home/vishnu${grailsApplication.config.grails.serverPath}/${UUID.randomUUID()}.pdf"
+            String path = "${grailsApplication.config.grails.serverPath}/${UUID.randomUUID()}.pdf"
             documentResource.contentType = params.file.contentType
             documentResource.filePath = path
             if (documentResource.validate()) {

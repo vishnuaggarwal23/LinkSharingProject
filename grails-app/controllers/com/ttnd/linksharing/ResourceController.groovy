@@ -73,19 +73,17 @@ class ResourceController {
     }
 
     def search(ResourceSearchCO co) {
-        if (co.q) {
-            co.visibility = Visibility.PUBLIC
-        }
+        List<PostVO> searchPosts=[]
         List<Resource> resources = Resource.search(co).list()
-        List<Resource> publicResources = Resource.publicTopicsSearch(co).list()
-        render "Resources"
-        resources.each {
-            render "${it}->${it.topic}\n"
+        def result=""
+        /*max: co.max, offset: co.offset, sort: co.sort,order: co.order)*/
+        resources?.each {
+            searchPosts.add(Resource.getPost(it.id))
         }
-        render "\n\n\nPublic Topic Resources"
-        publicResources.each {
-            render "${it}->${it.topic}\n"
+        searchPosts.each{
+            result+=g.render(template: '/templates/postPanel',model: [post:it])
         }
+        render result
     }
 
     def getRatingInfo(Long id) {

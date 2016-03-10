@@ -7,5 +7,5 @@ import enums.Visibility
  */
 class ResourceSearchCO extends SearchCO{
     Long topicID
-    Visibility visibility
+    //Visibility visibility
 }

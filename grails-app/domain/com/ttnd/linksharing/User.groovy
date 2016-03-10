@@ -78,7 +78,7 @@ class User {
     }
 
     static List<PostVO> getReadingItems(User user) {
-        List<ReadingItem> readingItems = ReadingItem.findAllByUserAndIsRead(user, false)
+        List<ReadingItem> readingItems = ReadingItem.findAllByUser(user)
         List<PostVO> readingItemsList = []
         readingItems.each {
             readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
@@ -127,5 +127,13 @@ class User {
             userSubscriptions.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: 0, createdBy: this))
         }
         return userSubscriptions
+    }
+
+    public Subscription getSubscription(Long topicId) {
+        return Subscription.findByUserAndTopic(this, Topic.load(topicId))
+    }
+
+    public Boolean equals(Long topicId) {
+        return this.id == Topic.get(topicId).createdBy.id
     }
 }

@@ -7,7 +7,7 @@
             </div>
 
             <div class="modal-body">
-                <g:form class="form-horizontal" name="topicCreate" id="topicCreate" controller="topic" action="save">
+                <g:form class="form-horizontal" name="topicCreate" id="topicCreate">
                     <div class="form-group row">
                         <label for="topicName" class="col-sm-4 form-control-label">Name *</label>
 
@@ -34,8 +34,7 @@
                         </div>
 
                         <div class="col-sm-8">
-                            <g:submitButton type="submit" name="createTopicBtn" value="Create Topic"
-                                            formaction="/topic/save"
+                            <g:submitButton type="button" name="createTopicBtn" id="createTopicBtn" value="Create Topic"
                                             class="btn btn-block btn-primary"/>
                         </div>
                     </div>

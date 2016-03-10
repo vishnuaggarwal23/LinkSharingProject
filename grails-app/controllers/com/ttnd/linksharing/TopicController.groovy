@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import enums.Visibility
+import grails.converters.JSON
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
@@ -17,11 +18,11 @@ class TopicController {
         } else {
             TopicVO topicDetails = Topic.getTopicDetails(topic)
             List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
-            List<PostVO> topicPosts=Resource.getTopicPosts(topic.id)
+            List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)
             if (topic.visibility == Visibility.PUBLIC) {
                 //render "Success, Subscribed to Public Topic"
                 render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
-                                             topicPosts:topicPosts])
+                                             topicPosts  : topicPosts])
             } else if (topic.visibility == Visibility.PRIVATE) {
                 User user = session.user
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
@@ -30,7 +31,7 @@ class TopicController {
                     //redirect(controller: 'login', action: 'index')
                 } else {
                     render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
-                                                 topicPosts: topicPosts])
+                                                 topicPosts  : topicPosts])
                     //render "Success, Subscribed to Private Topic"
                 }
             }
@@ -38,7 +39,7 @@ class TopicController {
     }
 
     def save(String topicName, String visibility) {
-        User user = session.user
+        /*User user = session.user
         Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
         if (topic.validate()) {
             topic.save(flush: true)
@@ -52,12 +53,54 @@ class TopicController {
             //render flash.error
             //render "${topic} Not Saved"
         }
-        redirect(uri: "/")
+        redirect(uri: "/")*/
+
+        Topic topic = Topic.findOrCreateByNameAndCreatedBy(topicName, session.user)
+        Map jsonResponse=[:]
+        try{
+            if(topic){
+                topic.visibility=Visibility.checkVisibility(visibility)
+                if(topic.validate()){
+                    topic.save(flush:true)
+                    flash.message="Topic Saved/Updated"
+                    jsonResponse.message=flash.message
+                }
+                else{
+                    flash.error="Topic not Saved/Updated"
+                    jsonResponse.error=flash.error
+                }
+            }
+            else{
+                flash.error="Topic not Found"
+                jsonResponse.error=flash.error
+            }
+        }
+        catch (Exception e){
+            log.info e.message
+            flash.error="Topic not Found"
+            jsonResponse.error=flash.error
+        }
+        JSON jsonObject=jsonResponse as JSON
+        render jsonObject
     }
 
     def getTrendingTopics() {
         TopicVO topicList = Resource.trendingTopics
 
         render "${topicList}"
+    }
+
+    def delete(Long id) {
+        Topic topic = Topic.get(id)
+        User user = session.user
+        if (user) {
+            if (topic && (user.isAdmin || topic.createdBy.id == user.id)) {
+                topic.delete(flush: true)
+                flash.message = "Topic Deleted"
+            } else {
+                flash.error = "Not Enough Rights"
+            }
+        }
+        redirect(controller: 'login', action: 'index')
     }
 }

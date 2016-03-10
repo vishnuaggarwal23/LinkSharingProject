@@ -9,12 +9,15 @@ class LinkSharingTagLib {
     def markRead = { attrs, body ->
         User user = session.user
         if (user) {
-            String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: true])}"
             Boolean isRead = Boolean.valueOf(attrs.isRead)
             if (isRead) {
-                out << "<p class='pull-right'>Post Read</p>"
+                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: false])}"
+                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
+                        "isRead='${!isRead}'>Mark as Unread</a>"
             } else {
-                out << "<a href=$link class='pull-right'>Mark as Read</a>"
+                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: true])}"
+                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
+                        "isRead='${!isRead}'>Mark as Read</a> "
             }
         }
     }
@@ -75,14 +78,41 @@ class LinkSharingTagLib {
     }
 
     def topicCount = { attrs, body ->
-        Long userId = session.user.id
+        Long userId = attrs.userId
         if (userId) {
             out << Topic.countByCreatedBy(User.load(userId))
         }
     }
 
+    def showSeriousness = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user) {
+            if (topic) {
+                Subscription subscription = user.getSubscription(topicId)
+                if (subscription) {
+                    out << "${g.select(name: 'seriousness', id: 'seriousness', from: enums.Seriousness.values(), class: 'btn btn-xs btn-default dropdown-toggle seriousness', value: subscription.seriousness, topicId: topicId)}"
+                }
+            }
+        }
+    }
+
+    //To be done
+    def showVisibility = { attrs, body ->
+        User user = session.user
+        Long topicId = attrs.topicId
+        Topic topic = Topic.get(topicId)
+        if (user) {
+            if (topic) {
+                if (user.isAdmin || user.equals(topicId)) {
+                    out << "${g.select(name: 'visibility', from: enums.Visibility.values(), class: 'btn btn-xs btn-default dropdown-toggle visibility', topicName: topic.name, value: topic.visibility)}"
+                }
+            }
+        }
+    }
+
     def userImage = { attrs, body ->
-        println "In Tag----- ${attrs.userId}"
         Long userId = attrs.userId
         def height = attrs.height
         def width = attrs.width
@@ -97,7 +127,8 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user && topic) {
             if (user.isAdmin || topic.createdBy.id == user.id) {
-                out << "<a href='#'><span class='fa fa-trash' style='font-size:20px'></span></a>"
+                out << "<a href='${createLink(controller: 'topic', action: 'delete', params: [id: topicId])}'><span " +
+                        "class='fa fa-trash' style='font-size:20px'></span></a>"
             }
         }
     }
@@ -113,7 +144,7 @@ class LinkSharingTagLib {
         }
     }
 
-    def editTopicSeriousness = { attrs, body ->
+    /*def editTopicSeriousness = { attrs, body ->
         User user = session.user
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
@@ -122,7 +153,7 @@ class LinkSharingTagLib {
                 out << g.render(template: '/templates/seriousnessSelect')
             }
         }
-    }
+    }*/
 
     def sendTopicInvite = { attrs, body ->
         User user = session.user
@@ -156,6 +187,17 @@ class LinkSharingTagLib {
             if (user.isAdmin || resource.createdBy.id == user.id) {
                 out << "<a href='#'><ins>Edit</ins></a>"
             }
+        }
+    }
+
+    def canUpdateTopic = { attrs, body ->
+        out << body()
+    }
+
+    def showSubscribedTopics = {
+        User user = session.user
+        if (user) {
+            out << "${g.select(class: 'btn dropdown-toggle', name: 'topic', id: 'linkTopic', from: user.getSubscribedTopics(), optionKey: 'id')}"
         }
     }
 

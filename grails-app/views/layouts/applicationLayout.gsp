@@ -14,6 +14,7 @@
     <asset:stylesheet src="bootstrap.min.css"/>
     <asset:stylesheet src="bootstrap-theme.min.css"/>
     <asset:stylesheet src="font-awesome.min.css"/>
+    <asset:stylesheet src="application.css"/>
     <g:layoutHead/>
 </head>
 
@@ -64,13 +65,14 @@
                             <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
                                 <span class="fa fa-weixin"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sendinviteModal">
+                            <a class="btn" id="inviteModalBtn" role="button" data-toggle="modal"
+                               data-target="#sendinviteModal">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sharelinkModal">
+                            <a class="btn" id="linkResourceModalBtn" role="button" data-toggle="modal" data-target="#sharelinkModal">
                                 <span class="fa fa-link"></span>
                             </a>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#sharedocModal">
+                            <a class="btn" id="documentResourceModalBtn" role="button" data-toggle="modal" data-target="#sharedocModal">
                                 <span class="fa fa-file-o"></span>
                             </a>
                         </span>
@@ -127,10 +129,18 @@
         </div>
     </g:if>
 
+    <div class="jsonObjectResponse" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+    </div>
+
 
     <g:layoutBody/>
 </div>
 <asset:javascript src="jquery.js"/>
 <asset:javascript src="bootstrap.min.js"/>
+<asset:javascript src="application.js"/>
+<asset:javascript src="jquery.validate.min.js"/>
+<asset:javascript src="additional-methods.min.js"/>
 </body>
 </html>

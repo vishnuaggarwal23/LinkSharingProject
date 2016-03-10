@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import constants.AppConstants
 import enums.Seriousness
+import grails.converters.JSON
 
 class SubscriptionController {
 
@@ -22,52 +23,40 @@ class SubscriptionController {
         redirect(uri: '/')
     }
 
-    /*def save(Integer topicID) {
-        String seriousness = 'serious'
-        User user = session.user
-        Topic topic = Topic.findById(topicID)
-        Subscription subscription = new Subscription(topic: topic, user: user, seriousness: Seriousness
-                .checkSeriousness(seriousness))
-        if (subscription.validate()) {
-            subscription.save(flush: true, failOnError: true)
-            topic.addToSubscriptions(subscription)
-            user.addToSubscriptions(subscription)
-            addToSubscriptionList(subscription)
-            render "subscription saved"
-        } else {
-            flash.error = "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
-            render "Subscription not saved"
-        }
-    }*/
-
-    /*private void addToSubscriptionList(Subscription subscription) {
-        List<Subscription> subscriptions = Subscription.list()
-        subscriptions.add(subscription)
-    }*/
-
-    def update(Integer id, String serious) {
-        Subscription subscription = Subscription.load(id)
+    def update(Long id, String serious) {
+        Subscription subscription = Subscription.findByUserAndTopic(session.user, Topic.load(id))
+        Map jsonResponse = [:]
         try {
             subscription.seriousness = Seriousness.checkSeriousness(serious)
             if (subscription.validate()) {
-                subscription.save(flush: true, failOnError: true)
-                render "Subscription Updated"
+                subscription.save(flush: true)
+                flash.message = "Subscription Updated"
+                jsonResponse.message = flash.message
             } else {
-                render "Subscription not updated"
-                flash.error = "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+                log.info = "${subscription.errors.allErrors.collect { message(error: it) }.join(',')}"
+                flash.error = "Subscription not Updated"
+                jsonResponse.error = flash.error
             }
         }
         catch (Exception e) {
             log.info e.message
-            render "Subscription not Found"
+            flash.error = "Subscription not Found"
+            jsonResponse.error = flash.error
         }
+
+        JSON jsonObject = jsonResponse as JSON
+        render jsonObject
     }
 
     def delete(Long userId, Long topicId) {
         Subscription subscription = Subscription.findByUserAndTopic(User.load(userId), Topic.load(topicId))
         try {
-            subscription.delete(flush: true)
-            flash.message = "Subscription Deleted"
+            if (Topic.get(topicId).createdBy.id != User.get(userId).id) {
+                subscription.delete(flush: true)
+                flash.message = "Subscription Deleted"
+            } else {
+                flash.error = "Topic Creator Cannot Unsubscribe From Its Own Topic"
+            }
         }
         catch (Exception e) {
             log.error e.message
