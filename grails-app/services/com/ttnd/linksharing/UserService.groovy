@@ -30,4 +30,14 @@ class UserService {
             return user1.equals(user2)
         }
     }
+
+    def toggleActive(Long userId, Long adminUserId) {
+        User adminUser = User.get(adminUserId)
+        User user = User.get(userId)
+        if(adminUser){
+            if(user){
+                user.isActive=!user.isActive
+            }
+        }
+    }
 }

@@ -93,11 +93,10 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><g:link controller="user" action="profile"
-                                            params="[id:session.user.id]">Profile</g:link></li>
+                                            params="[id: session.user.id]">Profile</g:link></li>
                                 <g:if test="${session.user.isAdmin}">
-                                    <li><a href="#">Users</a></li>
-                                    <li><a href="#">Topics</a></li>
-                                    <li><a href="#">Posts</a></li>
+                                    <li><g:link controller="user" action="users
+                                    ">Users</g:link></li>
                                 </g:if>
                                 <li><g:link controller="login" action="logout">Logout</g:link></li>
                             </ul>

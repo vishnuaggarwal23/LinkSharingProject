@@ -1,5 +1,7 @@
 package vo
 
+import com.ttnd.linksharing.User
+
 /**
  * Created by vishnu on 28/2/16.
  */
@@ -10,6 +12,6 @@ class UserVO {
     String lastName
     String email
     byte[] photo
-    boolean isAdmin
-    boolean isActive
+    Boolean isAdmin
+    Boolean isActive
 }
