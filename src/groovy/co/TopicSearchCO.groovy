@@ -4,14 +4,13 @@ import com.ttnd.linksharing.User
 import enums.Visibility
 
 /**
- * Created by vishnu on 23/2/16.
+ * Created by vishnu on 10/3/16.
  */
-class ResourceSearchCO extends SearchCO {
+class TopicSearchCO extends SearchCO {
     Long id
-    Long topicID
     Visibility visibility
 
-    User getUser() {
+    public User getUser() {
         return User.get(id)
     }
 }

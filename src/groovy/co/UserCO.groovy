@@ -1,5 +1,6 @@
 package co
 
+import com.ttnd.linksharing.User
 import grails.validation.Validateable
 
 /**

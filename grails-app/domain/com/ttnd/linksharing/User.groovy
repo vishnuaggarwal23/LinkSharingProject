@@ -136,4 +136,8 @@ class User {
     public Boolean equals(Long topicId) {
         return this.id == Topic.get(topicId).createdBy.id
     }
+
+    def getCreatedTopics(){
+        return this.topics
+    }
 }

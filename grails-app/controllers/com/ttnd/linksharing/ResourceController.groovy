@@ -86,6 +86,27 @@ class ResourceController {
         render result
     }
 
+    def search1(ResourceSearchCO resourceSearchCO) {
+        String result = ""
+        List<PostVO> postVOList = []
+        if (resourceSearchCO.q) {
+            postVOList = Resource.search(resourceSearchCO).list().collect({
+                Resource.getPost(it.id)
+            })
+        }
+        if (resourceSearchCO.visibility == Visibility.PUBLIC) {
+            render(view: 'search', model: [postVOList: postVOList, trendingTopics: Topic.getTrendingTopics()])
+        } else {
+            postVOList.each {
+                result += g.render(template: '/templates/postPanel', model: [post: it])
+            }
+            if (postVOList.size()==0){
+                result = "<h1>No resource found<h1>"
+            }
+            render(result)
+        }
+    }
+
     def getRatingInfo(Long id) {
         Resource resource = Resource.get(id)
         RatingInfoVO vo = resource.getRatingInfo()
