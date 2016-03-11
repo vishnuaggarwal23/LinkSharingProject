@@ -57,7 +57,7 @@ class User {
                     ilike('email', "%${userSearchCO.q}%")
                 }
             }
-            //eq('isAdmin', false)
+            eq('isAdmin', false)
         }
     }
 
