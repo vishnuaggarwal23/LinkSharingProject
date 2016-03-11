@@ -14,6 +14,6 @@ class TopicVO {
     User createdBy
 
     String toString(){
-        return "${id},${name},${visibility},${count},${createdBy}"
+        return "${name}"
     }
 }

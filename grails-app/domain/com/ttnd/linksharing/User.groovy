@@ -1,5 +1,7 @@
 package com.ttnd.linksharing
 
+import co.SearchCO
+import co.UserSearchCO
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
@@ -11,8 +13,8 @@ class User {
     String lastName
     String email
     byte[] photo
-    boolean isAdmin
-    boolean isActive
+    Boolean isAdmin
+    Boolean isActive
     Date dateCreated
     Date lastUpdated
     String confirmPassword
@@ -40,6 +42,23 @@ class User {
                 return 'password.do.not.match.confirm.password'
             }
         })
+    }
+
+    static namedQueries = {
+        search { UserSearchCO userSearchCO ->
+            if (userSearchCO.isActive != null) {
+                eq('isActive', userSearchCO.isActive)
+            }
+            if (userSearchCO.q) {
+                or {
+                    ilike('firstName', "%${userSearchCO.q}%")
+                    ilike('lastName', "%${userSearchCO.q}%")
+                    ilike('userName', "%${userSearchCO.q}%")
+                    ilike('email', "%${userSearchCO.q}%")
+                }
+            }
+            eq('isAdmin', false)
+        }
     }
 
     String getName() {
@@ -135,5 +154,18 @@ class User {
 
     public Boolean equals(Long topicId) {
         return this.id == Topic.get(topicId).createdBy.id
+    }
+
+    def getCreatedTopics() {
+        return this.topics
+    }
+
+    public static List<UserVO> getUsersList(SearchCO searchCO) {
+        List<UserVO> userVOList = []
+        findAllByIsAdminNotEqual(true, [sort: searchCO.sort, order: searchCO.order]).each {
+            userVOList.add(new UserVO(id: it.id, name: it.userName, firstName: it.firstName, lastName: it.lastName, email:
+                    it.email, isActive: it.isActive))
+        }
+        return userVOList
     }
 }

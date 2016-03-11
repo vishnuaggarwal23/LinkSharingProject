@@ -98,7 +98,6 @@ class LinkSharingTagLib {
         }
     }
 
-    //To be done
     def showVisibility = { attrs, body ->
         User user = session.user
         Long topicId = attrs.topicId

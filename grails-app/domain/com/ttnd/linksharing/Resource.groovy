@@ -44,27 +44,25 @@ abstract class Resource {
 
 
     static namedQueries = {
-        /*search { ResourceSearchCO co ->
-            if (co.topicID && co.visibility) {
-                eq('topic.id', co.topicID)
-                'topic' {
-                    eq('visibility', co.visibility)
-                }
-            }
-        }
-
-        publicTopicsSearch { ResourceSearchCO co ->
-            if (co.topicID) {
-                eq('topic.id', co.topicID)
-                topic {
-                    eq('visibility', Visibility.PRIVATE)
-                }
-            }
-        }*/
         search { ResourceSearchCO resourceSearchCO ->
-            if (resourceSearchCO.q && resourceSearchCO.topicID) {
+            if (resourceSearchCO.q) {
+                if (resourceSearchCO.topicID) {
+                    eq('topic.id', resourceSearchCO.topicID)
+                }
+                if (resourceSearchCO.visibility && resourceSearchCO.visibility == Visibility.PUBLIC) {
+                    'topic' {
+                        eq('visibility', Visibility.PUBLIC)
+                    }
+                }
                 ilike('description', "%${resourceSearchCO.q}%")
-                eq('topic.id', resourceSearchCO.topicID)
+            }
+            if (resourceSearchCO.id) {
+                if (resourceSearchCO.visibility && resourceSearchCO.visibility == Visibility.PUBLIC) {
+                    'topic' {
+                        eq('visibility', Visibility.PUBLIC)
+                    }
+                }
+                eq('createdBy.id', resourceSearchCO.id)
             }
         }
     }
