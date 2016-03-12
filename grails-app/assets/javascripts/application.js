@@ -57,7 +57,11 @@ $(document).ready(function () {
     $('.visibility').change(function () {
         $.ajax({
             url: "/topic/save",
-            data: {topicName: $(this).attr('topicName'), visibility: $(this).val()},
+            data: {
+                topicId: $(this).attr('topicId'),
+                topicName: $(this).attr('topicName'),
+                visibility: $(this).val()
+            },
             success: ajaxResponse
         });
     });
@@ -65,9 +69,25 @@ $(document).ready(function () {
     $('#createTopicBtn').click(function () {
         $.ajax({
             url: "/topic/save",
-            data: {topicName: $('#topicName').val(), visibility: $('#visibility').val()},
+            data: {
+                topicName: $('#topicName').val(),
+                visibility: $('#visibility').val()
+            },
             success: ajaxResponse,
-            complete:location.reload()
+            complete: location.reload()
+        });
+    });
+
+    $('.editTopicNameBtn').click(function () {
+        alert($('#topicName').val());
+        $.ajax({
+            url: "/topic/save",
+            data: {
+                topicId: $('#topicId').val(),
+                topicName: $('#topicName').val(),
+                newName: $('#newName').val()
+            },
+            success: ajaxResponse
         });
     });
 

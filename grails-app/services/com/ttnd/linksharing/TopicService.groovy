@@ -1,13 +1,20 @@
 package com.ttnd.linksharing
 
+import co.TopicCO
 import co.TopicSearchCO
+import enums.Visibility
 import grails.transaction.Transactional
 import vo.TopicVO
 
 @Transactional
 class TopicService {
 
-    def serviceMethod() {
+    def saveTopic(Topic topic) {
+        if (topic.validate()) {
+            return topic.save(flush: true)
+        } else {
+            return null
+        }
 
     }
 
@@ -40,5 +47,19 @@ class TopicService {
 
         }
         return createdTopics
+    }
+
+    def saveTopic(TopicCO topicCO) {
+        Topic topic = topicCO.getTopic()
+        if (topic) {
+            if (topicCO.newName) {
+                topic.name = topicCO.newName
+            } else {
+                topic.visibility = Visibility.checkVisibility(topicCO.visibility)
+            }
+            return saveTopic(topic)
+        } else {
+            return null
+        }
     }
 }

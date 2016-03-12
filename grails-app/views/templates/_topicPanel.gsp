@@ -16,6 +16,20 @@
                         <ins><g:link name="topicClickLnk" controller="topic" action="show"
                                      params="[id: topic.id]">${topic.name}</g:link></ins></span>
                 </div>
+
+                <div class="col-md-12">
+                    <g:form class="form-inline" name="editTopic">
+                        <div class="form-group">
+                            <g:hiddenField name="topicId" id="topicId" value="${topic.id}"/>
+                            <g:hiddenField name="topicName" id="topicName" value="${topic.name}"/>
+                            <g:hiddenField name="createdBy" id="createdBy" value="${topic.createdBy}"/>
+                            <g:textField name="newName" type="text" id="newName" value="${topic.name}"/>
+                            <g:submitButton name="editTopicNameBtn" type="submit" value="Save"
+                                            class="btn btn-default btn-primary form-control editTopicNameBtn"/>
+                            <button type="button" name="cancel" id="cancel" value="Cancel"></button>
+                        </div>
+                    </g:form>
+                </div>
             </div>
 
             <div class="row">

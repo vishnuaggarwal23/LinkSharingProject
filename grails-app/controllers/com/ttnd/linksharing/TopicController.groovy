@@ -1,5 +1,6 @@
 package com.ttnd.linksharing
 
+import co.TopicCO
 import enums.Visibility
 import grails.converters.JSON
 import vo.PostVO
@@ -9,6 +10,7 @@ import vo.UserVO
 class TopicController {
 
     def emailService
+    def topicService
 
     def index() {}
 
@@ -40,23 +42,41 @@ class TopicController {
         }
     }
 
-    def save(String topicName, String visibility) {
-        /*User user = session.user
-        Topic topic = new Topic(createdBy: user, name: topicName, visibility: Visibility.checkVisibility(visibility))
-        if (topic.validate()) {
-            topic.save(flush: true)
-            flash.message = "${topic} Saved"
-            //render flash.message
-            //user.addToTopics(topic)
-            //render "${topic} Saved"
-        } else {
-            flash.error = "${topic} Not Saved"
-            log.error "${topic.errors.allErrors.collect { message(error: it) }.join(',')}"
-            //render flash.error
-            //render "${topic} Not Saved"
+    def save(TopicCO topicCO) {
+        /*Topic topic = topicCO.getTopic()*/
+        Map jsonResponse = [:]
+        if (session.user) {
+            topicCO.createdBy=session.user
+            if (topicCO.hasErrors()) {
+                jsonResponse.error = "Topic Save/Update Error"
+            } else {
+                Topic topic = topicService.saveTopic(topicCO)
+                if (topic) {
+                    jsonResponse.message = "Topic Saved/Updated"
+                } else {
+                    jsonResponse.error = "Topic not Saved/Updated"
+                }
+            }
         }
-        redirect(uri: "/")*/
+        render jsonResponse as JSON
+        /*if (topic) {
+            topic.visibility = Visibility.checkVisibility(topicCO.visibility)
+            if (topicCO.newName) {
+                topic.name = topicCO.newName
+            }
+            if (topic.validate()) {
+                topic.save(flush: true)
 
+            } else {
+
+            }
+        } else {
+            jsonResponse.error = "Topic not Found"
+        }
+        render jsonResponse as JSON*/
+    }
+
+    /*def save(String topicName, String visibility) {
         Topic topic = Topic.findOrCreateByNameAndCreatedBy(topicName, session.user)
         Map jsonResponse = [:]
         try {
@@ -82,7 +102,7 @@ class TopicController {
         }
         JSON jsonObject = jsonResponse as JSON
         render jsonObject
-    }
+    }*/
 
     def getTrendingTopics() {
         TopicVO topicList = Resource.trendingTopics
@@ -129,4 +149,7 @@ class TopicController {
         redirect(controller: "login", action: "index")
     }
 
+    def edit(Long id, String name) {
+
+    }
 }

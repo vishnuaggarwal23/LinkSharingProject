@@ -1,8 +1,6 @@
 package com.ttnd.linksharing
 
-import co.ResourceSearchCO
-import co.TopicSearchCO
-import co.UserSearchCO
+import co.*
 import enums.Visibility
 import vo.PostVO
 import vo.TopicVO
@@ -21,38 +19,43 @@ class UserController {
         List<PostVO> recentPostVOList = Resource.getRecentPosts()
         UserVO userDetail = session.user.getUserDetails()
         List<PostVO> readingResource = User.getReadingItems(session.user)
-        render(view: 'index', model: [subscribedTopics                      : session.user.subscribedTopics, trendingTopics: trendingTopics,
-                                      userDetails                           : userDetail, recentPosts: recentPostVOList, readingItems:
-                                              readingResource, subscriptions: session.user.getUserSubscriptions()])
+        render(view: 'index', model: [subscribedTopics: session.user.subscribedTopics,
+                                      trendingTopics  : trendingTopics,
+                                      userDetails     : userDetail,
+                                      recentPosts     : recentPostVOList,
+                                      readingItems    : readingResource,
+                                      subscriptions   : session.user.getUserSubscriptions()])
     }
 
     def profile(ResourceSearchCO resourceSearchCO) {
         User user = User.get(resourceSearchCO.id)
         if (session.user) {
-            if (!(userService.isAdmin(session.user.id) || userService.isCurrentUser(session.user.id, resourceSearchCO.id))) {
+            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(resourceSearchCO.id)))) {
                 resourceSearchCO.visibility = Visibility.PUBLIC
             }
         } else
             resourceSearchCO.visibility = Visibility.PUBLIC
-        render view: 'profile', model: [userDetails: user.getUserDetails(), createdResources: resourceService.search
-                (resourceSearchCO)]
+        render view: 'profile', model: [userDetails     : user.getUserDetails(),
+                                        createdResources: resourceService.search(resourceSearchCO)]
     }
 
     def image(Long id) {
         User user = User.get(id)
-        if (user?.photo) {
-            Byte[] img = user.photo
-            response.outputStream.write(img)
+        if (user) {
+            def userPhoto = userService.image(user)
+            if (userPhoto) {
+                response.outputStream << userPhoto
+                response.outputStream.flush()
+            }
         } else {
-            response.outputStream << assetResourceLocator.findAssetForURI('silhouette.jpg').getInputStream()
+            flash.error = "Photo not Available"
         }
-        response.outputStream.flush()
     }
 
     def topics(Long id) {
         TopicSearchCO topicSearchCO = new TopicSearchCO(id: id)
         if (session.user) {
-            if (!(userService.isAdmin(session.user.id) || userService.isCurrentUser(session.user.id, id))) {
+            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
         } else
@@ -68,7 +71,7 @@ class UserController {
         TopicSearchCO topicSearchCO = new TopicSearchCO(id: id)
 
         if (session.user) {
-            if (!(userService.isAdmin(session.user.id) || userService.isCurrentUser(session.user.id, id))) {
+            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
         } else
@@ -78,47 +81,72 @@ class UserController {
 
         render(template: '/topic/list', model: [topicList: subscribedTopics])
 
+
     }
 
-    def users(UserSearchCO userSearchCO) {
-        if (session.user && userService.isAdmin(session.user.id)) {
-            List<User> users = User.search(userSearchCO).list([sort: userSearchCO.sort, order: userSearchCO.order])
-            List<UserVO> userVOList = []
-            users.each {
-                userVOList.add(new UserVO(id: it.id, name: it.userName, firstName: it.firstName, lastName: it.lastName, email:
-                        it.email, isActive: it.isActive))
-            }
-            render(view: 'users', model: [userList: userVOList])
+    def registeredUsers(UserSearchCO userSearchCO) {
+        List<UserVO> registeredUsers = userService.registeredUsers(userSearchCO, session.user)
+        if (registeredUsers) {
+            render(view: 'users', model: [userList: registeredUsers])
         } else {
             redirect(controller: 'login', action: 'index')
         }
     }
 
     def updateUserActiveStatus(Long id) {
-        User adminUser = session.user
-        User user = User.get(id)
-        if (adminUser) {
-            if (userService.isAdmin(session.user.id) && userService.isActive(session.user.id)) {
-                if (user) {
-                    if (!userService.isAdmin(user.id)) {
-                        user.isActive = !user.isActive
-                        if (user.save(flush: true)) {
-                            flash.message = "Toggle Success"
-                        } else {
-                            flash.error = "Toggle Error"
-                        }
-                    } else {
-                        flash.error = "Cant Toggle Admins"
-                    }
-                } else {
-                    flash.error = "User not Available"
-                }
+        User admin = session.user
+        User normal = User.get(id)
+        if (admin && normal) {
+            User tempUser = userService.toggleActiveStatus(admin, normal)
+            if (tempUser) {
+                flash.message = "Active Status Toggled"
             } else {
-                flash.error = "User is either not Admin or Active"
+                flash.error = "Active Status not Toggled"
             }
-        } else {
-            flash.error = "User not Available"
         }
-        redirect(controller: 'user', action: 'users')
+        redirect(controller: 'user', action: 'registeredUsers')
+    }
+
+    def save(UpdateProfileCO updateProfileCO) {
+        if (session.user) {
+            if (updateProfileCO.hasErrors()) {
+                render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+            } else {
+                User user = userService.updateProfile(updateProfileCO)
+                if (user) {
+                    session.user = user
+                    flash.message = "Profile Updated"
+                    render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+                } else {
+                    flash.error = "Profile not Updated"
+                    render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                }
+            }
+        }
+    }
+
+    def updatePassword(UpdatePasswordCO updatePasswordCO) {
+        if (session.user) {
+            if (updatePasswordCO.hasErrors()) {
+                render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+            } else {
+                User user = userService.updatePassword(updatePasswordCO)
+                if (user) {
+                    session.user = user
+                    flash.message = "Password Updated"
+                    render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+                } else {
+                    flash.error = "Password not Updated"
+                    render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                }
+            }
+        }
+    }
+
+    def edit() {
+        User user = session.user
+        if (user) {
+            render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+        }
     }
 }

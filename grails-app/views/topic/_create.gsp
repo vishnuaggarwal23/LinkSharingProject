@@ -13,6 +13,7 @@
 
                         <div class="col-sm-8">
                             <g:textField name="topicName" id="topicName" placeholder="Topic Name" class="form-control"/>
+                            <g:hiddenField name="createdBy" id="createdBy" value="${session.user}"/>
                         </div>
                     </div>
 
@@ -23,7 +24,8 @@
                             <div class="dropdown">
                                 %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="visibility"
                                           id="visibility" from="${enums.Visibility.values()}"/>--}%
-                                <g:render name="visibility" class="btn dropdown-toggle" id="visibility" template="/templates/visibilitySelect"/>
+                                <g:render name="visibility" class="btn dropdown-toggle" id="visibility"
+                                          template="/templates/visibilitySelect"/>
                             </div>
                         </div>
                     </div>

@@ -69,6 +69,8 @@ grails.project.dependency.resolution = {
 
         compile ':quartz:1.0.1'
 
+        compile "org.grails.plugins:codenarc:0.25.1"
+
         //code coverage plugin
         test "org.grails.plugins:code-coverage:2.0.3-3"
 
@@ -84,3 +86,14 @@ grails.project.dependency.resolution = {
         //compile ":handlebars-asset-pipeline:1.3.0.3"
     }
 }
+
+codenarc {
+    ruleSetFiles = "file:grails-app/conf/CodeNarcRules.groovy"
+    reports = {
+        HtmlReport('html') {                  // Report type is 'html'
+            outputFile = 'target/CodeNarcReport.html'
+            title = 'My Test Code Narc Report'
+        }
+    }
+}
+

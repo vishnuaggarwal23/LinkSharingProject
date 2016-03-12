@@ -94,8 +94,9 @@
                             <ul class="dropdown-menu">
                                 <li><g:link controller="user" action="profile"
                                             params="[id: session.user.id]">Profile</g:link></li>
+                                <li><g:link controller="user" action="edit">Edit Profile</g:link></li>
                                 <g:if test="${session.user.isAdmin}">
-                                    <li><g:link controller="user" action="users
+                                    <li><g:link controller="user" action="registeredUsers
                                     ">Users</g:link></li>
                                 </g:if>
                                 <li><g:link controller="login" action="logout">Logout</g:link></li>

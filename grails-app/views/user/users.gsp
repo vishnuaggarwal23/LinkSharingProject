@@ -26,15 +26,15 @@
             </div>--}%
 
             <div class="col-md-8">
-                <g:form name="adminUsersSearchForm" controller="user" action="users" class="form-inline">
+                <g:form name="adminUsersSearchForm" controller="user" action="registeredUsers" class="form-inline">
                     <div class="form-group">
-                            <div class="input-group">
-                                <select title="Select" class="dropdown btn btn-default" id="isActive" name="isActive">
-                                    <option value="${null}">All Users</option>
-                                    <option value="${true}">Active</option>
-                                    <option value="${false}">Inactive</option>
-                                </select>
-                            </div>
+                        <div class="input-group">
+                            <select title="Select" class="dropdown btn btn-default" id="isActive" name="isActive">
+                                <option value="${null}">All Users</option>
+                                <option value="${true}">Active</option>
+                                <option value="${false}">Inactive</option>
+                            </select>
+                        </div>
                         <label class="sr-only" for="q">Search</label>
 
                         <div class="input-group">

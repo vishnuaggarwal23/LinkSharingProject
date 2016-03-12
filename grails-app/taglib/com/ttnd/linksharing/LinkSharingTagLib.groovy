@@ -105,7 +105,7 @@ class LinkSharingTagLib {
         if (user) {
             if (topic) {
                 if (user.isAdmin || user.equals(topicId)) {
-                    out << "${g.select(name: 'visibility', from: enums.Visibility.values(), class: 'btn btn-xs btn-default dropdown-toggle visibility', topicName: topic.name, value: topic.visibility)}"
+                    out << "${g.select(name: 'visibility', from: enums.Visibility.values(), class: 'btn btn-xs btn-default dropdown-toggle visibility', topicId: topic.id, topicName: topic.name, createdBy: user, value: topic.visibility)}"
                 }
             }
         }
