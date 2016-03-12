@@ -6,7 +6,7 @@
             </div>
 
             <div class="modal-body">
-                <g:form name="inviteForm" class="form-horizontal">
+                <g:form name="inviteForm" controller="topic" action="invite" class="form-horizontal">
                     <div class="form-group row">
                         <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
@@ -20,10 +20,6 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topic"
-                                          id="linkTopic" from="${subscribedTopics}" optionKey="id"/>--}%
-                                %{--<g:render name="topic" id="linkTopic" class="btn dropdown-toggle"
-                                          template="/templates/topicSelect"/>--}%
                                 <ls:showSubscribedTopics/>
                             </div>
                         </div>

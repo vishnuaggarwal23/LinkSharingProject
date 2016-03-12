@@ -65,6 +65,10 @@ grails.project.dependency.resolution = {
 
         compile "org.grails.plugins:console:1.5.7"
 
+        compile "org.grails.plugins:mail:1.0.7"
+
+        compile ':quartz:1.0.1'
+
         //code coverage plugin
         test "org.grails.plugins:code-coverage:2.0.3-3"
 

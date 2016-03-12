@@ -8,6 +8,8 @@ import vo.UserVO
 
 class TopicController {
 
+    def emailService
+
     def index() {}
 
     def show(Long id) {
@@ -56,31 +58,29 @@ class TopicController {
         redirect(uri: "/")*/
 
         Topic topic = Topic.findOrCreateByNameAndCreatedBy(topicName, session.user)
-        Map jsonResponse=[:]
-        try{
-            if(topic){
-                topic.visibility=Visibility.checkVisibility(visibility)
-                if(topic.validate()){
-                    topic.save(flush:true)
-                    flash.message="Topic Saved/Updated"
-                    jsonResponse.message=flash.message
+        Map jsonResponse = [:]
+        try {
+            if (topic) {
+                topic.visibility = Visibility.checkVisibility(visibility)
+                if (topic.validate()) {
+                    topic.save(flush: true)
+                    flash.message = "Topic Saved/Updated"
+                    jsonResponse.message = flash.message
+                } else {
+                    flash.error = "Topic not Saved/Updated"
+                    jsonResponse.error = flash.error
                 }
-                else{
-                    flash.error="Topic not Saved/Updated"
-                    jsonResponse.error=flash.error
-                }
-            }
-            else{
-                flash.error="Topic not Found"
-                jsonResponse.error=flash.error
+            } else {
+                flash.error = "Topic not Found"
+                jsonResponse.error = flash.error
             }
         }
-        catch (Exception e){
+        catch (Exception e) {
             log.info e.message
-            flash.error="Topic not Found"
-            jsonResponse.error=flash.error
+            flash.error = "Topic not Found"
+            jsonResponse.error = flash.error
         }
-        JSON jsonObject=jsonResponse as JSON
+        JSON jsonObject = jsonResponse as JSON
         render jsonObject
     }
 
@@ -103,4 +103,30 @@ class TopicController {
         }
         redirect(controller: 'login', action: 'index')
     }
+
+    def invite(Long topic, String email) {
+        if (topic && email) {
+            if (emailService.invite(topic, email)) {
+                flash.message = "Invitation Sent"
+            } else {
+                flash.error = "Invitation not Sent"
+            }
+        }
+        redirect(controller: 'login', action: 'index')
+    }
+
+    def join(Long id) {
+        Topic topic = Topic.get(id)
+        if (topic && session.user) {
+            Subscription subscription = new Subscription(user: session.user, topic: topic)
+
+            if (subscription.validate()) {
+                subscription.save(flush: true)
+                flash.message = "You have subscribed to this topic successfully."
+            } else
+                flash.error = "Failure. Could not subscribe to the topic."
+        }
+        redirect(controller: "login", action: "index")
+    }
+
 }

@@ -14,6 +14,7 @@ class UserCO {
     String lastName
     String email
     byte[] photo
+    Boolean isAdmin=false
     String confirmPassword
 
     static constraints = {

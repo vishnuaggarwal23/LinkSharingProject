@@ -160,7 +160,8 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user && topic) {
             if (user.isAdmin || topic.createdBy.id == user.id || Subscription.findByUserAndTopic(user, topic)) {
-                out << "<a href='#'><span class='glyphicon glyphicon-envelope' style='font-size:20px'></span></a>"
+                out << "<a class='btn' id='inviteModalBtn' role='button' data-toggle='modal' data-target='#sendinviteModal'>" +
+                        "<span class='glyphicon glyphicon-envelope'></span></a>"
             }
         }
     }

@@ -5,6 +5,9 @@ import vo.PostVO
 
 class LoginController {
 
+    def userService
+    def emailService
+
     def index() {
         if (session.user) {
             flash.message = "Logged In"
@@ -39,26 +42,26 @@ class LoginController {
     def registration(UserCO userCo) {
         /*User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
         if (user == null) {*/
-            if (userCo.hasErrors()) {
-                //flash.error=userCo.errors.allErrors
-                render(view: '/login/index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource
-                        .getRecentPosts(), userCo            : userCo])
+        if (userCo.hasErrors()) {
+            //flash.error=userCo.errors.allErrors
+            render(view: '/login/index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource
+                    .getRecentPosts(), userCo            : userCo])
 
-            } else {
-                User user = userCo.properties
-                def file = params.file
-                if (!file.empty) {
-                    user.photo = params.file.bytes
-                }
-                user.isActive = true
-                if (user.validate()) {
-                    user.save(flush: true)
-                    forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
-                } else {
-                    //flash.error=user.errors.allErrors
-                    render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), userCo: user])
-                }
+        } else {
+            User user = userCo.properties
+            def file = params.file
+            if (!file.empty) {
+                user.photo = params.file.bytes
             }
+            user.isActive = true
+            if (user.validate()) {
+                user.save(flush: true)
+                forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
+            } else {
+                //flash.error=user.errors.allErrors
+                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), userCo: user])
+            }
+        }
         /*} else {
             flash.error = "User already exists"
             redirect(controller: 'login', action: 'index')
@@ -71,14 +74,25 @@ class LoginController {
     }
 
     def validateEmail() {
-        Boolean valid = User.countByEmail(params.email) ? false:true
-        /*response.setContentType("text/json;charset=UTF-8")*/
+        Boolean valid = User.countByEmail(params.email) ? false : true
         render valid
     }
 
     def validateUserName() {
-        Boolean valid = User.countByUserName(params.userName) ? false:true
-        /*response.setContentType("text/json;charset=UTF-8")*/
+        Boolean valid = User.countByUserName(params.userName) ? false : true
         render valid
+    }
+
+    def forgotPassword(String email) {
+        if (email) {
+            if (emailService.forgotPassword(email)) {
+                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), result: "Email Has Been Sent"])
+            } else {
+                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), result: "Email Has Not Been Sent"])
+            }
+        } else {
+            flash.error = "Please Enter an Email"
+            redirect(controller: 'login', action: 'index')
+        }
     }
 }
