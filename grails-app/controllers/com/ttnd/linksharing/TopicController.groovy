@@ -24,7 +24,6 @@ class TopicController {
             List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
             List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)
             if (topic.visibility == Visibility.PUBLIC) {
-                //render "Success, Subscribed to Public Topic"
                 render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
                                              topicPosts  : topicPosts])
             } else if (topic.visibility == Visibility.PRIVATE) {
@@ -32,21 +31,18 @@ class TopicController {
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
                 if (!subscription) {
                     flash.put("error", "Topic is Private, User is not Subscribed to it")
-                    //redirect(controller: 'login', action: 'index')
                 } else {
                     render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
                                                  topicPosts  : topicPosts])
-                    //render "Success, Subscribed to Private Topic"
                 }
             }
         }
     }
 
     def save(TopicCO topicCO) {
-        /*Topic topic = topicCO.getTopic()*/
         Map jsonResponse = [:]
         if (session.user) {
-            topicCO.createdBy=session.user
+            topicCO.createdBy = session.user
             if (topicCO.hasErrors()) {
                 jsonResponse.error = "Topic Save/Update Error"
             } else {
@@ -59,50 +55,7 @@ class TopicController {
             }
         }
         render jsonResponse as JSON
-        /*if (topic) {
-            topic.visibility = Visibility.checkVisibility(topicCO.visibility)
-            if (topicCO.newName) {
-                topic.name = topicCO.newName
-            }
-            if (topic.validate()) {
-                topic.save(flush: true)
-
-            } else {
-
-            }
-        } else {
-            jsonResponse.error = "Topic not Found"
-        }
-        render jsonResponse as JSON*/
     }
-
-    /*def save(String topicName, String visibility) {
-        Topic topic = Topic.findOrCreateByNameAndCreatedBy(topicName, session.user)
-        Map jsonResponse = [:]
-        try {
-            if (topic) {
-                topic.visibility = Visibility.checkVisibility(visibility)
-                if (topic.validate()) {
-                    topic.save(flush: true)
-                    flash.message = "Topic Saved/Updated"
-                    jsonResponse.message = flash.message
-                } else {
-                    flash.error = "Topic not Saved/Updated"
-                    jsonResponse.error = flash.error
-                }
-            } else {
-                flash.error = "Topic not Found"
-                jsonResponse.error = flash.error
-            }
-        }
-        catch (Exception e) {
-            log.info e.message
-            flash.error = "Topic not Found"
-            jsonResponse.error = flash.error
-        }
-        JSON jsonObject = jsonResponse as JSON
-        render jsonObject
-    }*/
 
     def getTrendingTopics() {
         TopicVO topicList = Resource.trendingTopics
@@ -147,9 +100,5 @@ class TopicController {
                 flash.error = "Failure. Could not subscribe to the topic."
         }
         redirect(controller: "login", action: "index")
-    }
-
-    def edit(Long id, String name) {
-
     }
 }

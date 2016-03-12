@@ -80,7 +80,13 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        <ls:editResourceDetails topicId="${post.topicID}" resourceId="${post.resourceID}"/>
+                        <ls:editResourceDetails dataTarget="resourceEditModal" dataToggle="modal"
+                                                resourceId="${post.resourceID}"/>
+                        <g:render template="edit" model="[params]"/>
+                        <a class="btn" id="resourceEdit" role="button" data-toggle="modal"
+                           data-target="#resourceEditModal">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </a>
                     </div>
 
                     <div class="col-md-2 col-xs-6">
@@ -95,7 +101,7 @@
     </div>
 
     <div class="col-md-5">
-        <g:render template="/templates/trendingTopics" model="[]"/>
+        <g:render template="/templates/trendingTopics" model="[trendingTopics: trendingTopics]"/>
     </div>
 </div>
 </body>

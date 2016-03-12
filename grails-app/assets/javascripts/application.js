@@ -30,8 +30,8 @@ $(document).ready(function () {
 
     function ajaxResponse(jsonObject) {
 
-        success(jsonObject)
-        error(jsonObject)
+        success(jsonObject);
+        error(jsonObject);
     }
 
     $('.toggleIsRead').on('click', function (event) {
@@ -78,18 +78,27 @@ $(document).ready(function () {
         });
     });
 
-    $('.editTopicNameBtn').click(function () {
-        alert($('#topicName').val());
+    editTopicName = function (topicId) {
         $.ajax({
             url: "/topic/save",
             data: {
-                topicId: $('#topicId').val(),
-                topicName: $('#topicName').val(),
-                newName: $('#newName').val()
+                topicId: $('#topicId_' + topicId).val(),
+                topicName: $('#topicName_' + topicId).val(),
+                newName: $('#newName_' + topicId).val()
             },
             success: ajaxResponse
         });
-    });
+    };
+
+    openTopicEdit = function (topicId) {
+        $('.topicShowPanel_' + topicId).css({"visibility": "hidden"});
+        $('#topicEditPanel_' + topicId).css({"visibility": "visible"});
+    };
+
+    closeEditTopic = function (topicId) {
+        $('.topicShowPanel_' + topicId).css({"visibility": "visible"});
+        $('#topicEditPanel_' + topicId).css({"visibility": "hidden"});
+    };
 
     jQuery.validator.addMethod("passwordCheck", function (value, element) {
         var result = false;
@@ -183,5 +192,9 @@ $(document).ready(function () {
                 $('.postPanelBody').html(searchPosts)
             }
         })
+    });
+
+    $('#data-target').click(function(){
+        $('#resourceEditModal').modal()
     })
 });

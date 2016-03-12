@@ -118,7 +118,13 @@ class User {
 
     public Integer getScore(Resource resource) {
         ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
-        return resourceRating.score
+        if(!resourceRating){
+            return 1
+        }
+        else{
+            return resourceRating.score
+        }
+
     }
 
     public Boolean isSubscribed(Long topicId) {

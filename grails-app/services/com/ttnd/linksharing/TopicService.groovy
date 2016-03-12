@@ -9,6 +9,8 @@ import vo.TopicVO
 @Transactional
 class TopicService {
 
+    def userService
+
     def saveTopic(Topic topic) {
         if (topic.validate()) {
             return topic.save(flush: true)
@@ -16,6 +18,23 @@ class TopicService {
             return null
         }
 
+    }
+
+    def isPublic(Topic topic) {
+        if (topic) {
+            return topic.visibility == Visibility.PUBLIC
+        } else {
+            return null
+        }
+    }
+
+    def canViewedBy(Topic topic, User user) {
+        if (user && topic) {
+            return ((isPublic(topic)) || userService.isAdmin(user) || (Subscription.findByUserAndTopic(user,
+                    topic)))
+        } else {
+            return null
+        }
     }
 
     def search(TopicSearchCO topicSearchCO) {

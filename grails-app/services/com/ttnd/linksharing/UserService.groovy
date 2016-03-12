@@ -14,25 +14,33 @@ class UserService {
     def saveUser(User user) {
         if (user.validate()) {
             return user.save(flush: true)
+        } else {
+            return null
         }
-        return null
+
     }
 
     def isAdmin(User user) {
         if (user) {
             return user.isAdmin
+        } else {
+            return null
         }
     }
 
     def isActive(User user) {
         if (user) {
             return user.isActive
+        } else {
+            return null
         }
     }
 
     def isCurrentUser(User user1, User user2) {
         if (user1 && user2) {
             return user1.id == user2.id
+        } else {
+            return null
         }
     }
 
@@ -70,8 +78,10 @@ class UserService {
                         it.email, isActive: it.isActive))
             }
             return registeredUsersVO
+        } else {
+            return null
         }
-        return null
+
     }
 
     def toggleActiveStatus(User admin, User normal) {
@@ -80,8 +90,10 @@ class UserService {
                 normal.isActive = !normal.isActive
                 return saveUser(normal)
             }
+        } else {
+            return null
         }
-        return null
+
     }
 
     def image(User user) {
@@ -93,7 +105,9 @@ class UserService {
                 sendPhoto = assetResourceLocator.findAssetForURI('silhouette.jpg').getInputStream()
             }
             return sendPhoto
+        } else {
+            return null
         }
-        return null
+
     }
 }

@@ -172,7 +172,10 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user && topic) {
             if (user.isAdmin || topic.createdBy.id == user.id) {
-                out << "<a href='#'><span class='fa fa-file-o' style='font-size:20px'></span></a>"
+                out << "<span name='editTopic_${topicId}' onclick='openTopicEdit(${topicId})' " +
+                        "id='editTopic_${topicId}' " +
+                        "class='fa fa-file-o' " +
+                        "style='font-size:20px'></span>"
             }
         }
     }
@@ -181,11 +184,15 @@ class LinkSharingTagLib {
         User user = session.user
         Long topicId = attrs.topicId
         Long resourceId = attrs.resourceId
-        Topic topic = Topic.get(topicId)
+        def dataTarget = attrs.dataTarget
+        def dataToggle = attrs.dataToggle
         Resource resource = Resource.get(resourceId)
-        if (user && topic && resource) {
+        if (user && resource) {
             if (user.isAdmin || resource.createdBy.id == user.id) {
-                out << "<a href='#'><ins>Edit</ins></a>"
+                out << "<a data-toggle='${dataToggle}' id='editResource' data-target='${dataTarget}' " +
+                        "params=[id:${resourceId}," +
+                        "description]><ins>Edit</ins></a>"
+
             }
         }
     }

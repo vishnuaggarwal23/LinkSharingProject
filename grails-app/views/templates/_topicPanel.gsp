@@ -7,26 +7,31 @@
 
         <div class="col-md-9">
             <div class="row">
-                <div class="col-md-6 col-xs-6">
+                <div class="col-md-6 col-xs-6 topicShowPanel_${topic.id}">
                     <span class="text-primary">${topic.createdBy.getName()}</span>
                 </div>
 
-                <div class="col-md-4 col-md-offset-2  col-xs-6">
+                <div class="col-md-4 col-md-offset-2 col-xs-6 topicShowPanel_${topic.id}">
                     <span class="text-primary">
                         <ins><g:link name="topicClickLnk" controller="topic" action="show"
                                      params="[id: topic.id]">${topic.name}</g:link></ins></span>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-12" id="topicEditPanel_${topic.id}" style="visibility: hidden">
                     <g:form class="form-inline" name="editTopic">
-                        <div class="form-group">
-                            <g:hiddenField name="topicId" id="topicId" value="${topic.id}"/>
-                            <g:hiddenField name="topicName" id="topicName" value="${topic.name}"/>
-                            <g:hiddenField name="createdBy" id="createdBy" value="${topic.createdBy}"/>
-                            <g:textField name="newName" type="text" id="newName" value="${topic.name}"/>
-                            <g:submitButton name="editTopicNameBtn" type="submit" value="Save"
-                                            class="btn btn-default btn-primary form-control editTopicNameBtn"/>
-                            <button type="button" name="cancel" id="cancel" value="Cancel"></button>
+                        <div class="form-group row">
+                            <g:hiddenField name="topicId" id="topicId_${topic.id}" value="${topic.id}"/>
+                            <g:hiddenField name="topicName" id="topicName_${topic.id}" value="${topic.name}"/>
+                            <g:hiddenField name="createdBy" id="createdBy_${topic.id}" value="${topic.createdBy}"/>
+                            <g:textField name="newName" class="form-control" size="13" type="text"
+                                         id="newName_${topic.id}"
+                                         value="${topic.name}" required="required"/>
+                            <g:submitButton name="editTopicNameBtn_${topic.id}" type="submit" value="Save"
+                                            class="btn btn-default btn-primary form-control editTopicNameBtn"
+                                            onclick="editTopicName(${topic.id})"/>
+                            <button type="button" class="btn btn-default" name="cancel_${topic.id}"
+                                    id="cancel_${topic.id}"
+                                    value="Cancel" onclick="closeEditTopic(${topic.id})">Cancel</button>
                         </div>
                     </g:form>
                 </div>

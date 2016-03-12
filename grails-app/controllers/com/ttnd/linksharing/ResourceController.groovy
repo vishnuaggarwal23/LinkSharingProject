@@ -8,12 +8,14 @@ import vo.TopicVO
 
 class ResourceController {
 
+    def resourceService
+
     def index() {
         List<TopicVO> topicVOList = Topic.getTrendingTopics()
         render(view: 'index1', model: [topicVOList: topicVOList])
     }
 
-    def show(Long id) {
+    /*def show(Long id) {
         Resource resource = Resource.get(id)
         User user = session.user
         if (resource) {
@@ -32,25 +34,31 @@ class ResourceController {
             flash.error = "Resource does not Exists"
             redirect(uri: '/')
         }
-        /*try {
-            if (resource.canViewBy(user)) {
-                List<TopicVO> topicVOList = Topic.getTrendingTopics()
-                PostVO post = Resource.getPost(id)
-                post.resourceRating = user.getScore(resource)
-                //Integer resourceScore =
-                def resourceType = Resource.checkResourceType(id)
-                flash.message = "User Can Access the Resource"
-                render(view: 'show', model: [trendingTopics: topicVOList, post: post])
+    }*/
+
+    def show(Long id) {
+        Resource resource = Resource.get(id)
+        if (resource) {
+            User user = session.user
+            PostVO post = resourceService.show(resource, user)
+            if (post) {
+                if (user) {
+                    post.resourceRating = user?.getScore(resource)
+                    List<TopicVO> trendingTopics = Topic.getTrendingTopics()
+                    render(view: 'show', model: [trendingTopics: trendingTopics, post: post])
+                } else {
+                    render(view: 'show', model: [post: post])
+                }
+
             } else {
-                flash.error = "User Access not Permitted"
-                redirect(uri: '/')
+                flash.error = "Resource can not be shown"
+                redirect(controller: 'login', action: 'index')
             }
+        } else {
+            flash.error = "Resource can not be shown"
+            redirect(controller: 'login', action: 'index')
         }
-        catch (Exception e) {
-            log.error e.message
-            flash.error = "Resource does not Exists"
-            redirect(uri: '/')
-        }*/
+
     }
 
     def delete(Long id) {
@@ -73,15 +81,15 @@ class ResourceController {
     }
 
     def search(ResourceSearchCO co) {
-        List<PostVO> searchPosts=[]
+        List<PostVO> searchPosts = []
         List<Resource> resources = Resource.search(co).list()
-        def result=""
+        def result = ""
         /*max: co.max, offset: co.offset, sort: co.sort,order: co.order)*/
         resources?.each {
             searchPosts.add(Resource.getPost(it.id))
         }
-        searchPosts.each{
-            result+=g.render(template: '/templates/postPanel',model: [post:it])
+        searchPosts.each {
+            result += g.render(template: '/templates/postPanel', model: [post: it])
         }
         render result
     }
@@ -100,7 +108,7 @@ class ResourceController {
             postVOList.each {
                 result += g.render(template: '/templates/postPanel', model: [post: it])
             }
-            if (postVOList.size()==0){
+            if (postVOList.size() == 0) {
                 result = "<h1>No resource found<h1>"
             }
             render(result)
@@ -113,37 +121,26 @@ class ResourceController {
         render vo
     }
 
-/*
-    def getTrendingTopics() {
-        List result = Topic.getTrendingTopics()
-        render "${result}"
-    }
-*/
-
-    /*def saveDocumentResource(String filePath, String description, String topicName) {
-        User user = session.user
-        Topic topic = Topic.findByNameAndCreatedBy(topicName, user)
-        Resource documentResource = new DocumentResource(filePath: filePath, description: description, createdBy:
-                user, topic: topic)
-        if (documentResource.validate()) {
-            documentResource.save(flush: true)
-            flash.message = "Document Resource Saved"
-            render flash.message
+    def save(Long id, String description) {
+        if (session.user) {
+            Resource resource = Resource.get(id)
+            if (resource) {
+                Resource tempResource = resourceService.editResourceDescription(resource, description)
+                if (tempResource) {
+                    flash.message = "Resource Description Updated"
+                } else {
+                    flash.error = "Resource Description is not Updated"
+                }
+            } else {
+                flash.error = "Resource not Found"
+            }
         } else {
-            flash.error = "Document Resource not Saved"
-            redirect(controller: 'user', action: 'index')
-            render flash.error
+            flash.error = "Session User not Set"
         }
-    }*/
+        render(view: 'show', params: [id: id])
+    }
 
     void addToReadingItems(Resource resource) {
-        /*Topic topic = Resource.createCriteria().get {
-            projections {
-                property('topic')
-            }
-            eq('topic', resource.topic)
-        }
-        List<User> subscribedUserList = Topic.getSubscribedUsers(topic)*/
         Topic topic = Resource.createCriteria().get {
             projections {
                 property('topic')
