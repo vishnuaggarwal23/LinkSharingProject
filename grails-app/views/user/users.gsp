@@ -20,11 +20,6 @@
                 Users
             </div>
 
-            %{--<div class="col-md-4">
-                --}%%{--<g:select name="usersType" class="btn btn-default"
-                          from="${enums.UserActiveStatus.values()}" optionKey="key"/>--}%%{--
-            </div>--}%
-
             <div class="col-md-8">
                 <g:form name="adminUsersSearchForm" controller="user" action="registeredUsers" class="form-inline">
                     <div class="form-group">
@@ -97,7 +92,8 @@
                         </td>
                     </tr>
                 </g:each>
-
+                <g:paginate class="pagination" total="${totalUsers}" controller="user" action="registeredUsers"
+                            max="${userSearchCO.max}" offset="${userSearchCO.offset}"/>
             </table>
         </div>
     </div>

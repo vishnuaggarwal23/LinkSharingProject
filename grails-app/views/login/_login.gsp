@@ -4,12 +4,12 @@
     </div>
 
     <div class="panel-body">
-        <g:form name="loginForm" class="form-horizontal" controller="login" action="login">
+        <g:form name="loginForm" id="loginForm" class="form-horizontal" controller="login" action="login">
             <div class="form-group row">
                 <label for="loginUserName" class="col-sm-4 form-control-label">User Name *</label>
 
                 <div class="col-sm-8">
-                    <g:textField name="loginUserName" class="form-control" id="loginUserName" required="required"/>
+                    <g:textField name="loginUserName" class="form-control" id="loginUserName"/>
                 </div>
             </div>
 
@@ -17,7 +17,7 @@
                 <label for="loginPassword" class="col-sm-4 form-control-label">Password *</label>
 
                 <div class="col-sm-8">
-                    <g:field name="loginPassword" type="password" class="form-control" id="loginPassword" required="required"/>
+                    <g:field name="loginPassword" type="password" class="form-control" id="loginPassword"/>
                 </div>
             </div>
 

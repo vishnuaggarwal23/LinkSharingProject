@@ -13,6 +13,7 @@
                 <div class="panel-heading">
                     Recent Shares
                 </div>
+
                 <div style="height: 400px;overflow-y: auto">
                     <g:each in="${recentPosts}" var="recentPost">
                         <g:render template="/templates/postPanel" model="[post: recentPost]"/>
@@ -26,6 +27,7 @@
                 <div class="panel-heading">
                     Top Posts
                 </div>
+
                 <div style="height: 400px;overflow-y: auto">
                     <g:each in="${topPosts}" var="topPost">
                         <g:render template="/templates/postPanel" model="[post: topPost]"/>
@@ -46,5 +48,11 @@
         </div>
     </div>
 </div>
+
+<g:javascript>
+
+
+</g:javascript>
+
 </body>
 </html>

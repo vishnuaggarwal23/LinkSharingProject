@@ -89,9 +89,13 @@ class UserController {
     }
 
     def registeredUsers(UserSearchCO userSearchCO) {
+        userSearchCO.max = userSearchCO.max ?: 5
+        userSearchCO.offset = userSearchCO.offset ?: 0
         List<UserVO> registeredUsers = userService.registeredUsers(userSearchCO, session.user)
         if (registeredUsers) {
-            render(view: 'users', model: [userList: registeredUsers])
+            render(view: 'users', model: [userList    : registeredUsers,
+                                          totalUsers  : User.count() ?: 0,
+                                          userSearchCO: userSearchCO])
         } else {
             redirect(controller: 'login', action: 'index')
         }
@@ -154,5 +158,9 @@ class UserController {
         if (user) {
             render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
         }
+    }
+
+    def validatePassword() {
+        return User.findByUserNameAndPassword(session.user.userName, params.oldPassword) ? false : true
     }
 }

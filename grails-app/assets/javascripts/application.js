@@ -114,6 +114,45 @@ $(document).ready(function () {
         $('#topicEditPanel_' + topicId).css({"visibility": "hidden"});
     };
 
+    /*AJAX- Topic Post Search*/
+
+    $('.topicPostSearchCancelBtn').on('click', function () {
+        $('#topicPostSearchBox').val("");
+        location.reload()
+    });
+
+    $('.topicPostSearchBtn').on('click', function () {
+        $.ajax({
+            url: "/resource/search",
+            data: {
+                q: $('#topicPostSearchBox').val(),
+                topicID: $('.topicPostSearchHiddenTopicID').val()
+            },
+            success: function (searchPosts) {
+                $('.postPanelBody').html(searchPosts)
+            }
+        })
+    });
+
+
+    /*Global Resource Search*/
+
+    $('.globalSearchCancelBtn').on('click', function () {
+        $('#globalSearchBox').val("");
+        location.href = "/";
+    });
+
+    $('.globalSearchBtn').on('click', function () {
+        $.ajax({
+            url: "/resource/save",
+            data: {
+                q: $('.globalSearchBox').val(),
+                global: $('#global').val(),
+                visibility: $('#visibility').val()
+            }
+        })
+    });
+
 
     /*jQuery- Field Validators*/
 
@@ -127,6 +166,189 @@ $(document).ready(function () {
     }, "Password Fields Do Not Match");
 
     $(function () {
+        $('#upload').validate({
+            rules: {
+                'file': {
+                    required: true
+                },
+                'description': {
+                    required: true
+                }
+            },
+            messages: {
+                'file': {
+                    required: "File Selection is Required"
+                },
+                'description': {
+                    required: "Resource Description is Required"
+                }
+            }
+        });
+
+        $('#resourceDescriptionEditForm').validate({
+            rules: {
+                'description': {
+                    rules: {
+                        required: true
+                    },
+                    messages: {
+                        required: "Resource Description is Required"
+                    }
+                }
+            }
+        });
+
+        $('#linkResourceSave').validate({
+            rules: {
+                'url': {
+                    required: true
+                },
+                'description': {
+                    required: true
+                }
+            },
+            messages: {
+                'file': {
+                    required: "URL is Required"
+                },
+                'description': {
+                    required: "Resource Description is Required"
+                }
+            }
+        });
+
+        $('#topicCreate').validate({
+            rules: {
+                'topicName': {
+                    required: true,
+                    remote: {
+                        url: "/topic/validateUniqueTopicPerUser",
+                        type: 'post',
+                        data: {
+                            topicName: function () {
+                                return $('#topicName').val()
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                'topicName': {
+                    required: "Topic Name Field is Required",
+                    remote: "Topic already Exists"
+                }
+            }
+        });
+
+        $('#inviteForm').validate({
+            rules: {
+                'email': {
+                    required: true,
+                    remote: {
+                        url: "/login/validateEmail",
+                        type: "post",
+                        data: {
+                            email: function () {
+                                return !$('#email').val()
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                'email': {
+                    required: 'Email is Required',
+                    remote: 'Entered E-mail is not registered'
+                }
+            }
+        });
+
+        $('#forgotPassword').validate({
+            rules: {
+                'email': {
+                    required: true,
+                    remote: {
+                        url: "/login/validateEmail",
+                        type: "post",
+                        data: {
+                            email: function () {
+                                return !$('#email').val()
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                'email': {
+                    required: 'Email is Required',
+                    remote: 'Entered E-mail is not registered'
+                }
+            }
+        });
+
+        $('#updatePassword').validate({
+            rules: {
+                'oldPassword': {
+                    required: true,
+                    minlength: 5,
+                    remote: {
+                        url: '/user/validatePassword',
+                        type: 'post',
+                        data: {
+                            oldPassword: function () {
+                                return $('#oldPassword').val()
+                            }
+                        }
+                    }
+                },
+                'password': {
+                    required: true,
+                    minlength: 5
+                },
+                'confirmPassword': {
+                    required: true,
+                    minlength: 5,
+                    passwordCheck: true
+                }
+            },
+            messages: {
+                'oldPassword': {
+                    required: "Old Password is Required",
+                    remote: "Old Password is Incorrect",
+                    minlength: "Password should be of Minimum Length 5"
+                },
+                'password': {
+                    required: "Password is Required",
+                    minlength: "Password should be of Minimum Length 5"
+                },
+                'confirmPassword': {
+                    required: "Confirm Password is Required",
+                    minlength: "Confirm Password should be of Minimum Length 5"
+                }
+            }
+        });
+
+        $('#loginForm').validate({
+            rules: {
+                'loginUserName': {
+                    required: true
+                },
+                'loginPassword': {
+                    required: true,
+                    minlength: 5
+                }
+            },
+            messages: {
+                'loginUserName': {
+                    required: "Username is Required"
+                },
+                'loginPassword': {
+                    required: "Password is Required",
+                    minlength: "Password should be minimum 5 characters"
+                }
+            }
+        });
+
         $('#registration').validate({
             rules: {
                 'firstName': {
@@ -194,44 +416,6 @@ $(document).ready(function () {
                 }
             }
         });
+
     });
-
-    /*AJAX- Topic Post Search*/
-
-    $('.topicPostSearchCancelBtn').on('click', function () {
-        $('#topicPostSearchBox').val("");
-        location.reload()
-    });
-
-    $('.topicPostSearchBtn').on('click', function () {
-        $.ajax({
-            url: "/resource/search",
-            data: {
-                q: $('#topicPostSearchBox').val(),
-                topicID: $('.topicPostSearchHiddenTopicID').val()
-            },
-            success: function (searchPosts) {
-                $('.postPanelBody').html(searchPosts)
-            }
-        })
-    });
-
-
-    /*Global Resource Search*/
-
-    $('.globalSearchCancelBtn').on('click', function () {
-        $('#globalSearchBox').val("");
-        location.href = "/";
-    });
-
-    $('.globalSearchBtn').on('click', function () {
-        $.ajax({
-            url: "/resource/save",
-            data: {
-                q: $('.globalSearchBox').val(),
-                global: $('#global').val(),
-                visibility: $('#visibility').val()
-            }
-        })
-    })
 });

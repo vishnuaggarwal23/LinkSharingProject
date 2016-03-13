@@ -104,4 +104,8 @@ class TopicController {
         }
         redirect(controller: "login", action: "index")
     }
+
+    def validateUniqueTopicPerUser() {
+        return Topic.findByCreatedByAndName(session.user, params.topicName) ? false : true
+    }
 }

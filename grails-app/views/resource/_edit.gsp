@@ -7,7 +7,7 @@
             </div>
 
             <div class="modal-body">
-                <g:form name="resourceDescriptionEditForm" class="form-horizontal" controller="resource"
+                <g:form name="resourceDescriptionEditForm" id="resourceDescriptionEditForm" class="form-horizontal" controller="resource"
                         action="save" params="[id: id]">
                     <div class="form-group row">
                         <label for="description" class="col-sm-12 form-control-label">Description</label>

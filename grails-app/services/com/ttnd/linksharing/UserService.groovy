@@ -72,7 +72,10 @@ class UserService {
 
     def registeredUsers(UserSearchCO userSearchCO, User user) {
         if (user && isAdmin(user)) {
-            List<User> registeredUsers = User.search(userSearchCO).list([sort: userSearchCO.sort, order: userSearchCO.order])
+            List<User> registeredUsers = User.search(userSearchCO).list([sort  : userSearchCO.sort,
+                                                                         order : userSearchCO.order,
+                                                                         max   : userSearchCO.max,
+                                                                         offset: userSearchCO.offset])
             List<UserVO> registeredUsersVO = []
             registeredUsers.each {
                 registeredUsersVO.add(new UserVO(id: it.id, name: it.userName, firstName: it.firstName, lastName: it.lastName, email:

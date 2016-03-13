@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="row" style="overflow-y:scroll; height: 400px;">
+        <div class="row" style="overflow-y:scroll; height:auto;max-height: 400px">
             <g:render template="/templates/trendingTopics" model="[]"/>
         </div>
     </div>

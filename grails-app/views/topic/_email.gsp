@@ -6,7 +6,7 @@
             </div>
 
             <div class="modal-body">
-                <g:form name="inviteForm" controller="topic" action="invite" class="form-horizontal">
+                <g:form name="inviteForm" id="inviteForm" controller="topic" action="invite" class="form-horizontal">
                     <div class="form-group row">
                         <label for="email" class="col-sm-4 form-control-label">Email *</label>
 

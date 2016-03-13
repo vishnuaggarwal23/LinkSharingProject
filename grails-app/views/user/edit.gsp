@@ -98,7 +98,7 @@
                 </div>
 
                 <div class="panel-body">
-                    <g:form name="updatePassword" controller="user" action="updatePassword">
+                    <g:form name="updatePassword" id="updatePassword" controller="user" action="updatePassword">
                         <div class="form-group row">
                             <g:hiddenField name="id" value="${userCo?.id}"/>
                             <label for="oldPassword" class="col-sm-4 form-control-label">Old Password *</label>
