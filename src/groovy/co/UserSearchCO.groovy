@@ -1,5 +1,5 @@
 package co
 
-class UserSearchCO extends SearchCO{
+class UserSearchCO extends SearchCO {
     Boolean isActive
 }

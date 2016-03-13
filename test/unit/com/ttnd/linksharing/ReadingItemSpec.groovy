@@ -41,6 +41,6 @@ class ReadingItemSpec extends Specification {
 
         where:
         userName          | description | isRead | result
-        "vishnu.aggarwal" | "grails"    | true     | "vishnu.aggarwal read the grails: true"
+        "vishnu.aggarwal" | "grails"    | true   | "vishnu.aggarwal read the grails: true"
     }
 }

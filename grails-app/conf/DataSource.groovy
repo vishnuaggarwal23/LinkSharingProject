@@ -1,13 +1,11 @@
 dataSource {
     /*pooled = true
-    jmxExport = true
-    driverClassName = "org.h2.Driver"
-    username = "sa"
-    password = ""*/
+    jmxExport = true*/
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
+    username = "root"
+    password = "root"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-//    loggingSql = true
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -16,30 +14,20 @@ hibernate {
     cache.region.factory_class = 'org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory' // Hibernate 4
     singleSession = true // configure OSIV singleSession mode
     flush.mode = 'manual' // OSIV session flush mode outside of transactional context
-//    loggingSql = true
 }
 
 // environment specific settings
 environments {
     development {
         dataSource {
-            /*dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"*/
-            username = "root"
-            password = "root"
             dbCreate = "update"
             url = "jdbc:mysql://localhost:3306/linksharing"
-//            logSql=true
         }
     }
     test {
         dataSource {
-            /*dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"*/
-            username = "root"
-            password = "root"
             dbCreate = "update"
-            url = "jdbc:mysql://localhost:3306/linksharing"
+            url = "jdbc:mysql://localhost:3306/linksharingdb"
         }
     }
     production {

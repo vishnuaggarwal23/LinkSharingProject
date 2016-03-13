@@ -13,15 +13,6 @@ import spock.lang.Specification
 @Mock([User, Topic, Subscription])
 class SubscriptionControllerSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     def "CheckSubscriptionDelete"() {
         setup:
         User user = new User().save(validate: false)

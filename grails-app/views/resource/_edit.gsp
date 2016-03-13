@@ -8,7 +8,7 @@
 
             <div class="modal-body">
                 <g:form name="resourceDescriptionEditForm" class="form-horizontal" controller="resource"
-                        action="save" params="[id: params.id]">
+                        action="save" params="[id: id]">
                     <div class="form-group row">
                         <label for="description" class="col-sm-12 form-control-label">Description</label>
                     </div>
@@ -16,7 +16,7 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <g:textArea name="description" class="col-sm-12" id="description"
-                                        value="${params.description}"/>
+                                        value="${description}"/>
                         </div>
                     </div>
 

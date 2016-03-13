@@ -41,10 +41,6 @@ class ResourceService {
         resource.delete(flush: true)
     }
 
-    def saveResourceRating() {
-
-    }
-
     def isCreatedBy(Resource resource, User user) {
         if (user && resource) {
             return resource.createdBy.id == user.id
@@ -105,7 +101,7 @@ class ResourceService {
 
     def search(ResourceSearchCO resourceSearchCO) {
         List<PostVO> resources = []
-        Resource.search(resourceSearchCO).list([max:resourceSearchCO.max,offset:resourceSearchCO.offset]).each {
+        Resource.search(resourceSearchCO).list([max: resourceSearchCO.max, offset: resourceSearchCO.offset]).each {
             resources.add(Resource.getPost(it.id))
         }
         return resources
@@ -143,7 +139,9 @@ class ResourceService {
     }
 
     def uploadDocumentResource(DocumentResource documentResource, def sourceFile) {
-        if (!sourceFile.empty) {
+        if (sourceFile.empty) {
+            return null
+        } else {
             String filePath = "${getFileServerPath()}${getUniqueID()}.pdf"
             documentResource.contentType = AppConstants.DOCUMENT_CONTENT_TYPE
             documentResource.filePath = filePath
@@ -151,8 +149,6 @@ class ResourceService {
             if (destinationFile) {
                 return saveResource(documentResource, sourceFile, destinationFile)
             }
-        } else {
-            return null
         }
     }
 
@@ -167,9 +163,6 @@ class ResourceService {
         } else {
             return null
         }
-    }
-
-    def scoreResource(Resource resource, Integer score) {
     }
 
     def getFileServerPath() {

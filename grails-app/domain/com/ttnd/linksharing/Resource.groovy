@@ -29,7 +29,7 @@ abstract class Resource {
         return "${description}"
     }
 
-    public static Resource save(Resource resource) {
+    static Resource save(Resource resource) {
         resource.validate()
         if (resource.hasErrors()) {
             resource.errors.each {
@@ -80,7 +80,7 @@ abstract class Resource {
         new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
     }
 
-    public static List<PostVO> getTopPosts() {
+    static List<PostVO> getTopPosts() {
         List<PostVO> topPostVOList = []
         ResourceRating.createCriteria().list(max: 5) {
             projections {
@@ -104,7 +104,6 @@ abstract class Resource {
                     property('lastUpdated')
                 }
             }
-
             groupProperty('resource.id')
             count('id', 'totalVotes')
             order('totalVotes', 'desc')
@@ -116,7 +115,7 @@ abstract class Resource {
         return topPostVOList
     }
 
-    public static List<TopicVO> getTrendingTopics() {
+    static List<TopicVO> getTrendingTopics() {
         List<TopicVO> trendingTopicsList
         def result = Resource.createCriteria().list() {
             projections {
@@ -142,7 +141,7 @@ abstract class Resource {
         return trendingTopicsList
     }
 
-    public static List<PostVO> getRecentPosts() {
+    static List<PostVO> getRecentPosts() {
         List<PostVO> recentPostsList = []
         Resource.createCriteria().list(max: 5) {
             projections {
@@ -173,7 +172,7 @@ abstract class Resource {
         return recentPostsList
     }
 
-    public static List<PostVO> getTopicPosts(Long topicID) {
+    static List<PostVO> getTopicPosts(Long topicID) {
         List<PostVO> topicPosts = []
         Resource.createCriteria().list(max: 5) {
             projections {
@@ -204,7 +203,7 @@ abstract class Resource {
         return topicPosts
     }
 
-    public static PostVO getPost(Long resourceId) {
+    static PostVO getPost(Long resourceId) {
         def obj = Resource.createCriteria().get {
             projections {
                 property('id')
@@ -226,55 +225,10 @@ abstract class Resource {
             }
             eq('id', resourceId)
         }
-        /*def obj = ResourceRating.createCriteria().get {
-            projections {
-                property('resource.id')
-                'resource' {
-                    property('description')
-                    property('url')
-                    property('filePath')
-                    'topic' {
-                        property('id')
-                        property('name')
-                    }
-                    'createdBy' {
-                        property('id')
-                        property('userName')
-                        property('firstName')
-                        property('lastName')
-                        property('photo')
-                    }
-                    property('lastUpdated')
-                }
-                property('score')
-            }
-            eq('user.id', userId)
-            eq('resource.id', resourceId)
-        }*/
         return new PostVO(resourceID: obj[0], description: obj[1], url: obj[2], filePath: obj[3], topicID:
                 obj[4], topicName: obj[5], userID: obj[6], userName: obj[7], userFirstName: obj[8], userLastName: obj[9],
                 userPhoto: obj[10], isRead: "", postDate: obj[11], resourceRating: 0)
     }
-
-    public static def checkResourceType(Long id) {
-        Resource resource = Resource.read(id)
-        if (resource.class.equals(LinkResource))
-            return "LinkResource"
-        else if (resource.class.equals(DocumentResource))
-            return "DocumentResource"
-    }
-
-    public canViewBy(User user) {
-        if (this.topic.canViewedBy(user)) {
-            return true
-        }
-        return false
-    }
-
-    /*Boolean deleteFile() {
-        log.info "Implemented in Sub Classes"
-        return false
-    }*/
 
     static List usersWithUnreadResources() {
         return ReadingItem.createCriteria().listDistinct {

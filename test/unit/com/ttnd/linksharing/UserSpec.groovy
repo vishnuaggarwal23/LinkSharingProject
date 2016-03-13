@@ -1,6 +1,5 @@
 package com.ttnd.linksharing
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 

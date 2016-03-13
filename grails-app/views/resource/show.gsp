@@ -80,13 +80,8 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6">
-                        <ls:editResourceDetails dataTarget="resourceEditModal" dataToggle="modal"
-                                                resourceId="${post.resourceID}"/>
-                        <g:render template="edit" model="[params]"/>
-                        <a class="btn" id="resourceEdit" role="button" data-toggle="modal"
-                           data-target="#resourceEditModal">
-                            <span class="glyphicon glyphicon-envelope"></span>
-                        </a>
+                        <ls:editResourceDetails resourceId="${post.resourceID}"/>
+                        <g:render template="edit" model="[id: post.resourceID, description: post.description]"/>
                     </div>
 
                     <div class="col-md-2 col-xs-6">

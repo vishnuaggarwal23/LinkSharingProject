@@ -5,15 +5,6 @@ import vo.RatingInfoVO
 
 class ResourceControllerIntegrationSpec extends IntegrationSpec {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     def "check-GetTrendingTopics"() {
         when:
         List list = Topic.getTrendingTopics()

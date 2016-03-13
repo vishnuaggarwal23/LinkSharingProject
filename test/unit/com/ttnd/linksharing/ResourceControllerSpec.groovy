@@ -11,19 +11,7 @@ import spock.lang.Specification
 @Mock([Resource, LinkResource])
 class ResourceControllerSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     def "CheckResourceDelete"() {
-        setup:
-        Resource resource = new LinkResource(id: id).save(validate: false)
-
         when:
         controller.delete(id)
 
@@ -35,11 +23,11 @@ class ResourceControllerSpec extends Specification {
         1  | "Resource Deleted"
     }
 
-    def "checkResourceDoesNotExists"(){
+    def "checkResourceDoesNotExists"() {
         when:
         controller.delete(1)
 
         then:
-        response.text=="Resource not Deleted"
+        response.text == "Resource not Deleted"
     }
 }

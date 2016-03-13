@@ -40,8 +40,9 @@ class UserController {
             if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(resourceSearchCO.id)))) {
                 resourceSearchCO.visibility = Visibility.PUBLIC
             }
-        } else
+        } else {
             resourceSearchCO.visibility = Visibility.PUBLIC
+        }
         render view: 'profile', model: [userDetails     : user.getUserDetails(),
                                         createdResources: resourceService.search(resourceSearchCO),
                                         totalPosts      : user.getPostsCount(),
@@ -67,8 +68,9 @@ class UserController {
             if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
-        } else
+        } else {
             topicSearchCO.visibility = Visibility.PUBLIC
+        }
         List<TopicVO> createdTopics = topicService.search(topicSearchCO)
         render(template: '/topic/list', model: [topicList: createdTopics])
     }
@@ -79,8 +81,9 @@ class UserController {
             if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
-        } else
+        } else {
             topicSearchCO.visibility = Visibility.PUBLIC
+        }
         List<Topic> subscribedTopics = subscriptionService.search(topicSearchCO)
         render(template: '/topic/list', model: [topicList: subscribedTopics])
     }

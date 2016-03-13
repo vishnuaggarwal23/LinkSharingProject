@@ -3,9 +3,6 @@ package vo
 import com.ttnd.linksharing.User
 import enums.Visibility
 
-/**
- * Created by vishnu on 24/2/16.
- */
 class TopicVO {
     Long id
     String name
@@ -13,7 +10,7 @@ class TopicVO {
     Integer count
     User createdBy
 
-    String toString(){
+    String toString() {
         return "${name}"
     }
 }

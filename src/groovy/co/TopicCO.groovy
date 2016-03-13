@@ -4,9 +4,6 @@ import com.ttnd.linksharing.Topic
 import com.ttnd.linksharing.User
 import grails.validation.Validateable
 
-/**
- * Created by vishnu on 12/3/16.
- */
 @Validateable
 class TopicCO {
     Long topicId
@@ -23,7 +20,7 @@ class TopicCO {
         createdBy(nullable: true, blank: true)
     }
 
-    public Topic getTopic() {
-        return Topic.findOrCreateByNameAndCreatedBy(topicName,createdBy)
+    Topic getTopic() {
+        return Topic.findOrCreateByNameAndCreatedBy(topicName, createdBy)
     }
 }

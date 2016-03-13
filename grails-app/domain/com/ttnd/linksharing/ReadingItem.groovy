@@ -4,13 +4,14 @@ class ReadingItem {
     boolean isRead
     Date dateCreated
     Date lastUpdated
+
     static constraints = {
         resource(unique: ['user'])
     }
 
-    static belongsTo = [resource:Resource,user:User]
+    static belongsTo = [resource: Resource, user: User]
 
-    public static ReadingItem save(ReadingItem readingItem) {
+    static ReadingItem save(ReadingItem readingItem) {
         readingItem.validate()
         if (readingItem.hasErrors()) {
             readingItem.errors.each {
@@ -23,7 +24,7 @@ class ReadingItem {
         }
     }
 
-    String toString(){
+    String toString() {
         return "${user} read the ${resource}: ${isRead}"
     }
 }

@@ -12,15 +12,6 @@ import spock.lang.Specification
 @Mock([User])
 class LoginControllerSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     def "CheckIndexAction- if user's session is set, then  user should forward to user index action"() {
         setup:
         controller.session.user = new User()

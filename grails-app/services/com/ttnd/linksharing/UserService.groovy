@@ -112,15 +112,15 @@ class UserService {
     }
 
     def registerUser(UserCO userCO, def file) {
-        if (!checkIfUserExists(userCO)) {
+        if (checkIfUserExists(userCO)) {
+            return null
+        } else {
             User user = userCO.properties
             if (!file.empty) {
                 user.photo = file.bytes
             }
             user.isActive = true
             return saveUser(user)
-        } else {
-            return null
         }
 
     }

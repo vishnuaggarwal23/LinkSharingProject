@@ -10,32 +10,6 @@ class ResourceController {
 
     def resourceService
 
-    def index() {
-        List<TopicVO> topicVOList = Topic.getTrendingTopics()
-        render(view: 'index1', model: [topicVOList: topicVOList])
-    }
-
-    /*def show(Long id) {
-        Resource resource = Resource.get(id)
-        User user = session.user
-        if (resource) {
-            if (resource.canViewBy(user)) {
-                List<TopicVO> topicVOList = Topic.getTrendingTopics()
-                PostVO post = Resource.getPost(id)
-                if (session.user)
-                    post.resourceRating = user?.getScore(resource)
-                flash.message = "User Can Access the Resource"
-                render(view: 'show', model: [trendingTopics: topicVOList, post: post])
-            } else {
-                flash.error = "User Access not Permitted"
-                redirect(uri: '/')
-            }
-        } else {
-            flash.error = "Resource does not Exists"
-            redirect(uri: '/')
-        }
-    }*/
-
     def show(Long id) {
         Resource resource = Resource.get(id)
         if (resource) {
@@ -92,36 +66,10 @@ class ResourceController {
                     trendingTopics: Topic.getTrendingTopics(),
                     posts         : searchPosts])
         } else {
-            /*render(template: '/templates/postPanel', model: [post: searchPosts])*/
             searchPosts.each {
                 result += g.render(template: '/templates/postPanel', model: [post: it])
             }
             render result
-        }
-        /*searchPosts.each {
-            result += g.render(template: '/templates/postPanel', model: [post: it])
-        }
-        render result*/
-    }
-
-    def search1(ResourceSearchCO resourceSearchCO) {
-        String result = ""
-        List<PostVO> postVOList = []
-        if (resourceSearchCO.q) {
-            postVOList = Resource.search(resourceSearchCO).list().collect({
-                Resource.getPost(it.id)
-            })
-        }
-        if (resourceSearchCO.visibility == Visibility.PUBLIC) {
-            render(view: 'search', model: [postVOList: postVOList, trendingTopics: Topic.getTrendingTopics()])
-        } else {
-            postVOList.each {
-                result += g.render(template: '/templates/postPanel', model: [post: it])
-            }
-            if (postVOList.size() == 0) {
-                result = "<h1>No resource found<h1>"
-            }
-            render(result)
         }
     }
 
@@ -147,27 +95,6 @@ class ResourceController {
         } else {
             flash.error = "Session User not Set"
         }
-        render(view: 'show', params: [id: id])
-    }
-
-    void addToReadingItems(Resource resource) {
-        Topic topic = Resource.createCriteria().get {
-            projections {
-                property('topic')
-            }
-            eq('topic', resource.topic)
-        }
-        List<User> subscribedUserList = Subscription.createCriteria().list {
-            projections {
-                property('user')
-            }
-            eq('topic', topic)
-        }
-        subscribedUserList.each { user ->
-            if (user.id == session.user?.id)
-                resource.addToReadingItems(new ReadingItem(user: user, resource: resource, isRead: true))
-            else
-                resource.addToReadingItems(new ReadingItem(user: user, resource: resource, isRead: false))
-        }
+        render(view: 'show', model: [post: Resource.getPost(id), trendingTopics: Topic.getTrendingTopics()])
     }
 }

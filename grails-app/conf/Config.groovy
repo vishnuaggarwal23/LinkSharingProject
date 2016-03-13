@@ -10,7 +10,6 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-grails.sampleValue = "Sample Text Inside config.groovy"
 grails.serverPath="${userHome}/var/www/linksharing"
 grails.serverBaseURL = "http://localhost:8080"
 grails.project.groupId = "com.ttnd.LinkSharing" // change this to alter the default package name and Maven publishing destination
@@ -123,9 +122,7 @@ log4j.main = {
             'com.ttnd.LinkSharing'
 
     info 'grails.app'
-    debug 'grails.app'/*,
-            'org.hibernate.SQL'
-    trace 'org.hibernate.type.descriptor.sql.BasicBinder'*/
+    debug 'grails.app'
 }
 
 

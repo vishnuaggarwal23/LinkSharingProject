@@ -48,11 +48,11 @@ class TopicService {
     def search(TopicSearchCO topicSearchCO) {
         List<TopicVO> createdTopics = []
         if (topicSearchCO.id) {
-            User user = topicSearchCO.getUser()
             List<Topic> topicList = Topic.createCriteria().list(max: topicSearchCO.max) {
                 eq('createdBy.id', topicSearchCO.id)
-                if (topicSearchCO.visibility)
+                if (topicSearchCO.visibility) {
                     eq('visibility', topicSearchCO.visibility)
+                }
             }
             topicList.each {
                 topic ->

@@ -1,11 +1,7 @@
 package co
 
-import com.ttnd.linksharing.User
 import grails.validation.Validateable
 
-/**
- * Created by vishnu on 6/3/16.
- */
 @Validateable
 class UserCO {
     String userName
@@ -14,7 +10,7 @@ class UserCO {
     String lastName
     String email
     byte[] photo
-    Boolean isAdmin=false
+    Boolean isAdmin = false
     String confirmPassword
 
     static constraints = {

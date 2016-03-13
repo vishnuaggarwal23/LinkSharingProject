@@ -4,15 +4,6 @@ import grails.test.spock.IntegrationSpec
 
 class ReadingItemControllerIntegrationSpec extends IntegrationSpec {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
-
     def "check-ChangeIsRead"() {
         setup:
         ReadingItemController readingItemController = new ReadingItemController()
@@ -20,7 +11,6 @@ class ReadingItemControllerIntegrationSpec extends IntegrationSpec {
         when:
         readingItemController.changeIsRead(id, isRead)
         ReadingItem readingItem = ReadingItem.get(id)
-        //log.info(readingItem)
 
         then:
         readingItem.isRead == isRead

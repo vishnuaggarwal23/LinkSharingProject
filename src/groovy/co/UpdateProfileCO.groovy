@@ -3,9 +3,6 @@ package co
 import com.ttnd.linksharing.User
 import grails.validation.Validateable
 
-/**
- * Created by vishnu on 12/3/16.
- */
 @Validateable
 class UpdateProfileCO {
     Long id
@@ -22,7 +19,7 @@ class UpdateProfileCO {
         file(nullable: true, blank: true)
     }
 
-    public User getUser() {
+    User getUser() {
         return User.get(id)
     }
 }

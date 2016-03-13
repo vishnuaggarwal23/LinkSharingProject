@@ -12,15 +12,9 @@ class TopicController {
     def emailService
     def topicService
 
-    def index() {}
-
     def show(Long id) {
         Topic topic = Topic.read(id)
-        if (!topic) {
-            flash.put("error", "Topic do not exists")
-            redirect(controller: 'login', action: 'index')
-        } else {
-
+        if (topic) {
             TopicVO topicDetails = Topic.getTopicDetails(topic)
             List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
             List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)
@@ -30,13 +24,16 @@ class TopicController {
             } else if (topic.visibility == Visibility.PRIVATE) {
                 User user = session.user
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
-                if (!subscription) {
-                    flash.put("error", "Topic is Private, User is not Subscribed to it")
-                } else {
+                if (subscription) {
                     render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
                                                  topicPosts  : topicPosts])
+                } else {
+                    flash.put("error", "Topic is Private, User is not Subscribed to it")
                 }
             }
+        } else {
+            flash.put("error", "Topic do not exists")
+            redirect(controller: 'login', action: 'index')
         }
     }
 

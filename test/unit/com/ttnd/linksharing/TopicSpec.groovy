@@ -64,7 +64,7 @@ class TopicSpec extends Specification {
         noExceptionThrown()
 
         where:
-        name          | result
+        name     | result
         "grails" | "grails"
     }
 }

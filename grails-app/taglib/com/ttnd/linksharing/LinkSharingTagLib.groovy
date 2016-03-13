@@ -1,8 +1,14 @@
 package com.ttnd.linksharing
 
+import constants.AppConstants
+
 class LinkSharingTagLib {
     //static defaultEncodeAs = [taglib: 'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
+
+    def resourceService
+    def userService
+    def topicService
 
     static namespace = "ls"
 
@@ -11,11 +17,9 @@ class LinkSharingTagLib {
         if (user) {
             Boolean isRead = Boolean.valueOf(attrs.isRead)
             if (isRead) {
-                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: false])}"
                 out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
                         "isRead='${!isRead}'>Mark as Unread</a>"
             } else {
-                String link = "${createLink(controller: 'readingItem', action: 'changeIsRead', params: [id: attrs.id, isRead: true])}"
                 out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
                         "isRead='${!isRead}'>Mark as Read</a> "
             }
@@ -24,12 +28,11 @@ class LinkSharingTagLib {
 
     def resourceType = { attrs, body ->
         def resourceID = attrs.resourceID
-        def resourceType = Resource.checkResourceType(resourceID)
+        def resourceType = resourceService.checkType(Resource?.get(resourceID))
         def resourceLink = attrs.url
-        def resourcePath = attrs.filePath
-        if (resourceType == "LinkResource") {
+        if (resourceType == AppConstants.LINK_RESOURCE_TYPE) {
             out << "<a href='${resourceLink}' class='pull-right' target='_blank'>View Full Site</a>"
-        } else if (resourceType == "DocumentResource") {
+        } else if (resourceType == AppConstants.DOCUMENT_RESOURCE_TYPE) {
             out << "<a href='${createLink(controller: 'documentResource', action: 'download', params: [id: resourceID])}' class='pull-right'>Download</a>"
         }
     }
@@ -38,7 +41,7 @@ class LinkSharingTagLib {
         Long resourceID = attrs.resourceID
         User user = session.user
         if (user) {
-            Boolean canDelete = User.canDeleteResource(user, resourceID)
+            def canDelete = resourceService.canEditDeleteResource(Resource?.get(resourceID), user)
             if (canDelete) {
                 out << "<a href='${createLink(controller: 'Resource', action: 'delete', params: [id: resourceID])}' " +
                         "class='pull-right'>Delete</a>"
@@ -104,7 +107,7 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user) {
             if (topic) {
-                if (user.isAdmin || user.equals(topicId)) {
+                if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
                     out << "${g.select(name: 'visibility', from: enums.Visibility.values(), class: 'btn btn-xs btn-default dropdown-toggle visibility', topicId: topic.id, topicName: topic.name, createdBy: user, value: topic.visibility)}"
                 }
             }
@@ -125,7 +128,7 @@ class LinkSharingTagLib {
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (user.isAdmin || topic.createdBy.id == user.id) {
+            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
                 out << "<a href='${createLink(controller: 'topic', action: 'delete', params: [id: topicId])}'><span " +
                         "class='fa fa-trash' style='font-size:20px'></span></a>"
             }
@@ -143,23 +146,12 @@ class LinkSharingTagLib {
         }
     }
 
-    /*def editTopicSeriousness = { attrs, body ->
-        User user = session.user
-        Long topicId = attrs.topicId
-        Topic topic = Topic.get(topicId)
-        if (user && topic) {
-            if (user.isAdmin || topic.createdBy.id == user.id || Subscription.findByUserAndTopic(user, topic)) {
-                out << g.render(template: '/templates/seriousnessSelect')
-            }
-        }
-    }*/
-
     def sendTopicInvite = { attrs, body ->
         User user = session.user
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (user.isAdmin || topic.createdBy.id == user.id || Subscription.findByUserAndTopic(user, topic)) {
+            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user) || Subscription.findByUserAndTopic(user, topic)) {
                 out << "<a class='btn' id='inviteModalBtn' role='button' data-toggle='modal' data-target='#sendinviteModal'>" +
                         "<span class='glyphicon glyphicon-envelope'></span></a>"
             }
@@ -171,7 +163,7 @@ class LinkSharingTagLib {
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (user.isAdmin || topic.createdBy.id == user.id) {
+            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
                 out << "<span name='editTopic_${topicId}' onclick='openTopicEdit(${topicId})' " +
                         "id='editTopic_${topicId}' " +
                         "class='fa fa-file-o' " +
@@ -182,16 +174,15 @@ class LinkSharingTagLib {
 
     def editResourceDetails = { attrs, body ->
         User user = session.user
-        Long topicId = attrs.topicId
         Long resourceId = attrs.resourceId
-        def dataTarget = attrs.dataTarget
-        def dataToggle = attrs.dataToggle
         Resource resource = Resource.get(resourceId)
         if (user && resource) {
-            if (user.isAdmin || resource.createdBy.id == user.id) {
-                out << "<a data-toggle='${dataToggle}' id='editResource' data-target='${dataTarget}' " +
-                        "params=[id:${resourceId}," +
-                        "description]><ins>Edit</ins></a>"
+            if (userService.isAdmin(user) || resourceService.isCreatedBy(resource, user)) {
+                out << "<a class=\"btn\" id=\"resourceEdit\" role=\"button\" data-toggle=\"modal\"\n" +
+                        "                           data-target=\"#resourceEditModal\"\n" +
+                        "                           params=\"[id:${resourceId},description:${resource.description}]\">\n" +
+                        "                            <ins>Edit</ins>\n" +
+                        "                        </a>"
 
             }
         }
