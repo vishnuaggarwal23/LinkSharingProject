@@ -69,19 +69,6 @@ class User {
         return this.userName
     }
 
-    public static User save(User user) {
-        user.validate()
-        if (user.hasErrors()) {
-            user.errors.each {
-                log.error "error while saving user ${it}--- ${it.allErrors}"
-            }
-            return null
-        } else {
-            user.save(flush: true)
-            return user
-        }
-    }
-
     List<Topic> getSubscribedTopics() {
         List<Topic> topicList = Subscription.createCriteria().list() {
             projections {
@@ -107,13 +94,6 @@ class User {
                     .resource, filePath: it.resource, postDate: it.resource.lastUpdated))
         }
         return readingItemsList
-    }
-
-    public static Boolean canDeleteResource(User user, Long resourceID) {
-        Resource resource = Resource.read(resourceID)
-        if (user.isAdmin || resource.createdBy.id == user.id)
-            return true
-        return false
     }
 
     public Integer getScore(Resource resource) {
@@ -157,21 +137,8 @@ class User {
         return Subscription.findByUserAndTopic(this, Topic.load(topicId))
     }
 
-    public Boolean equals(Long topicId) {
-        return this.id == Topic.get(topicId).createdBy.id
-    }
-
     def getCreatedTopics() {
         return this.topics
-    }
-
-    public static List<UserVO> getUsersList(SearchCO searchCO) {
-        List<UserVO> userVOList = []
-        findAllByIsAdminNotEqual(true, [sort: searchCO.sort, order: searchCO.order]).each {
-            userVOList.add(new UserVO(id: it.id, name: it.userName, firstName: it.firstName, lastName: it.lastName, email:
-                    it.email, isActive: it.isActive))
-        }
-        return userVOList
     }
 
     List<Resource> unreadResources() {

@@ -7,6 +7,7 @@
     <asset:javascript src="bootstrap.min.js"/>
     <asset:stylesheet src="bootstrap.min.css"/>
 </head>
+
 <body>
 <div style="text-align: center">
     <div class="container">
@@ -14,11 +15,13 @@
             <div class="row">
                 <h2>Welcome To Linksharing</h2>
             </div>
+
             <div class="row">
-                <p>${userName} have invited you to view the topic ${topicName}. Choose any of the following actions</p>
+                <p>${userName} have invited you to view the topic ${topicName}</p>
             </div>
+
             <div class="row">
-                <g:createLink base = "${base}" controller="topic" action="join" params="[id: topicId]">Click here to
+                <g:createLink base="${base}" controller="topic" action="join" params="[id: topicId]">Click here to
                 subscribe</g:createLink>
             </div>
         </div>

@@ -11,7 +11,7 @@
                         <label for="doc" class="col-sm-4 form-control-label">Document *</label>
 
                         <div class="col-sm-8">
-                            <input type="file" id="doc" name="file" required>
+                            <input type="file" class="form-control col-sm-8" id="doc" name="file" required>
                         </div>
                     </div>
 
@@ -19,7 +19,7 @@
                         <label for="description" class="col-sm-4 form-control-label">Description *</label>
 
                         <div class="col-sm-8">
-                            <g:textArea name="description" id="description"/>
+                            <g:textArea name="description" class="form-control col-sm-8" id="description"/>
                         </div>
                     </div>
 
@@ -29,10 +29,6 @@
                         <div class="col-sm-8">
                             <div class="dropdown">
                                 <div class="dropdown">
-                                    %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topicName"
-                                              id="docTopic" from="${topicsOfUser}"/>--}%
-                                    %{--<g:render name="topic" id="docTopic" class="btn dropdown-toggle"
-                                              template="/templates/topicSelect"/>--}%
                                     <ls:showSubscribedTopics/>
                                 </div>
                             </div>

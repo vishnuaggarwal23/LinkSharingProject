@@ -12,6 +12,8 @@ class Topic {
     Date dateCreated
     Date lastUpdated
 
+    def subscriptionService
+
     static hasMany = [subscriptions: Subscription, resources: Resource]
 
     static constraints = {
@@ -26,26 +28,11 @@ class Topic {
     def afterInsert() {
         Topic.withNewSession {
             Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: AppConstants.SERIOUSNESS)
-            if (Subscription.save(subscription)) {
+            if (subscriptionService.saveSubscription(subscription)) {
                 log.info "${subscription}-> ${this.createdBy} subscribed for ${this}"
-                //this.addToSubscriptions(subscription)
-                //this.createdBy.addToSubscriptions(subscription)
             } else {
                 log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
             }
-        }
-    }
-
-    public static Topic save(Topic topic) {
-        topic.validate()
-        if (topic.hasErrors()) {
-            topic.errors.each {
-                log.error "error while saving user ${it}--- ${it.allErrors}"
-            }
-            return null
-        } else {
-            topic.save(flush: true)
-            return topic
         }
     }
 
@@ -70,7 +57,6 @@ class Topic {
         }?.each {
             trendingTopics.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: it[3], createdBy: it[4]))
         }
-
         return trendingTopics
     }
 
@@ -80,7 +66,6 @@ class Topic {
         topicDetails.name = topic.name
         topicDetails.visibility = topic.visibility
         topicDetails.createdBy = topic.createdBy
-        //topicDetails.count=topic.resources.count()
         return topicDetails
     }
 
@@ -111,31 +96,5 @@ class Topic {
         if (visibility == Visibility.PUBLIC)
             return true
         return false
-    }
-
-    public Boolean canViewedBy(User user) {
-        /*if (this.isTopicPublic()) {
-            return true
-        } else {
-            if (user.isAdmin) {
-                return true
-            } else if (this.createdBy.id == user.id) {
-                return true
-            } else {
-                Subscription subscription = Subscription.findByUserAndTopic(user, this)
-                if (subscription) {
-                    return true
-                } else {
-                    return false
-                }
-            }
-        }*/
-
-        if (this.isTopicPublic() || user.isAdmin || Subscription.findByUserAndTopic(user, this)) {
-            return true
-        }
-
-        return false
-
     }
 }

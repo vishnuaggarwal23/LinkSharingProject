@@ -11,7 +11,7 @@
                         <label for="link" class="col-sm-4 form-control-label">Link *</label>
 
                         <div class="col-sm-8">
-                            <g:field type="url" id="link" name="url"/>
+                            <g:field type="url" class="form-control col-sm-8" id="link" name="url"/>
                         </div>
                     </div>
 
@@ -19,7 +19,7 @@
                         <label for="description" class="col-sm-4 form-control-label">Description *</label>
 
                         <div class="col-sm-8">
-                            <g:textArea name="description" id="description"/>
+                            <g:textArea name="description" class="col-sm-8 form-control" id="description"/>
                         </div>
                     </div>
 
@@ -28,10 +28,6 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="topic"
-                                          id="linkTopic" from="${subscribedTopics}" optionKey="id"/>--}%
-                                %{--<g:render name="topic" id="linkTopic" class="btn dropdown-toggle"
-                                          template="/templates/topicSelect"/>--}%
                                 <ls:showSubscribedTopics/>
                             </div>
                         </div>

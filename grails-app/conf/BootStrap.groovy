@@ -4,7 +4,11 @@ import constants.AppConstants
 class BootStrap {
 
     def grailsApplication
-    def bootstrapService
+    def bootstrapServic
+    def userService
+    def topicService
+    def resourceService
+    def subscriptionService
 
     def init = { servletContext ->
         List<User> users = createUser()
@@ -32,13 +36,13 @@ class BootStrap {
         Integer countUsers = User.count()
         if (!countUsers) {
             log.info "Creating new users "
-            if (User.save(normalUser)) {
+            if (userService.saveUser(normalUser)) {
                 log.info "${normalUser} saved"
                 users.add(normalUser)
             } else {
                 log.error "${normalUser} cannot be saved--- ${normalUser.errors.allErrors}"
             }
-            if (User.save(adminUser)) {
+            if (userService.saveUser(adminUser)) {
                 log.info "${adminUser} saved"
                 users.add(adminUser)
             } else {
@@ -60,7 +64,7 @@ class BootStrap {
                 (1..5).each {
                     Topic topic = new Topic(name: "Topic${it}", visibility: AppConstants.VISIBILITY,
                             createdBy: user)
-                    if (Topic.save(topic)) {
+                    if (topicService.saveTopic(topic)) {
                         log.info "${topic} saved for ${user}"
                         topics.add(topic)
                         user.addToTopics(topic)
@@ -86,7 +90,7 @@ class BootStrap {
                             .createdBy, filePath: "file/path", topic: topic)
                     Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
                             .createdBy, url: "https://www.google.co.in", topic: topic)
-                    if (Resource.save(documentResource)) {
+                    if (resourceService.saveResource(documentResource)) {
                         log.info "${documentResource} saved by ${topic.createdBy} for ${topic}"
                         resources.add(documentResource)
                         topic.addToResources(documentResource)
@@ -94,7 +98,7 @@ class BootStrap {
                     } else {
                         log.error "${documentResource} not saved--- ${documentResource.errors.allErrors}"
                     }
-                    if (Resource.save(linkResource)) {
+                    if (resourceService.saveResource(linkResource)) {
                         log.info "${linkResource} saved by ${topic.createdBy} for ${topic}"
                         resources.add(linkResource)
                         topic.addToResources(linkResource)
@@ -117,15 +121,13 @@ class BootStrap {
             topics.each { Topic topic ->
                 if (Subscription.findByUserAndTopic(user, topic) == null) {
                     Subscription subscription = new Subscription(user: user, topic: topic, seriousness: AppConstants.SERIOUSNESS)
-                    if (Subscription.save(subscription)) {
-                        if (Subscription.save(subscription)) {
-                            log.info "${subscription}-> ${user} subscribed for ${topic}"
-                            subscriptions.add(subscription)
-                            topic.addToSubscriptions(subscription)
-                            user.addToSubscriptions(subscription)
-                        } else {
-                            log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
-                        }
+                    if (subscriptionService.saveSubscription(subscription)) {
+                        log.info "${subscription}-> ${user} subscribed for ${topic}"
+                        subscriptions.add(subscription)
+                        topic.addToSubscriptions(subscription)
+                        user.addToSubscriptions(subscription)
+                    } else {
+                        log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"
                     }
                 } else {
                     log.info "User ${user} already subscribed to Topic ${topic}"
@@ -143,7 +145,7 @@ class BootStrap {
                     topic.resources.each { resource ->
                         if (resource.createdBy != user && !user.readingItems?.contains(resource)) {
                             ReadingItem readingItem = new ReadingItem(user: user, resource: resource, isRead: false)
-                            if (ReadingItem.save(readingItem)) {
+                            if (resourceService.saveReadingItem(readingItem)) {
                                 log.info "${readingItem} saved in ${user}'s list"
                                 readingItems.add(readingItem)
                                 resource.addToReadingItems(readingItem)
@@ -166,7 +168,7 @@ class BootStrap {
                 if (!readingItem.isRead) {
                     ResourceRating resourceRating = new ResourceRating(score: AppConstants.RATING, user: readingItem.user,
                             resource: readingItem.resource)
-                    if (ResourceRating.save(resourceRating)) {
+                    if (resourceService.saveResourceRating(resourceRating)) {
                         log.info "${resourceRating} rating for ${readingItem.resource} by ${readingItem.user}"
                         resourceRatings.add(resourceRating)
                         readingItem.resource.addToResourceRating(resourceRating)

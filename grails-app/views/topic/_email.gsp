@@ -11,7 +11,7 @@
                         <label for="email" class="col-sm-4 form-control-label">Email *</label>
 
                         <div class="col-sm-8">
-                            <g:field name="email" type="email" class="form-control" id="email"/>
+                            <g:field name="email" type="email" class="form-control col-sm-8" id="email"/>
                         </div>
                     </div>
 

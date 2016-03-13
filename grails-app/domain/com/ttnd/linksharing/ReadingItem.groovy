@@ -11,19 +11,6 @@ class ReadingItem {
 
     static belongsTo = [resource: Resource, user: User]
 
-    static ReadingItem save(ReadingItem readingItem) {
-        readingItem.validate()
-        if (readingItem.hasErrors()) {
-            readingItem.errors.each {
-                log.error "error while saving readingItem ${it.allErrors}"
-            }
-            return null
-        } else {
-            readingItem.save(flush: true)
-            return readingItem
-        }
-    }
-
     String toString() {
         return "${user} read the ${resource}: ${isRead}"
     }

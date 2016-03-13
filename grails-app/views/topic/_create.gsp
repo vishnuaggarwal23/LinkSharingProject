@@ -12,7 +12,8 @@
                         <label for="topicName" class="col-sm-4 form-control-label">Name *</label>
 
                         <div class="col-sm-8">
-                            <g:textField name="topicName" id="topicName" placeholder="Topic Name" class="form-control"/>
+                            <g:textField name="topicName" id="topicName" placeholder="Topic Name"
+                                         class="form-control col-sm-8"/>
                             <g:hiddenField name="createdBy" id="createdBy" value="${session.user}"/>
                         </div>
                     </div>
@@ -22,8 +23,6 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                %{--<g:select class="btn dropdown-toggle" data-toggle="dropdown" name="visibility"
-                                          id="visibility" from="${enums.Visibility.values()}"/>--}%
                                 <g:render name="visibility" class="btn dropdown-toggle" id="visibility"
                                           template="/templates/visibilitySelect"/>
                             </div>

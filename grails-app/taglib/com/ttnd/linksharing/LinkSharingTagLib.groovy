@@ -135,17 +135,6 @@ class LinkSharingTagLib {
         }
     }
 
-    def editTopicVisibility = { attrs, body ->
-        User user = session.user
-        Long topicId = attrs.topicId
-        Topic topic = Topic.get(topicId)
-        if (user && topic) {
-            if (user.isAdmin || topic.createdBy.id == user.id) {
-                out << g.render(template: '/templates/visibilitySelect')
-            }
-        }
-    }
-
     def sendTopicInvite = { attrs, body ->
         User user = session.user
         Long topicId = attrs.topicId
@@ -195,7 +184,7 @@ class LinkSharingTagLib {
     def showSubscribedTopics = {
         User user = session.user
         if (user) {
-            out << "${g.select(class: 'btn dropdown-toggle', name: 'topic', id: 'linkTopic', from: user.getSubscribedTopics(), optionKey: 'id')}"
+            out << "${g.select(class: 'btn dropdown-toggle col-sm-8 form-control', name: 'topic', id: 'linkTopic', from: user.getSubscribedTopics(), optionKey: 'id')}"
         }
     }
 

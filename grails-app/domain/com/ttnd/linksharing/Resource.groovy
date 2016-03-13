@@ -29,20 +29,6 @@ abstract class Resource {
         return "${description}"
     }
 
-    static Resource save(Resource resource) {
-        resource.validate()
-        if (resource.hasErrors()) {
-            resource.errors.each {
-                log.error "error while saving resource ${it}--- ${it.allErrors}"
-            }
-            return null
-        } else {
-            resource.save(flush: true)
-            return resource
-        }
-    }
-
-
     static namedQueries = {
         search { ResourceSearchCO resourceSearchCO ->
             if (resourceSearchCO.q) {

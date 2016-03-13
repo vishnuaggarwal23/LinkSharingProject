@@ -11,12 +11,4 @@ class LinkResource extends Resource {
     String toString() {
         return url
     }
-
-    /*@Transactional
-    Boolean deleteFile() {
-        if (this.delete(flush: true))
-            return true
-        else
-            return false
-    }*/
 }
