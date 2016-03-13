@@ -91,10 +91,4 @@ class Topic {
         }
         return subscribedUsers
     }
-
-    public Boolean isTopicPublic() {
-        if (visibility == Visibility.PUBLIC)
-            return true
-        return false
-    }
 }

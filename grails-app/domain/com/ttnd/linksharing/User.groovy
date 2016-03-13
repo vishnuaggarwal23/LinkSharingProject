@@ -70,7 +70,7 @@ class User {
     }
 
     List<Topic> getSubscribedTopics() {
-        List<Topic> topicList = Subscription.createCriteria().list() {
+        List<Topic> topicList = Subscription.createCriteria().list {
             projections {
                 property('topic')
             }
@@ -96,25 +96,27 @@ class User {
         return readingItemsList
     }
 
-    public Integer getScore(Resource resource) {
+    Integer getScore(Resource resource) {
         ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
-        if (!resourceRating) {
-            return 1
-        } else {
+        /*if (resourceRating) {
             return resourceRating.score
-        }
+        } else {
+            return 1
+        }*/
+        return resourceRating ? resourceRating.score : 1
 
     }
 
-    public Boolean isSubscribed(Long topicId) {
-        if (Subscription.findByUserAndTopic(this, Topic.load(topicId))) {
+    Boolean isSubscribed(Long topicId) {
+        /*if (Subscription.findByUserAndTopic(this, Topic.load(topicId))) {
             return true
         } else {
             return false
-        }
+        }*/
+        return Subscription.findByUserAndTopic(this, Topic.load(topicId)) ? true : false
     }
 
-    public List<TopicVO> getUserSubscriptions() {
+    List<TopicVO> getUserSubscriptions() {
         List<TopicVO> userSubscriptions = []
         Subscription.createCriteria().list(max: 5) {
             projections {
@@ -133,7 +135,7 @@ class User {
         return userSubscriptions
     }
 
-    public Subscription getSubscription(Long topicId) {
+    Subscription getSubscription(Long topicId) {
         return Subscription.findByUserAndTopic(this, Topic.load(topicId))
     }
 

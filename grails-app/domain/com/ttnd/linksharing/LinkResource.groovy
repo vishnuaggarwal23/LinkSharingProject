@@ -1,7 +1,5 @@
 package com.ttnd.linksharing
 
-import grails.transaction.Transactional
-
 class LinkResource extends Resource {
     String url
     static constraints = {

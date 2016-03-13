@@ -26,7 +26,7 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
+            dbCreate = "create"
             url = "jdbc:mysql://localhost:3306/linksharingdb"
         }
     }

@@ -11,7 +11,7 @@ class ResourceRating {
 
     static belongsTo = [user: User, resource: Resource]
 
-    String toString(){
+    String toString() {
         return "${user} rated ${resource} by ${score}"
     }
 }

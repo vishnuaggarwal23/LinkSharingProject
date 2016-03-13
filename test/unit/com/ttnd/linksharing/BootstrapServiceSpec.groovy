@@ -9,12 +9,4 @@ import spock.lang.Specification
 @TestFor(BootstrapService)
 class BootstrapServiceSpec extends Specification {
 
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-    }
 }

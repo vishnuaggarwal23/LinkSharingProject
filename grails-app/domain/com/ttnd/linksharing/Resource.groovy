@@ -103,7 +103,7 @@ abstract class Resource {
 
     static List<TopicVO> getTrendingTopics() {
         List<TopicVO> trendingTopicsList
-        def result = Resource.createCriteria().list() {
+        def result = Resource.createCriteria().list {
             projections {
                 createAlias('topic', 't')
                 groupProperty('t')
