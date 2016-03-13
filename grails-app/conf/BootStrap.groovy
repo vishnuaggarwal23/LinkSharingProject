@@ -2,7 +2,10 @@ import com.ttnd.linksharing.*
 import constants.AppConstants
 
 class BootStrap {
+
     def grailsApplication
+    def bootstrapService
+
     def init = { servletContext ->
         List<User> users = createUser()
         List<Topic> topics = createTopic(users)
@@ -11,6 +14,13 @@ class BootStrap {
         List<ReadingItem> readingItems = createReadingItems(users, topics, resources)
         List<ResourceRating> resourceRatings = createResourceRatings(users, readingItems)
         println(grailsApplication.config.grails.sampleValue)
+
+        /*bootstrapService.createUser()
+        bootstrapService.createTopic()
+        bootstrapService.createSubscriptions()
+        bootstrapService.createResource()
+        bootstrapService.createReadingItem()
+        bootstrapService.createResourceRating()*/
     }
 
     List<User> createUser() {

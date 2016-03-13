@@ -52,7 +52,7 @@ class ResourceController {
 
     def search(ResourceSearchCO co) {
         List<PostVO> searchPosts = []
-        if (co.q) {
+        if (co.q && !co.topicID) {
             co.visibility = Visibility.PUBLIC
         }
         List<Resource> resources = Resource.search(co).list()

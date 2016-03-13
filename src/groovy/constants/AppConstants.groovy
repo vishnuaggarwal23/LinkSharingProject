@@ -8,7 +8,7 @@ import enums.Visibility
  */
 class AppConstants {
     static final String PASSWORD = "123abc"
-    static final Visibility VISIBILITY = Visibility.PUBLIC
+    static final Visibility VISIBILITY = Visibility.PRIVATE
     static final Seriousness SERIOUSNESS = Seriousness.VERY_SERIOUS
     static final Integer RATING = 3
     static final String DOCUMENT_CONTENT_TYPE = "application/pdf"

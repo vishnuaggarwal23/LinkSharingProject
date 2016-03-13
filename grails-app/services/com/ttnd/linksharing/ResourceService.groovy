@@ -37,6 +37,22 @@ class ResourceService {
         }
     }
 
+    def saveReadingItem(ReadingItem readingItem) {
+        if (readingItem.validate()) {
+            return readingItem.save(flush: true)
+        } else {
+            return null
+        }
+    }
+
+    def saveResourceRating(ResourceRating resourceRating) {
+        if (resourceRating.validate()) {
+            return resourceRating.save(flush: true)
+        } else {
+            return null
+        }
+    }
+
     def deleteResource(Resource resource) {
         resource.delete(flush: true)
     }
