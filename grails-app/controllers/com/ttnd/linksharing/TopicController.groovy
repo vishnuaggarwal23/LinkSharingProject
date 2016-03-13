@@ -20,6 +20,7 @@ class TopicController {
             flash.put("error", "Topic do not exists")
             redirect(controller: 'login', action: 'index')
         } else {
+
             TopicVO topicDetails = Topic.getTopicDetails(topic)
             List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
             List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)
@@ -66,13 +67,14 @@ class TopicController {
     def delete(Long id) {
         Topic topic = Topic.get(id)
         User user = session.user
-        if (user) {
-            if (topic && (user.isAdmin || topic.createdBy.id == user.id)) {
-                topic.delete(flush: true)
+        if (user && topic) {
+            if (topicService.deleteTopic(topic, user)) {
                 flash.message = "Topic Deleted"
             } else {
-                flash.error = "Not Enough Rights"
+                flash.error = "Topic not Deleted"
             }
+        } else {
+            flash.error = "Topic/User not Set"
         }
         redirect(controller: 'login', action: 'index')
     }
@@ -90,14 +92,18 @@ class TopicController {
 
     def join(Long id) {
         Topic topic = Topic.get(id)
-        if (topic && session.user) {
-            Subscription subscription = new Subscription(user: session.user, topic: topic)
-
-            if (subscription.validate()) {
-                subscription.save(flush: true)
-                flash.message = "You have subscribed to this topic successfully."
-            } else
-                flash.error = "Failure. Could not subscribe to the topic."
+        if (topic) {
+            if (session.user) {
+                if (topicService.joinTopic(topic, session.user)) {
+                    flash.message = "Topic Subscribed"
+                } else {
+                    flash.error = "Topic not Subscribed"
+                }
+            } else {
+                flash.error = "Session User not Set, Re-login to join"
+            }
+        } else {
+            flash.error = "Topic do not exists"
         }
         redirect(controller: "login", action: "index")
     }

@@ -62,36 +62,46 @@ class ResourceController {
     }
 
     def delete(Long id) {
-        if (User.canDeleteResource(session.user, id)) {
-            Resource resource = Resource.load(id)
-            try {
-                if (resource.deleteFile())
-                    flash.message = "Resource Deleted"
-                else
-                    flash.error = "Resource not Deleted"
-            }
-            catch (Exception e) {
-                log.info e.message
-                flash.error = "Resource Not Found"
+        Resource resource = Resource.get(id)
+        if (session.user && resource) {
+            def resourceDeleted = resourceService.deleteResource(resource, session.user)
+            if (resourceDeleted) {
+                flash.message = "Resource Deleted"
+            } else {
+                flash.error = "Resource not Deleted"
             }
         } else {
-            flash.error = "Deletion Not Permissible"
+            flash.error = "Resource or User not Found"
         }
-        redirect(uri: '/')
+        redirect(controller: 'login', action: 'index')
     }
 
     def search(ResourceSearchCO co) {
         List<PostVO> searchPosts = []
+        if (co.q) {
+            co.visibility = Visibility.PUBLIC
+        }
         List<Resource> resources = Resource.search(co).list()
         def result = ""
-        /*max: co.max, offset: co.offset, sort: co.sort,order: co.order)*/
         resources?.each {
             searchPosts.add(Resource.getPost(it.id))
         }
-        searchPosts.each {
+        if (co.global) {
+            render(view: 'search', model: [
+                    topPosts      : Resource.getTopPosts(),
+                    trendingTopics: Topic.getTrendingTopics(),
+                    posts         : searchPosts])
+        } else {
+            /*render(template: '/templates/postPanel', model: [post: searchPosts])*/
+            searchPosts.each {
+                result += g.render(template: '/templates/postPanel', model: [post: it])
+            }
+            render result
+        }
+        /*searchPosts.each {
             result += g.render(template: '/templates/postPanel', model: [post: it])
         }
-        render result
+        render result*/
     }
 
     def search1(ResourceSearchCO resourceSearchCO) {

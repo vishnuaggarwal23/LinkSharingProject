@@ -54,13 +54,14 @@
                                 <div class="input-group-addon globalSearchBtn"><span class="glyphicon glyphicon-search"
                                                                                      style="font-size: large"></span>
                                 </div>
-                                <g:textField name="globalSearchBox" type="text" class="form-control globalSearchBox"
-                                             id="globalSearchForm" placeholder="Search"/>
+                                <g:textField name="q" type="text" class="form-control globalSearchBox"
+                                             id="globalSearchBox" placeholder="Search"/>
+                                <g:hiddenField name="global" value="${true}" />
                                 <div class="input-group-addon globalSearchCancelBtn"><span
-                                        class="glyphicon glyphicon-remove" style="font-size: large"></span></div>
+                                        class="glyphicon glyphicon-remove globalSearchCancelBtn" style="font-size: large"></span></div>
                             </div>
                         </div>
-                        <g:hiddenField name="visibilityField" id="visibilityField" class="visibilityHiddenField"
+                        <g:hiddenField name="visibility" id="visibility" class="visibility"
                                        value="PUBLIC"/>
                     </g:form>
                 </li>

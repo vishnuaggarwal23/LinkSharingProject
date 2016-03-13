@@ -16,7 +16,8 @@ class LoginController {
         } else {
             List<PostVO> topPostVOList = Resource.getTopPosts()
             List<PostVO> recentPostVOList = Resource.getRecentPosts()
-            render(view: 'index', model: [topPosts: topPostVOList, recentPosts: recentPostVOList])
+            render(view: 'index', model: [topPosts   : topPostVOList,
+                                          recentPosts: recentPostVOList])
         }
     }
 
@@ -40,32 +41,21 @@ class LoginController {
     }
 
     def registration(UserCO userCo) {
-        /*User user = User.findByUserNameOrEmail(userCo.userName, userCo.email)
-        if (user == null) {*/
         if (userCo.hasErrors()) {
-            //flash.error=userCo.errors.allErrors
-            render(view: '/login/index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource
-                    .getRecentPosts(), userCo            : userCo])
-
+            render(view: '/login/index', model: [topPosts   : Resource.getTopPosts(),
+                                                 recentPosts: Resource.getRecentPosts(),
+                                                 userCo     : userCo])
         } else {
-            User user = userCo.properties
-            def file = params.file
-            if (!file.empty) {
-                user.photo = params.file.bytes
-            }
-            user.isActive = true
-            if (user.validate()) {
-                user.save(flush: true)
-                forward(action: 'login', params: [loginUserName: user.userName, loginPassword: user.password])
+            User user = userService.registerUser(userCo, params.file)
+            if (user) {
+                forward(controller: 'login', action: 'index', params: [loginUserName: user.userName,
+                                                                       loginPassword: user.password])
             } else {
-                //flash.error=user.errors.allErrors
-                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), userCo: user])
+                render(view: 'index', model: [topPosts   : Resource.getTopPosts(),
+                                              recentPosts: Resource.getRecentPosts(),
+                                              userCo     : user])
             }
         }
-        /*} else {
-            flash.error = "User already exists"
-            redirect(controller: 'login', action: 'index')
-        }*/
     }
 
     List<Resource> getTopPosts() {

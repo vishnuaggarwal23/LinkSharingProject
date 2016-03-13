@@ -25,7 +25,7 @@ abstract class Resource {
     static hasMany = [resourceRating: ResourceRating, readingItems: ReadingItem]
     static belongsTo = [topic: Topic]
 
-    String toString(){
+    String toString() {
         return "${description}"
     }
 
@@ -271,8 +271,18 @@ abstract class Resource {
         return false
     }
 
-    Boolean deleteFile() {
+    /*Boolean deleteFile() {
         log.info "Implemented in Sub Classes"
         return false
+    }*/
+
+    static List usersWithUnreadResources() {
+        return ReadingItem.createCriteria().listDistinct {
+            projections {
+                property('user')
+            }
+            eq('isRead', false)
+        }
     }
+
 }

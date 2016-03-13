@@ -11,12 +11,8 @@ class EmailService {
     def mailService
     def userService
     def groovyPageRenderer
-    def grailsLinkGenerator
     def grailsApplication
-
-    def serviceMethod() {
-
-    }
+    def messageSource
 
     def sendMail(EmailDTO emailDTO) {
         mailService.sendMail {
@@ -35,14 +31,17 @@ class EmailService {
         User user = User.findByEmail(email)
         if (topic && user) {
             def session = RequestContextHolder.currentRequestAttributes().getSession()
-            EmailDTO emailDTO = new EmailDTO()
-            emailDTO.to = []
-            emailDTO.to.add(email)
-            emailDTO.subject = "Topic Invitation"
-            emailDTO.content = groovyPageRenderer.render(template: '/topic/invite', model: [userName: session.user
-                    .firstName, topicName: topic.name, email: email, topicId: topic.id, base: grailsApplication.config
-                    .grails.serverBaseURL])
-            if(sendMail(emailDTO)){
+            EmailDTO emailDTO = new EmailDTO(
+                    to: [email],
+                    subject: messageSource.getMessage("com.ttnd.linksharing.dto.EmailDTO.topic.invitation.subject",
+                            [].toArray(), Locale.default),
+                    content: groovyPageRenderer.render(template: '/topic/invite', model: [userName : session.user.firstName,
+                                                                                          topicName: topic.name,
+                                                                                          email    : email,
+                                                                                          topicId  : topic.id,
+                                                                                          base     : grailsApplication.config.grails.serverBaseURL])
+            )
+            if (sendMail(emailDTO)) {
                 return true
             }
         }
@@ -51,15 +50,15 @@ class EmailService {
 
     def forgotPassword(String email) {
         User user = User.findByEmail(email)
-        if (user && userService.isActive(user.id)) {
+        if (user && userService.isActive(user)) {
             String newPassword = PasswordGenerator.getRandomPassword()
             if (newPassword) {
-                EmailDTO emailDTO = new EmailDTO()
-                emailDTO.to = []
-                emailDTO.to.add(email)
-                emailDTO.subject = "Forgot Password Mail"
-                emailDTO.content = groovyPageRenderer.render(template: '/login/password', model: [userName: user
-                        .userName, newPassword                                                            : newPassword])
+                EmailDTO emailDTO = new EmailDTO(
+                        to: [email],
+                        subject: messageSource.getMessage("com.ttnd.linksharing.dto.EmailDTO.forgot.password.subject", [].toArray(), Locale.default),
+                        content: groovyPageRenderer.render(template: '/login/password', model: [userName   : user.userName,
+                                                                                                newPassword: newPassword])
+                )
                 if (sendMail(emailDTO)) {
                     user.password = newPassword
                     if (user.save(flush: true)) {
@@ -69,5 +68,16 @@ class EmailService {
             }
         }
         return false
+    }
+
+    def sendUnReadResourcesMail(User user, List<Resource> unreadResources) {
+        EmailDTO emailDTO = new EmailDTO(
+                to: [user.email],
+                subject: messageSource.getMessage("com.tothenew.co.dto.EmailDTO.unread.subject", [].toArray(), Locale
+                        .default),
+                content: groovyPageRenderer.render(template: '/resource/unreadResouces', model: [user           : user,
+                                                                                                 unreadResources: unreadResources])
+        )
+        sendMail(emailDTO)
     }
 }

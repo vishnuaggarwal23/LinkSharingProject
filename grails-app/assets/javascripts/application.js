@@ -12,6 +12,8 @@
 
 $(document).ready(function () {
 
+    /*JSON Response*/
+
     function success(jsonObject) {
         if (jsonObject && jsonObject.message) {
             $('.jsonObjectResponse').css({"display": "block"});
@@ -34,6 +36,9 @@ $(document).ready(function () {
         error(jsonObject);
     }
 
+
+    /*AJAX- Toggle ReadingItem isRead*/
+
     $('.toggleIsRead').on('click', function (event) {
         event.preventDefault();
         $.ajax({
@@ -46,6 +51,8 @@ $(document).ready(function () {
         });
     });
 
+    /*AJAX- Toggle Subscription Seriousness*/
+
     $('.seriousness').change(function () {
         $.ajax({
             url: "/subscription/update",
@@ -53,6 +60,8 @@ $(document).ready(function () {
             success: ajaxResponse
         });
     });
+
+    /*AJAX- Toggle Topic Visibility*/
 
     $('.visibility').change(function () {
         $.ajax({
@@ -66,6 +75,8 @@ $(document).ready(function () {
         });
     });
 
+    /*AJAX- Create Topic*/
+
     $('#createTopicBtn').click(function () {
         $.ajax({
             url: "/topic/save",
@@ -77,6 +88,9 @@ $(document).ready(function () {
             complete: location.reload()
         });
     });
+
+
+    /*AJAX- Edit Topic Name*/
 
     editTopicName = function (topicId) {
         $.ajax({
@@ -99,6 +113,9 @@ $(document).ready(function () {
         $('.topicShowPanel_' + topicId).css({"visibility": "visible"});
         $('#topicEditPanel_' + topicId).css({"visibility": "hidden"});
     };
+
+
+    /*jQuery- Field Validators*/
 
     jQuery.validator.addMethod("passwordCheck", function (value, element) {
         var result = false;
@@ -179,6 +196,8 @@ $(document).ready(function () {
         });
     });
 
+    /*AJAX- Topic Post Search*/
+
     $('.topicPostSearchCancelBtn').on('click', function () {
         $('#topicPostSearchBox').val("");
         location.reload()
@@ -187,14 +206,32 @@ $(document).ready(function () {
     $('.topicPostSearchBtn').on('click', function () {
         $.ajax({
             url: "/resource/search",
-            data: {q: $('#topicPostSearchBox').val(), topicID: $('.topicPostSearchHiddenTopicID').val()},
+            data: {
+                q: $('#topicPostSearchBox').val(),
+                topicID: $('.topicPostSearchHiddenTopicID').val()
+            },
             success: function (searchPosts) {
                 $('.postPanelBody').html(searchPosts)
             }
         })
     });
 
-    $('#data-target').click(function(){
-        $('#resourceEditModal').modal()
+
+    /*Global Resource Search*/
+
+    $('.globalSearchCancelBtn').on('click', function () {
+        $('#globalSearchBox').val("");
+        location.href = "/";
+    });
+
+    $('.globalSearchBtn').on('click', function () {
+        $.ajax({
+            url: "/resource/save",
+            data: {
+                q: $('.globalSearchBox').val(),
+                global: $('#global').val(),
+                visibility: $('#visibility').val()
+            }
+        })
     })
 });

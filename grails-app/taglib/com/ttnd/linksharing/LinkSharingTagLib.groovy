@@ -30,7 +30,7 @@ class LinkSharingTagLib {
         if (resourceType == "LinkResource") {
             out << "<a href='${resourceLink}' class='pull-right' target='_blank'>View Full Site</a>"
         } else if (resourceType == "DocumentResource") {
-            out << "<a href='${createLink(controller: 'documentResource', action: 'download', params: [resourceId: resourceID])}' class='pull-right'>Download</a>"
+            out << "<a href='${createLink(controller: 'documentResource', action: 'download', params: [id: resourceID])}' class='pull-right'>Download</a>"
         }
     }
 

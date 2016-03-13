@@ -1,8 +1,11 @@
 <div class="panel-body">
     <div class="row">
         <div class="col-md-3">
-            <ls:userImage userId="${userDetails.id}" class="img img-responsive img-thumbnail" height="75px"
-                          width="75px"/>
+            <g:link controller="user" action="profile" params="[id: userDetails.id]">
+                <ls:userImage userId="${userDetails.id}" class="img img-responsive img-thumbnail" height="75px"
+                              width="75px"/>
+            </g:link>
+
         </div>
 
         <div class="col-md-9">
@@ -17,7 +20,7 @@
 
                 <div class="col-md-4 col-md-offset-2 col-xs-6">
                     <span class="text-muted">Topics</span><br/>
-                    <span class="text-primary"><ls:topicCount userId = "${userDetails.id}"/></span>
+                    <span class="text-primary"><ls:topicCount userId="${userDetails.id}"/></span>
                 </div>
             </div>
         </div>

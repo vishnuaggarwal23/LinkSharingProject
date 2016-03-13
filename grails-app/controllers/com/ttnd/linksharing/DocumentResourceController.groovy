@@ -1,9 +1,10 @@
 package com.ttnd.linksharing
 
 import constants.AppConstants
-import grails.transaction.Transactional
 
-class DocumentResourceController extends ResourceController {
+class DocumentResourceController{
+
+    def resourceService
 
     def index() {}
 
@@ -45,7 +46,7 @@ class DocumentResourceController extends ResourceController {
         redirect(controller: 'login', action: 'index')
     }*/
 
-    @Transactional
+    /*@Transactional
     def save(DocumentResource documentResource) {
         documentResource.createdBy = session.user
         def file = params.file
@@ -66,22 +67,54 @@ class DocumentResourceController extends ResourceController {
             //addToReadingItems(documentResource)
         }
         redirect(controller: 'login', action: 'index')
-    }
+    }*/
 
-    def download(Long resourceId) {
-        DocumentResource documentResource = (DocumentResource) Resource.get(resourceId)
-        if (documentResource && documentResource.topic.canViewedBy(session.user)) {
-            def file = new File(documentResource.filePath)
-            if (file.exists()) {
-                response.setContentType(AppConstants.DOCUMENT_CONTENT_TYPE)
-                response.setHeader("Content-disposition", "attachment;filename=\"${documentResource.getFileName()}\"")
-                response.outputStream << file.bytes
+    /*def download(Long resourceId) {
+         DocumentResource documentResource = (DocumentResource) Resource.get(resourceId)
+         if (documentResource && documentResource.topic.canViewedBy(session.user)) {
+             def file = new File(documentResource.filePath)
+             if (file.exists()) {
+                 response.setContentType(AppConstants.DOCUMENT_CONTENT_TYPE)
+                 response.setHeader("Content-disposition", "attachment;filename=\"${documentResource.getFileName()}\"")
+                 response.outputStream << file.bytes
+             } else {
+                 flash.error = "resource not found"
+             }
+         } else {
+             flash.error = "resource not found"
+         }
+         redirect(controller: 'login', action: 'index')
+     }*/
+
+    def upload(DocumentResource documentResource) {
+        if (session.user) {
+            documentResource.createdBy = session.user
+            def file = params.file
+            DocumentResource tempResource = resourceService.uploadDocumentResource(documentResource, file)
+            if (tempResource) {
+                resourceService.addToReadingItems(tempResource, session.user)
+                flash.message = "Resource Saved"
             } else {
-                flash.error = "resource not found"
+                flash.error = "Resource not Saved"
             }
         } else {
-            flash.error = "resource not found"
+            flash.error = "Session user not set"
         }
         redirect(controller: 'login', action: 'index')
     }
+
+    def download(Long id) {
+        DocumentResource documentResource = (DocumentResource) Resource.get(id)
+        def file = resourceService.downloadDocumentResource(documentResource, session.user)
+        if (file) {
+            response.setContentType(AppConstants.DOCUMENT_CONTENT_TYPE)
+            response.setHeader("Content-disposition", "attachment;filename=\"${documentResource.getFileName()}\"")
+            response.outputStream << file.bytes
+        } else {
+            flash.error = "Resource not Available"
+        }
+        redirect(controller: 'login', action: 'index')
+    }
+
+    //TDOD: add to reading items to be implemented
 }

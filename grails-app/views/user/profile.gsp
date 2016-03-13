@@ -27,7 +27,7 @@
                     Topics
                 </div>
 
-                <div id="createdTopics">
+                <div id="createdTopics" style="overflow-y:scroll; height: 300px;">
                     <g:render template="/topic/list"/>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     Subscriptions
                 </div>
 
-                <div id="subscribedTopics">
+                <div id="subscribedTopics" style="overflow-y:scroll; height: 300px;">
                     <g:render template="/topic/list"/>
                 </div>
 
@@ -83,7 +83,9 @@
                     <g:each in="${createdResources}">
                         <g:render template="/templates/postPanel" model="[post: it]"/>
                     </g:each>
-
+                    <g:paginate class="pagination" total="${totalPosts}" controller="user" action="profile"
+                                max="${resourceSearchCO.max}" offset="${resourceSearchCO.offset}"
+                                params="[id: userDetails.id]"/>
                 </div>
             </div>
         </div>

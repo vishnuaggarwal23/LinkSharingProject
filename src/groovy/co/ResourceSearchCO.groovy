@@ -10,6 +10,7 @@ class ResourceSearchCO extends SearchCO {
     Long id
     Long topicID
     Visibility visibility
+    Boolean global
 
     User getUser() {
         return User.get(id)

@@ -1,8 +1,10 @@
 <div class="panel-body">
     <div class="row">
         <div class="col-md-3">
-            <ls:userImage userId="${topic.createdBy.id}" class="img img-responsive img-thumbnail" height="75px"
-                          width="75px"/>
+            <g:link controller="user" action="profile" params="[id: topic.createdBy.id]">
+                <ls:userImage userId="${topic.createdBy.id}" class="img img-responsive img-thumbnail" height="75px"
+                              width="75px"/>
+            </g:link>
         </div>
 
         <div class="col-md-9">

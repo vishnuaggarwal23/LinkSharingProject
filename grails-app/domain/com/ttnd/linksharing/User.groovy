@@ -96,8 +96,8 @@ class User {
         return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
     }
 
-    static List<PostVO> getReadingItems(User user) {
-        List<ReadingItem> readingItems = ReadingItem.findAllByUser(user)
+    static List<PostVO> getReadingItems(User user, SearchCO searchCO) {
+        List<ReadingItem> readingItems = ReadingItem.findAllByUser(user, [max: searchCO.max, offset: searchCO.offset])
         List<PostVO> readingItemsList = []
         readingItems.each {
             readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
@@ -118,10 +118,9 @@ class User {
 
     public Integer getScore(Resource resource) {
         ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
-        if(!resourceRating){
+        if (!resourceRating) {
             return 1
-        }
-        else{
+        } else {
             return resourceRating.score
         }
 
@@ -173,5 +172,23 @@ class User {
                     it.email, isActive: it.isActive))
         }
         return userVOList
+    }
+
+    List<Resource> unreadResources() {
+        return ReadingItem.createCriteria().list {
+            projections {
+                property('resource')
+            }
+            eq('user', this)
+            eq('isRead', false)
+        }
+    }
+
+    Integer getTotalReadingItem() {
+        return ReadingItem.countByUser(this) ?: 0
+    }
+
+    Integer getPostsCount() {
+        return Resource.countByCreatedBy(this) ?: 0
     }
 }

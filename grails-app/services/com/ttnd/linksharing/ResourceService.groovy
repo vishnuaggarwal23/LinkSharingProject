@@ -105,7 +105,7 @@ class ResourceService {
 
     def search(ResourceSearchCO resourceSearchCO) {
         List<PostVO> resources = []
-        Resource.search(resourceSearchCO).list().each {
+        Resource.search(resourceSearchCO).list([max:resourceSearchCO.max,offset:resourceSearchCO.offset]).each {
             resources.add(Resource.getPost(it.id))
         }
         return resources
@@ -159,7 +159,11 @@ class ResourceService {
     def downloadDocumentResource(DocumentResource documentResource, User user) {
         if (user && documentResource && topicService.canViewedBy(documentResource.topic, user)) {
             def file = new File(documentResource.filePath)
-            return file.exists()
+            if (file.exists()) {
+                return file
+            } else {
+                return null
+            }
         } else {
             return null
         }
@@ -174,6 +178,20 @@ class ResourceService {
 
     def getUniqueID() {
         return UUID.randomUUID()
+    }
+
+    def addToReadingItems(Resource resource, User sessionUser) {
+        List<User> subscribedUsers = Subscription.createCriteria().list {
+            projections {
+                property('user')
+            }
+            eq('topic', resource.topic)
+        }
+        subscribedUsers.each {
+            if (it.id != sessionUser.id) {
+                resource.addToReadingItems(new ReadingItem(user: it, resource: resource, isRead: false))
+            }
+        }
     }
 
 }

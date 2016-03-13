@@ -12,11 +12,11 @@ class LinkResource extends Resource {
         return url
     }
 
-    @Transactional
+    /*@Transactional
     Boolean deleteFile() {
         if (this.delete(flush: true))
             return true
         else
             return false
-    }
+    }*/
 }

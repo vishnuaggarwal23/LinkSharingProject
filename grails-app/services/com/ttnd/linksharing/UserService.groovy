@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import co.UpdatePasswordCO
 import co.UpdateProfileCO
+import co.UserCO
 import co.UserSearchCO
 import grails.transaction.Transactional
 import vo.UserVO
@@ -10,6 +11,7 @@ import vo.UserVO
 class UserService {
 
     def assetResourceLocator
+    def emailService
 
     def saveUser(User user) {
         if (user.validate()) {
@@ -17,7 +19,6 @@ class UserService {
         } else {
             return null
         }
-
     }
 
     def isAdmin(User user) {
@@ -108,6 +109,37 @@ class UserService {
         } else {
             return null
         }
+    }
 
+    def registerUser(UserCO userCO, def file) {
+        if (!checkIfUserExists(userCO)) {
+            User user = userCO.properties
+            if (!file.empty) {
+                user.photo = file.bytes
+            }
+            user.isActive = true
+            return saveUser(user)
+        } else {
+            return null
+        }
+
+    }
+
+    def checkIfUserExists(UserCO userCO) {
+        return User.findByUserNameOrEmail(userCO.userName, userCO.email)
+    }
+
+    def sendUnreadItemsMail() {
+        getUserWithUnreadItems().each { user ->
+            emailService.sendUnReadResourcesMail(user, getUnreadResources(user))
+        }
+    }
+
+    List<User> getUserWithUnreadItems() {
+        return Resource.usersWithUnreadResources()
+    }
+
+    List<Resource> getUnreadResources(User user) {
+        return user.unreadResources()
     }
 }

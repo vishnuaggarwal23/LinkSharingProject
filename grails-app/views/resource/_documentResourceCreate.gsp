@@ -6,7 +6,7 @@
             </div>
 
             <div class="modal-body">
-                <g:uploadForm name="upload" class="form-horizontal" controller="documentResource" action="save">
+                <g:uploadForm name="upload" class="form-horizontal" controller="documentResource" action="upload">
                     <div class="form-group row">
                         <label for="doc" class="col-sm-4 form-control-label">Document *</label>
 

@@ -16,7 +16,7 @@ class DocumentResource extends Resource {
         })
     }
 
-    @Transactional
+    /*@Transactional
     Boolean deleteFile() {
         String filePath = createCriteria().get {
             projections {
@@ -31,7 +31,7 @@ class DocumentResource extends Resource {
         } else {
             return false
         }
-    }
+    }*/
 
     String toString() {
         return filePath
