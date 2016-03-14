@@ -1,14 +1,11 @@
 package com.ttnd.linksharing
 
 import constants.AppConstants
+import util.Linksharing
 
 class LinkSharingTagLib {
     //static defaultEncodeAs = [taglib: 'html']
     //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
-
-    def resourceService
-    def userService
-    def topicService
 
     static namespace = "ls"
 
@@ -27,9 +24,9 @@ class LinkSharingTagLib {
     }
 
     def resourceType = { attrs, body ->
-        def resourceID = attrs.resourceID
-        def resourceType = resourceService.checkType(Resource?.get(resourceID))
-        def resourceLink = attrs.url
+        Long resourceID = attrs.resourceID
+        String resourceType = Linksharing.checkResourceType(Resource?.get(resourceID))
+        String resourceLink = attrs.url
         if (resourceType == AppConstants.LINK_RESOURCE_TYPE) {
             out << "<a href='${resourceLink}' class='pull-right' target='_blank'>View Full Site</a>"
         } else if (resourceType == AppConstants.DOCUMENT_RESOURCE_TYPE) {
@@ -41,8 +38,7 @@ class LinkSharingTagLib {
         Long resourceID = attrs.resourceID
         User user = session.user
         if (user) {
-            def canDelete = resourceService.canEditDeleteResource(Resource?.get(resourceID), user)
-            if (canDelete) {
+            if (Linksharing.ifUserCanEditDeleteResource(Resource?.get(resourceID), user)) {
                 out << "<a href='${createLink(controller: 'Resource', action: 'delete', params: [id: resourceID])}' " +
                         "class='pull-right'>Delete</a>"
             }
@@ -107,7 +103,7 @@ class LinkSharingTagLib {
         Topic topic = Topic.get(topicId)
         if (user) {
             if (topic) {
-                if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
+                if (Linksharing.isUserAdmin(user) || Linksharing.ifTopicIsCreatedBy(topic, user)) {
                     out << "${g.select(name: 'visibility', from: enums.Visibility.values(), class: 'btn btn-xs btn-default dropdown-toggle visibility', topicId: topic.id, topicName: topic.name, createdBy: user, value: topic.visibility)}"
                 }
             }
@@ -116,9 +112,9 @@ class LinkSharingTagLib {
 
     def userImage = { attrs, body ->
         Long userId = attrs.userId
-        def height = attrs.height
-        def width = attrs.width
-        def tagClass = attrs.class
+        String height = attrs.height
+        String width = attrs.width
+        String tagClass = attrs.class
         out << "<img src='${createLink(controller: 'user', action: 'image', params: [id: userId])}' " +
                 "class='${tagClass}' height='${height}' width='${width}'>"
     }
@@ -128,7 +124,7 @@ class LinkSharingTagLib {
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
+            if (Linksharing.isUserAdmin(user) || Linksharing.ifTopicIsCreatedBy(topic, user)) {
                 out << "<a href='${createLink(controller: 'topic', action: 'delete', params: [id: topicId])}'><span " +
                         "class='fa fa-trash' style='font-size:20px'></span></a>"
             }
@@ -140,7 +136,7 @@ class LinkSharingTagLib {
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user) || Subscription.findByUserAndTopic(user, topic)) {
+            if (Linksharing.isUserAdmin(user) || Linksharing.ifTopicIsCreatedBy(topic, user) || Subscription.findByUserAndTopic(user, topic)) {
                 out << "<a class='btn' id='inviteModalBtn' role='button' data-toggle='modal' data-target='#sendinviteModal'>" +
                         "<span class='glyphicon glyphicon-envelope'></span></a>"
             }
@@ -152,7 +148,7 @@ class LinkSharingTagLib {
         Long topicId = attrs.topicId
         Topic topic = Topic.get(topicId)
         if (user && topic) {
-            if (userService.isAdmin(user) || topicService.isCreatedBy(topic, user)) {
+            if (Linksharing.isUserAdmin(user) || Linksharing.ifTopicIsCreatedBy(topic, user)) {
                 out << "<span name='editTopic_${topicId}' onclick='openTopicEdit(${topicId})' " +
                         "id='editTopic_${topicId}' " +
                         "class='fa fa-file-o' " +
@@ -166,7 +162,7 @@ class LinkSharingTagLib {
         Long resourceId = attrs.resourceId
         Resource resource = Resource.get(resourceId)
         if (user && resource) {
-            if (userService.isAdmin(user) || resourceService.isCreatedBy(resource, user)) {
+            if (Linksharing.isUserAdmin(user) || Linksharing.isResourceCreatedBy(resource, user)) {
                 out << "<a class=\"btn\" id=\"resourceEdit\" role=\"button\" data-toggle=\"modal\"\n" +
                         "                           data-target=\"#resourceEditModal\"\n" +
                         "                           params=\"[id:${resourceId},description:${resource.description}]\">\n" +

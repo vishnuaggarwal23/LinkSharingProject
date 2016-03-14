@@ -106,6 +106,7 @@ class TopicController {
     }
 
     def validateUniqueTopicPerUser() {
-        return Topic.findByCreatedByAndName(session.user, params.topicName) ? false : true
+        Boolean valid = Topic.findByCreatedByAndName(session.user, params.topicName) ? false : true
+        render valid
     }
 }

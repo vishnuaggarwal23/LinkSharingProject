@@ -4,46 +4,19 @@ import co.TopicCO
 import co.TopicSearchCO
 import enums.Visibility
 import grails.transaction.Transactional
+import util.Linksharing
 import vo.TopicVO
-import vo.UserVO
 
 @Transactional
 class TopicService {
 
-    def userService
     def subscriptionService
 
-    def saveTopic(Topic topic) {
+    Topic saveTopic(Topic topic) {
         if (topic.validate()) {
             return topic.save(flush: true)
-        } else {
-            return null
         }
-    }
-
-    def isPublic(Topic topic) {
-        if (topic) {
-            return topic.visibility == Visibility.PUBLIC
-        } else {
-            return null
-        }
-    }
-
-    def canViewedBy(Topic topic, User user) {
-        if (user && topic) {
-            return ((isPublic(topic)) || userService.isAdmin(user) || (Subscription.findByUserAndTopic(user,
-                    topic)))
-        } else {
-            return null
-        }
-    }
-
-    def isCreatedBy(Topic topic, User user) {
-        if (user && topic) {
-            return topic.createdBy.id == user.id
-        } else {
-            return null
-        }
+        return null
     }
 
     def search(TopicSearchCO topicSearchCO) {
@@ -64,7 +37,7 @@ class TopicService {
         return createdTopics
     }
 
-    def saveTopic(TopicCO topicCO) {
+    Topic saveTopic(TopicCO topicCO) {
         Topic topic = topicCO.getTopic()
         if (topic) {
             if (topicCO.newName) {
@@ -73,60 +46,26 @@ class TopicService {
                 topic.visibility = Visibility.checkVisibility(topicCO.visibility)
             }
             return saveTopic(topic)
-        } else {
-            return null
         }
+        return null
     }
 
-    def joinTopic(Topic topic, User user) {
+    Subscription joinTopic(Topic topic, User user) {
         if (topic && user) {
             return subscriptionService.saveSubscription(new Subscription(user: user, topic: topic))
-        } else {
-            return null
         }
+        return null
     }
 
     def deleteTopic(Topic topic, User user) {
         if (user && topic) {
-            if (userService.isAdmin(user) || isCreatedBy(topic, user)) {
+            if (Linksharing.isUserAdmin(user) || Linksharing.ifTopicIsCreatedBy(topic, user)) {
                 topic.delete(flush: true)
                 return true
             } else {
                 return false
             }
-        } else {
-            return null
         }
-    }
-
-    def subscribedUsers(Topic topic) {
-        if (topic) {
-            List<User> subscribedUsers = topic.subscribedUsers()
-            List<UserVO> subscribedUsersVO = []
-            subscribedUsers.each { User user ->
-                subscribedUsersVO.add(new UserVO(id: user.id, name: user.userName, firstName: user.firstName, lastName:
-                        user.lastName, email: user.email))
-            }
-            return subscribedUsersVO
-        }
-    }
-
-    def topicDetails(Topic topic) {
-        if (topic) {
-            Topic topicDetails = topic.topicDetails()
-            TopicVO topicVO = new TopicVO()
-            topicVO.id = topicDetails.id
-            topicVO.name = topicDetails.name
-            topicVO.createdBy = topicDetails.createdBy
-            topicVO.visibility = topicDetails.visibility
-            return topicVO
-        }
-    }
-
-    def trendingTopics(){
-        List<TopicVO> trendingTopicsVO=[]
-        Topic.trendingTopics().each {
-
-        }
+        return null
     }
 }

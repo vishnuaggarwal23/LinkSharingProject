@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import co.*
 import enums.Visibility
+import util.Linksharing
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
@@ -44,14 +45,14 @@ class UserController {
         resourceSearchCO.offset = resourceSearchCO.offset ?: 0
         User user = User.get(resourceSearchCO.id)
         if (session.user) {
-            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(resourceSearchCO.id)))) {
+            if (!(Linksharing.isUserAdmin(session.user) || Linksharing.isCurrentUser(session.user, User.load(resourceSearchCO.id)))) {
                 resourceSearchCO.visibility = Visibility.PUBLIC
             }
         } else {
             resourceSearchCO.visibility = Visibility.PUBLIC
         }
         render view: 'profile', model: [userDetails     : DomainToVO.userDetails(user),
-                                        createdResources: resourceService.search(resourceSearchCO),
+                                        createdResources: DomainToVO.createdResources(resourceSearchCO),
                                         totalPosts      : user.getPostsCount(),
                                         resourceSearchCO: resourceSearchCO]
     }
@@ -72,33 +73,33 @@ class UserController {
     def topics(Long id) {
         TopicSearchCO topicSearchCO = new TopicSearchCO(id: id)
         if (session.user) {
-            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
+            if (!(Linksharing.isUserAdmin(session.user) || Linksharing.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
         } else {
             topicSearchCO.visibility = Visibility.PUBLIC
         }
-        List<TopicVO> createdTopics = topicService.search(topicSearchCO)
+        List<TopicVO> createdTopics = DomainToVO.createdTopics(topicSearchCO)
         render(template: '/topic/list', model: [topicList: createdTopics])
     }
 
     def subscriptions(Long id) {
         TopicSearchCO topicSearchCO = new TopicSearchCO(id: id)
         if (session.user) {
-            if (!(userService.isAdmin(session.user) || userService.isCurrentUser(session.user, User.load(id)))) {
+            if (!(Linksharing.isUserAdmin(session.user) || Linksharing.isCurrentUser(session.user, User.load(id)))) {
                 topicSearchCO.visibility = Visibility.PUBLIC
             }
         } else {
             topicSearchCO.visibility = Visibility.PUBLIC
         }
-        List<Topic> subscribedTopics = subscriptionService.search(topicSearchCO)
+        List<Topic> subscribedTopics = DomainToVO.subscribedTopics(topicSearchCO)
         render(template: '/topic/list', model: [topicList: subscribedTopics])
     }
 
     def registeredUsers(UserSearchCO userSearchCO) {
         userSearchCO.max = userSearchCO.max ?: 5
         userSearchCO.offset = userSearchCO.offset ?: 0
-        List<UserVO> registeredUsers = userService.registeredUsers(userSearchCO, session.user)
+        List<UserVO> registeredUsers = DomainToVO.registeredUsers(userSearchCO, session.user)
         if (registeredUsers) {
             render(view: 'users', model: [userList    : registeredUsers,
                                           totalUsers  : User.count() ?: 0,
@@ -133,11 +134,12 @@ class UserController {
                 if (user) {
                     session.user = user
                     flash.message = "Profile Updated"
-                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user), userCo: user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user),
+                                                 userCo     : user])
                 } else {
                     flash.error = "Profile not Updated"
-                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session
-                            .user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user),
+                                                 userCo     : session.user])
                 }
             }
         }
@@ -145,6 +147,7 @@ class UserController {
 
     def updatePassword(UpdatePasswordCO updatePasswordCO) {
         if (session.user) {
+            updatePasswordCO.id = session.user.id
             if (updatePasswordCO.hasErrors()) {
                 render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session.user])
             } else {
@@ -169,6 +172,7 @@ class UserController {
     }
 
     def validatePassword() {
-        return User.findByUserNameAndPassword(session.user.userName, params.oldPassword) ? false : true
+        Boolean valid = User.findByUserNameAndPassword(session.user.userName, params.oldPassword) ? true : false
+        render valid
     }
 }

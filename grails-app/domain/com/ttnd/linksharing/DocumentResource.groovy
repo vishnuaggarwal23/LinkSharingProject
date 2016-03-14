@@ -20,8 +20,8 @@ class DocumentResource extends Resource {
         return filePath
     }
 
-    String getFileName() {
+    /*String getFileName() {
         String fileName = this.filePath.substring(this.filePath.lastIndexOf('/') + 1, this.filePath.length())
         return fileName ?: ""
-    }
+    }*/
 }

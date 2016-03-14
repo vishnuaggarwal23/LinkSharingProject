@@ -7,14 +7,14 @@
             </div>
 
             <div class="modal-body">
-                <g:form class="form-horizontal" name="topicCreate" id="topicCreate">
+                <g:form class="form-horizontal" name="topicCreate">
                     <div class="form-group row">
                         <label for="topicName" class="col-sm-4 form-control-label">Name *</label>
 
                         <div class="col-sm-8">
-                            <g:textField name="topicName" id="topicName" placeholder="Topic Name"
+                            <g:textField name="topicName" placeholder="Topic Name"
                                          class="form-control col-sm-8"/>
-                            <g:hiddenField name="createdBy" id="createdBy" value="${session.user}"/>
+                            <g:hiddenField name="createdBy" value="${session.user}"/>
                         </div>
                     </div>
 
@@ -23,7 +23,7 @@
 
                         <div class="col-sm-8">
                             <div class="dropdown">
-                                <g:render name="visibility" class="btn dropdown-toggle" id="visibility"
+                                <g:render name="visibility" class="btn dropdown-toggle"
                                           template="/templates/visibilitySelect"/>
                             </div>
                         </div>

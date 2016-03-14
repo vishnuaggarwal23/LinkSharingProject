@@ -173,6 +173,9 @@ $(document).ready(function () {
                 },
                 'description': {
                     required: true
+                },
+                'topic': {
+                    required: true
                 }
             },
             messages: {
@@ -181,6 +184,9 @@ $(document).ready(function () {
                 },
                 'description': {
                     required: "Resource Description is Required"
+                },
+                'topic': {
+                    required: "Topic is Required"
                 }
             }
         });
@@ -205,6 +211,9 @@ $(document).ready(function () {
                 },
                 'description': {
                     required: true
+                },
+                'topic': {
+                    required: true
                 }
             },
             messages: {
@@ -213,6 +222,9 @@ $(document).ready(function () {
                 },
                 'description': {
                     required: "Resource Description is Required"
+                },
+                'topic': {
+                    required: "Topic is Required"
                 }
             }
         });
@@ -230,12 +242,18 @@ $(document).ready(function () {
                             }
                         }
                     }
+                },
+                'visibility': {
+                    required: true
                 }
             },
             messages: {
                 'topicName': {
                     required: "Topic Name Field is Required",
                     remote: "Topic already Exists"
+                },
+                'visibility': {
+                    required: "Visibility is Required"
                 }
             }
         });

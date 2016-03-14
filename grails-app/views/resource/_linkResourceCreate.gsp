@@ -6,12 +6,12 @@
             </div>
 
             <div class="modal-body">
-                <g:form class="form-horizontal" controller="linkResource" action="save">
+                <g:form name="linkResourceSave" class="form-horizontal" controller="linkResource" action="save">
                     <div class="form-group row">
-                        <label for="link" class="col-sm-4 form-control-label">Link *</label>
+                        <label for="url" class="col-sm-4 form-control-label">Link *</label>
 
                         <div class="col-sm-8">
-                            <g:field type="url" class="form-control col-sm-8" id="link" name="url"/>
+                            <g:field type="url" class="form-control col-sm-8" name="url"/>
                         </div>
                     </div>
 
@@ -19,7 +19,7 @@
                         <label for="description" class="col-sm-4 form-control-label">Description *</label>
 
                         <div class="col-sm-8">
-                            <g:textArea name="description" class="col-sm-8 form-control" id="description"/>
+                            <g:textArea name="description" class="col-sm-8 form-control"/>
                         </div>
                     </div>
 

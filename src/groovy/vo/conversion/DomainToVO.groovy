@@ -1,16 +1,17 @@
 package vo.conversion
 
+import co.ResourceSearchCO
 import co.SearchCO
+import co.TopicSearchCO
+import co.UserSearchCO
 import com.ttnd.linksharing.Resource
 import com.ttnd.linksharing.Topic
 import com.ttnd.linksharing.User
+import util.Linksharing
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
 
-/**
- * Created by vishnu on 14/3/16.
- */
 class DomainToVO {
     static List<UserVO> subscribedUsers(Topic topic) {
         if (topic) {
@@ -197,5 +198,59 @@ class DomainToVO {
             }
             return userSubscriptionsVO
         }
+    }
+
+    static List<UserVO> registeredUsers(UserSearchCO userSearchCO, User user) {
+        if (user && Linksharing.isUserAdmin(user) && Linksharing.isUserActive(user)) {
+            List<UserVO> registeredUsersVO = []
+            User.search(userSearchCO).list([sort  : userSearchCO.sort,
+                                            order : userSearchCO.order,
+                                            max   : userSearchCO.max,
+                                            offset: userSearchCO.offset]).each {
+                registeredUsersVO.add(new UserVO(
+                        id: it.id,
+                        name: it.userName,
+                        firstName: it.firstName,
+                        lastName: it.lastName,
+                        email: it.email,
+                        isActive: it.isActive)
+                )
+            }
+            return registeredUsersVO
+        }
+    }
+
+    static List<TopicVO> createdTopics(TopicSearchCO topicSearchCO) {
+        List<TopicVO> createdTopics = []
+        if (topicSearchCO.id) {
+            List<Topic> topicList = Topic.createCriteria().list(max: topicSearchCO.max) {
+                eq('createdBy.id', topicSearchCO.id)
+                if (topicSearchCO.visibility) {
+                    eq('visibility', topicSearchCO.visibility)
+                }
+            }
+            topicList.each {
+                topic ->
+                    createdTopics.add(new TopicVO(id: topic.id, name: topic.name, visibility: topic
+                            .visibility, createdBy: topic.createdBy))
+            }
+        }
+        return createdTopics
+    }
+
+    static List<Topic> subscribedTopics(TopicSearchCO topicSearchCO) {
+        if (topicSearchCO.id) {
+            User user = topicSearchCO.getUser()
+            return user.getSubscribedTopics()
+        }
+    }
+
+    static List<PostVO> createdResources(ResourceSearchCO resourceSearchCO) {
+        List<PostVO> resources = []
+        Resource.search(resourceSearchCO).list([max   : resourceSearchCO.max,
+                                                offset: resourceSearchCO.offset]).each {
+            resources.add(DomainToVO.post(it))
+        }
+        return resources
     }
 }

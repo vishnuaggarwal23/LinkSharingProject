@@ -42,8 +42,7 @@ class ResourceController {
     def delete(Long id) {
         Resource resource = Resource.get(id)
         if (session.user && resource) {
-            def resourceDeleted = resourceService.deleteResource(resource, session.user)
-            if (resourceDeleted) {
+            if (resourceService.deleteResource(resource, session.user)) {
                 flash.message = "Resource Deleted"
             } else {
                 flash.error = "Resource not Deleted"
@@ -87,8 +86,7 @@ class ResourceController {
         if (session.user) {
             Resource resource = Resource.get(id)
             if (resource) {
-                Resource tempResource = resourceService.editResourceDescription(resource, description)
-                if (tempResource) {
+                if (resourceService.editResourceDescription(resource, description)) {
                     flash.message = "Resource Description Updated"
                 } else {
                     flash.error = "Resource Description is not Updated"

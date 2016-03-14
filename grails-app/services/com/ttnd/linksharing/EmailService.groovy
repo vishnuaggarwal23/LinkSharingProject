@@ -3,6 +3,7 @@ package com.ttnd.linksharing
 import dto.EmailDTO
 import grails.transaction.Transactional
 import org.springframework.web.context.request.RequestContextHolder
+import util.Linksharing
 import util.PasswordGenerator
 
 @Transactional
@@ -50,7 +51,7 @@ class EmailService {
 
     def forgotPassword(String email) {
         User user = User.findByEmail(email)
-        if (user && userService.isActive(user)) {
+        if (user && Linksharing.isUserActive(user)) {
             String newPassword = PasswordGenerator.getRandomPassword()
             if (newPassword) {
                 EmailDTO emailDTO = new EmailDTO(

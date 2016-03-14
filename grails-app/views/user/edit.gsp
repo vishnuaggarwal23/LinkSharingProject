@@ -63,10 +63,11 @@
                         <div class="form-group row">
                             <label for="userName" class="col-sm-4 form-control-label">User Name *</label>
 
-                            %{--<div class="col-sm-8">
-                                <g:textField name="userName" type="text" class="form-control" id="userName"
-                                             value="${userCo?.userName}"/>
-                            </div>--}%
+                            <div class="col-sm-8">
+                                <input type="text" value="${userCo?.userName}" readonly class="form-control">
+                                %{--<g:textField name="userName" type="text" class="form-control" id="userName"
+                                             value="${userCo?.userName}" readonly="true"/>--}%
+                            </div>
 
                             <div class="alert-danger"><g:fieldError field="userName" bean="${userCo}"/></div>
                         </div>
@@ -98,13 +99,13 @@
                 </div>
 
                 <div class="panel-body">
-                    <g:form name="updatePassword" id="updatePassword" controller="user" action="updatePassword">
+                    <g:form name="updatePassword"controller="user" action="updatePassword">
                         <div class="form-group row">
                             <g:hiddenField name="id" value="${userCo?.id}"/>
                             <label for="oldPassword" class="col-sm-4 form-control-label">Old Password *</label>
 
                             <div class="col-sm-8">
-                                <g:field name="oldPassword" type="password" class="form-control" id="oldPassword"/>
+                                <g:field name="oldPassword" type="password" class="form-control"/>
                             </div>
                         </div>
 
@@ -112,7 +113,7 @@
                             <label for="password" class="col-sm-4 form-control-label">Password *</label>
 
                             <div class="col-sm-8">
-                                <g:field name="password" type="password" class="form-control" id="password"/>
+                                <g:field name="password" type="password" class="form-control"/>
                             </div>
                         </div>
 
@@ -120,8 +121,7 @@
                             <label for="confirmPassword" class="col-sm-4 form-control-label">Confirm Password *</label>
 
                             <div class="col-sm-8">
-                                <g:field name="confirmPassword" type="password" class="form-control"
-                                         id="confirmPassword"/>
+                                <g:field name="confirmPassword" type="password" class="form-control"/>
                             </div>
                         </div>
 
