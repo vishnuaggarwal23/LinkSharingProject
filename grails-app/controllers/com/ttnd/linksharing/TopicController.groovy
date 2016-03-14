@@ -6,6 +6,7 @@ import grails.converters.JSON
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
+import vo.conversion.DomainToVO
 
 class TopicController {
 
@@ -15,18 +16,23 @@ class TopicController {
     def show(Long id) {
         Topic topic = Topic.read(id)
         if (topic) {
-            TopicVO topicDetails = Topic.getTopicDetails(topic)
-            List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)
-            List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)
+            /*TopicVO topicDetails = Topic.getTopicDetails(topic)*/
+            /*List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)*/
+            /*List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)*/
+
+            TopicVO topicDetailsVO = DomainToVO.topicDetails(topic)
+            List<UserVO> subscribedUsersVO = DomainToVO.subscribedUsers(topic)
+            List<PostVO> topicPostsVO = DomainToVO.topicPosts(topic)
+
             if (topic.visibility == Visibility.PUBLIC) {
-                render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
-                                             topicPosts  : topicPosts])
+                render(view: 'show', model: [topicDetails: topicDetailsVO, subscribedUsers: subscribedUsersVO,
+                                             topicPosts  : topicPostsVO])
             } else if (topic.visibility == Visibility.PRIVATE) {
                 User user = session.user
                 Subscription subscription = Subscription.findByUserAndTopic(user, topic)
                 if (subscription) {
-                    render(view: 'show', model: [topicDetails: topicDetails, subscribedUsers: subscribedUsers,
-                                                 topicPosts  : topicPosts])
+                    render(view: 'show', model: [topicDetails: topicDetailsVO, subscribedUsers: subscribedUsersVO,
+                                                 topicPosts  : topicPostsVO])
                 } else {
                     flash.put("error", "Topic is Private, User is not Subscribed to it")
                 }

@@ -79,8 +79,16 @@ class User {
         return topicList
     }
 
+    User userDetails() {
+        return this
+    }
+
     UserVO getUserDetails() {
         return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
+    }
+
+    def readingItems(SearchCO searchCO) {
+        return ReadingItem?.findAllByUser(this, [max: searchCO.max, offset: searchCO.offset])
     }
 
     static List<PostVO> getReadingItems(User user, SearchCO searchCO) {
@@ -114,6 +122,21 @@ class User {
             return false
         }*/
         return Subscription.findByUserAndTopic(this, Topic.load(topicId)) ? true : false
+    }
+
+    def userSubscriptions() {
+        return Subscription.createCriteria().list(max: 5) {
+            projections {
+                'topic' {
+                    property('id')
+                    property('name')
+                    property('visibility')
+                }
+                'user' {
+                    eq('id', this.id)
+                }
+            }
+        }
     }
 
     List<TopicVO> getUserSubscriptions() {

@@ -35,6 +35,4 @@ class DocumentResourceController {
         }
         redirect(controller: 'login', action: 'index')
     }
-
-    //TDOD: add to reading items to be implemented
 }

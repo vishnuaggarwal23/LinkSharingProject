@@ -60,6 +60,22 @@ class Topic {
         return trendingTopics
     }
 
+    static List<Topic> trendingTopics() {
+        return Resource.createCriteria().list {
+            projections {
+                createAlias('topic', 't')
+                groupProperty('t.id')
+                property('t.name')
+                property('t.visibility')
+                count('t.id', 'topicCount')
+                property('t.createdBy')
+            }
+            order('topicCount', 'desc')
+            order('t.name', 'asc')
+            maxResults(5)
+        }
+    }
+
     static TopicVO getTopicDetails(Topic topic) {
         TopicVO topicDetails = new TopicVO()
         topicDetails.id = topic.id
@@ -67,6 +83,10 @@ class Topic {
         topicDetails.visibility = topic.visibility
         topicDetails.createdBy = topic.createdBy
         return topicDetails
+    }
+
+    Topic topicDetails() {
+        return this
     }
 
     static List<UserVO> getSubscribedUsers(Topic topic) {
@@ -90,5 +110,14 @@ class Topic {
                     it[5], isAdmin: it[6], isActive: it[7]))
         }
         return subscribedUsers
+    }
+
+    List<User> subscribedUsers() {
+        return Subscription.createCriteria().list {
+            projections {
+                property('user')
+            }
+            eq('topic', this)
+        }
     }
 }

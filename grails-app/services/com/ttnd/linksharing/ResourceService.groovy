@@ -4,6 +4,7 @@ import co.ResourceSearchCO
 import constants.AppConstants
 import grails.transaction.Transactional
 import vo.PostVO
+import vo.conversion.DomainToVO
 
 @Transactional
 class ResourceService {
@@ -106,7 +107,7 @@ class ResourceService {
                 }
             }
             if (canView) {
-                return Resource.getPost(resource.id)
+                return DomainToVO.post(resource)
             } else {
                 return null
             }
@@ -118,7 +119,7 @@ class ResourceService {
     def search(ResourceSearchCO resourceSearchCO) {
         List<PostVO> resources = []
         Resource.search(resourceSearchCO).list([max: resourceSearchCO.max, offset: resourceSearchCO.offset]).each {
-            resources.add(Resource.getPost(it.id))
+            resources.add(DomainToVO.post(it))
         }
         return resources
     }
@@ -190,17 +191,17 @@ class ResourceService {
     }
 
     def addToReadingItems(Resource resource, User sessionUser) {
-        List<User> subscribedUsers = Subscription.createCriteria().list {
+        /*List<User> subscribedUsers = Subscription.createCriteria().list {
             projections {
                 property('user')
             }
             eq('topic', resource.topic)
-        }
+        }*/
+        List<User> subscribedUsers = resource.topic.subscribedUsers()
         subscribedUsers.each {
             if (it.id != sessionUser.id) {
                 resource.addToReadingItems(new ReadingItem(user: it, resource: resource, isRead: false))
             }
         }
     }
-
 }

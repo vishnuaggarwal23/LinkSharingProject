@@ -5,6 +5,7 @@ import enums.Visibility
 import vo.PostVO
 import vo.RatingInfoVO
 import vo.TopicVO
+import vo.conversion.DomainToVO
 
 class ResourceController {
 
@@ -18,8 +19,11 @@ class ResourceController {
             if (post) {
                 if (user) {
                     post.resourceRating = user?.getScore(resource)
-                    List<TopicVO> trendingTopics = Topic.getTrendingTopics()
-                    render(view: 'show', model: [trendingTopics: trendingTopics, post: post])
+
+                    /*List<TopicVO> trendingTopics = Topic.getTrendingTopics()*/
+
+                    List<TopicVO> trendingTopicsVO = DomainToVO.trendingTopics()
+                    render(view: 'show', model: [trendingTopics: trendingTopicsVO, post: post])
                 } else {
                     render(view: 'show', model: [post: post])
                 }
@@ -58,12 +62,12 @@ class ResourceController {
         List<Resource> resources = Resource.search(co).list()
         def result = ""
         resources?.each {
-            searchPosts.add(Resource.getPost(it.id))
+            searchPosts.add(DomainToVO.post(it))
         }
         if (co.global) {
             render(view: 'search', model: [
-                    topPosts      : Resource.getTopPosts(),
-                    trendingTopics: Topic.getTrendingTopics(),
+                    topPosts      : DomainToVO.topPosts(),
+                    trendingTopics: DomainToVO.trendingTopics(),
                     posts         : searchPosts])
         } else {
             searchPosts.each {
@@ -95,6 +99,6 @@ class ResourceController {
         } else {
             flash.error = "Session User not Set"
         }
-        render(view: 'show', model: [post: Resource.getPost(id), trendingTopics: Topic.getTrendingTopics()])
+        render(view: 'show', model: [post: DomainToVO.post(Resource?.get(id)), trendingTopics: DomainToVO.trendingTopics()])
     }
 }

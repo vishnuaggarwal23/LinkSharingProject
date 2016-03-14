@@ -20,10 +20,10 @@ class SessionCheckFilters {
             }
         }
 
-        consoleCheck(uri: '/console') {
+        /*consoleCheck(uri: '/console') {
             before = {
                 redirect(controller: 'login', action: 'index')
             }
-        }
+        }*/
     }
 }

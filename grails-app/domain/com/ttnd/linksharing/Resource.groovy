@@ -66,6 +66,35 @@ abstract class Resource {
         new RatingInfoVO(totalVotes: result[0], averageScore: result[1], totalScore: result[2])
     }
 
+    static def topPosts() {
+        return ResourceRating.createCriteria().list(max: 5) {
+            projections {
+                property('resource.id')
+                'resource' {
+                    property('description')
+                    property('url')
+                    property('filePath')
+                    'topic' {
+                        property('id')
+                        property('name')
+                        eq('visibility', enums.Visibility.PUBLIC)
+                    }
+                    'createdBy' {
+                        property('id')
+                        property('userName')
+                        property('firstName')
+                        property('lastName')
+                        property('photo')
+                    }
+                    property('lastUpdated')
+                }
+            }
+            groupProperty('resource.id')
+            count('id', 'totalVotes')
+            order('totalVotes', 'desc')
+        }
+    }
+
     static List<PostVO> getTopPosts() {
         List<PostVO> topPostVOList = []
         ResourceRating.createCriteria().list(max: 5) {
@@ -127,6 +156,31 @@ abstract class Resource {
         return trendingTopicsList
     }
 
+    static def recentPosts() {
+        return Resource.createCriteria().list(max: 5) {
+            projections {
+                property('id')
+                property('description')
+                property('url')
+                property('filePath')
+                'topic' {
+                    property('id')
+                    property('name')
+                    eq('visibility', enums.Visibility.PUBLIC)
+                }
+                'createdBy' {
+                    property('id')
+                    property('userName')
+                    property('firstName')
+                    property('lastName')
+                    property('photo')
+                }
+                property('lastUpdated')
+            }
+            order('lastUpdated', 'desc')
+        }
+    }
+
     static List<PostVO> getRecentPosts() {
         List<PostVO> recentPostsList = []
         Resource.createCriteria().list(max: 5) {
@@ -158,6 +212,31 @@ abstract class Resource {
         return recentPostsList
     }
 
+    static def topicPosts(Long id) {
+        return Resource.createCriteria().list(max: 5) {
+            projections {
+                property('id')
+                property('description')
+                property('url')
+                property('filePath')
+                'topic' {
+                    property('id')
+                    property('name')
+                }
+                'createdBy' {
+                    property('id')
+                    property('userName')
+                    property('firstName')
+                    property('lastName')
+                    property('photo')
+                }
+                property('lastUpdated')
+            }
+            eq('topic.id', id)
+            order('lastUpdated', 'desc')
+        }
+    }
+
     static List<PostVO> getTopicPosts(Long topicID) {
         List<PostVO> topicPosts = []
         Resource.createCriteria().list(max: 5) {
@@ -187,6 +266,30 @@ abstract class Resource {
                     userPhoto: it[10], isRead: "", resourceRating: 0, postDate: it[11]))
         }
         return topicPosts
+    }
+
+    def post() {
+        return Resource.createCriteria().get {
+            projections {
+                property('id')
+                property('description')
+                property('url')
+                property('filePath')
+                'topic' {
+                    property('id')
+                    property('name')
+                }
+                'createdBy' {
+                    property('id')
+                    property('userName')
+                    property('firstName')
+                    property('lastName')
+                    property('photo')
+                }
+                property('lastUpdated')
+            }
+            eq('id', this.id)
+        }
     }
 
     static PostVO getPost(Long resourceId) {

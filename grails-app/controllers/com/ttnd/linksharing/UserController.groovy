@@ -5,6 +5,7 @@ import enums.Visibility
 import vo.PostVO
 import vo.TopicVO
 import vo.UserVO
+import vo.conversion.DomainToVO
 
 class UserController {
 
@@ -18,16 +19,22 @@ class UserController {
         searchCO.max = searchCO.max ?: 5
         searchCO.offset = searchCO.offset ?: 0
 
-        List<TopicVO> trendingTopics = Topic.getTrendingTopics()
-        List<PostVO> recentPostVOList = Resource.getRecentPosts()
-        UserVO userDetail = session.user.getUserDetails()
-        List<PostVO> readingResource = User.getReadingItems(session.user, searchCO)
+        /*List<TopicVO> trendingTopics = Topic.getTrendingTopics()*/
+        /*List<PostVO> recentPostVOList = Resource.getRecentPosts()*/
+        /*UserVO userDetail = session.user.getUserDetails()*/
+        /*List<PostVO> readingResource = User.getReadingItems(session.user, searchCO)*/
+
+        List<TopicVO> trendingTopicsVO = DomainToVO.trendingTopics()
+        UserVO userDetailsVO = DomainToVO.userDetails(session.user)
+        List<PostVO> recentPostVO = DomainToVO.recentPosts()
+        List<PostVO> readingItemsVO = DomainToVO.readingItems(session.user, searchCO)
+
         render(view: 'index', model: [subscribedTopics : session.user.subscribedTopics,
-                                      trendingTopics   : trendingTopics,
-                                      userDetails      : userDetail,
-                                      recentPosts      : recentPostVOList,
-                                      readingItems     : readingResource,
-                                      subscriptions    : session.user.getUserSubscriptions(),
+                                      trendingTopics   : trendingTopicsVO,
+                                      userDetails      : userDetailsVO,
+                                      recentPosts      : recentPostVO,
+                                      readingItems     : readingItemsVO,
+                                      subscriptions    : DomainToVO.userSubscriptions(session.user),
                                       searchCO         : searchCO,
                                       totalReadingItems: session.user.getTotalReadingItem()])
     }
@@ -43,7 +50,7 @@ class UserController {
         } else {
             resourceSearchCO.visibility = Visibility.PUBLIC
         }
-        render view: 'profile', model: [userDetails     : user.getUserDetails(),
+        render view: 'profile', model: [userDetails     : DomainToVO.userDetails(user),
                                         createdResources: resourceService.search(resourceSearchCO),
                                         totalPosts      : user.getPostsCount(),
                                         resourceSearchCO: resourceSearchCO]
@@ -120,16 +127,17 @@ class UserController {
             updateProfileCO.file = params.file
             log.info params.file
             if (updateProfileCO.hasErrors()) {
-                render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session.user])
             } else {
                 User user = userService.updateProfile(updateProfileCO)
                 if (user) {
                     session.user = user
                     flash.message = "Profile Updated"
-                    render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user), userCo: user])
                 } else {
                     flash.error = "Profile not Updated"
-                    render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session
+                            .user])
                 }
             }
         }
@@ -138,16 +146,16 @@ class UserController {
     def updatePassword(UpdatePasswordCO updatePasswordCO) {
         if (session.user) {
             if (updatePasswordCO.hasErrors()) {
-                render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session.user])
             } else {
                 User user = userService.updatePassword(updatePasswordCO)
                 if (user) {
                     session.user = user
                     flash.message = "Password Updated"
-                    render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user), userCo: user])
                 } else {
                     flash.error = "Password not Updated"
-                    render(view: 'edit', model: [userDetails: session.user.getUserDetails(), userCo: session.user])
+                    render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session.user])
                 }
             }
         }
@@ -156,7 +164,7 @@ class UserController {
     def edit() {
         User user = session.user
         if (user) {
-            render(view: 'edit', model: [userDetails: user.getUserDetails(), userCo: user])
+            render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user), userCo: user])
         }
     }
 

@@ -2,6 +2,7 @@ package com.ttnd.linksharing
 
 import co.UserCO
 import vo.PostVO
+import vo.conversion.DomainToVO
 
 class LoginController {
 
@@ -14,10 +15,13 @@ class LoginController {
             forward(controller: 'user', action: 'index')
 
         } else {
-            List<PostVO> topPostVOList = Resource.getTopPosts()
-            List<PostVO> recentPostVOList = Resource.getRecentPosts()
-            render(view: 'index', model: [topPosts   : topPostVOList,
-                                          recentPosts: recentPostVOList])
+            /*List<PostVO> topPostVOList = Resource.getTopPosts()*/
+            /*List<PostVO> recentPostVOList = Resource.getRecentPosts()*/
+
+            List<PostVO> topPostVO = DomainToVO.topPosts()
+            List<PostVO> recentPostVO = DomainToVO.recentPosts()
+            render(view: 'index', model: [topPosts   : topPostVO,
+                                          recentPosts: recentPostVO])
         }
     }
 
@@ -42,8 +46,8 @@ class LoginController {
 
     def registration(UserCO userCo) {
         if (userCo.hasErrors()) {
-            render(view: '/login/index', model: [topPosts   : Resource.getTopPosts(),
-                                                 recentPosts: Resource.getRecentPosts(),
+            render(view: '/login/index', model: [topPosts   : DomainToVO.topPosts(),
+                                                 recentPosts: DomainToVO.recentPosts(),
                                                  userCo     : userCo])
         } else {
             User user = userService.registerUser(userCo, params.file)
@@ -51,8 +55,8 @@ class LoginController {
                 forward(controller: 'login', action: 'index', params: [loginUserName: user.userName,
                                                                        loginPassword: user.password])
             } else {
-                render(view: 'index', model: [topPosts   : Resource.getTopPosts(),
-                                              recentPosts: Resource.getRecentPosts(),
+                render(view: 'index', model: [topPosts   : DomainToVO.topPosts(),
+                                              recentPosts: DomainToVO.recentPosts(),
                                               userCo     : user])
             }
         }
@@ -76,9 +80,15 @@ class LoginController {
     def forgotPassword(String email) {
         if (email) {
             if (emailService.forgotPassword(email)) {
-                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), result: "Email Has Been Sent"])
+                render(view: 'index', model: [
+                        topPosts   : DomainToVO.topPosts(),
+                        recentPosts: DomainToVO.recentPosts(),
+                        result     : "Email Has Been Sent"])
             } else {
-                render(view: 'index', model: [topPosts: Resource.getTopPosts(), recentPosts: Resource.getRecentPosts(), result: "Email Has Not Been Sent"])
+                render(view: 'index', model: [
+                        topPosts   : DomainToVO.topPosts(),
+                        recentPosts: DomainToVO.recentPosts(),
+                        result     : "Email Has Not Been Sent"])
             }
         } else {
             flash.error = "Please Enter an Email"

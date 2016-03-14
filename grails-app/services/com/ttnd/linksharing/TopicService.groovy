@@ -5,6 +5,7 @@ import co.TopicSearchCO
 import enums.Visibility
 import grails.transaction.Transactional
 import vo.TopicVO
+import vo.UserVO
 
 @Transactional
 class TopicService {
@@ -95,6 +96,37 @@ class TopicService {
             }
         } else {
             return null
+        }
+    }
+
+    def subscribedUsers(Topic topic) {
+        if (topic) {
+            List<User> subscribedUsers = topic.subscribedUsers()
+            List<UserVO> subscribedUsersVO = []
+            subscribedUsers.each { User user ->
+                subscribedUsersVO.add(new UserVO(id: user.id, name: user.userName, firstName: user.firstName, lastName:
+                        user.lastName, email: user.email))
+            }
+            return subscribedUsersVO
+        }
+    }
+
+    def topicDetails(Topic topic) {
+        if (topic) {
+            Topic topicDetails = topic.topicDetails()
+            TopicVO topicVO = new TopicVO()
+            topicVO.id = topicDetails.id
+            topicVO.name = topicDetails.name
+            topicVO.createdBy = topicDetails.createdBy
+            topicVO.visibility = topicDetails.visibility
+            return topicVO
+        }
+    }
+
+    def trendingTopics(){
+        List<TopicVO> trendingTopicsVO=[]
+        Topic.trendingTopics().each {
+
         }
     }
 }
