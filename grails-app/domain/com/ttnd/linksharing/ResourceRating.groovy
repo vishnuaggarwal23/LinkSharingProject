@@ -9,7 +9,8 @@ class ResourceRating {
         resource(unique: ['user'])
     }
 
-    static belongsTo = [user: User, resource: Resource]
+    static belongsTo = [user    : User,
+                        resource: Resource]
 
     String toString() {
         return "${user} rated ${resource} by ${score}"

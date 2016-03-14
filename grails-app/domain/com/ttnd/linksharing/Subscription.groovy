@@ -10,7 +10,8 @@ class Subscription {
         topic(unique: ['user'])
     }
 
-    static belongsTo = [user: User, topic: Topic]
+    static belongsTo = [user : User,
+                        topic: Topic]
 
     static mapping = {
         seriousness defaultValue: Seriousness.SERIOUS

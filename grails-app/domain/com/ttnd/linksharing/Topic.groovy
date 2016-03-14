@@ -14,7 +14,8 @@ class Topic {
 
     def subscriptionService
 
-    static hasMany = [subscriptions: Subscription, resources: Resource]
+    static hasMany = [subscriptions: Subscription,
+                      resources    : Resource]
 
     static constraints = {
         name(blank: false, unique: ['createdBy'])
@@ -27,7 +28,10 @@ class Topic {
 
     def afterInsert() {
         Topic.withNewSession {
-            Subscription subscription = new Subscription(user: this.createdBy, topic: this, seriousness: AppConstants.SERIOUSNESS)
+            Subscription subscription = new Subscription(
+                    user: this.createdBy,
+                    topic: this,
+                    seriousness: AppConstants.SERIOUSNESS)
             if (subscriptionService.saveSubscription(subscription)) {
                 log.info "${subscription}-> ${this.createdBy} subscribed for ${this}"
             } else {
@@ -76,40 +80,8 @@ class Topic {
         }
     }
 
-    static TopicVO getTopicDetails(Topic topic) {
-        TopicVO topicDetails = new TopicVO()
-        topicDetails.id = topic.id
-        topicDetails.name = topic.name
-        topicDetails.visibility = topic.visibility
-        topicDetails.createdBy = topic.createdBy
-        return topicDetails
-    }
-
     Topic topicDetails() {
         return this
-    }
-
-    static List<UserVO> getSubscribedUsers(Topic topic) {
-        List<UserVO> subscribedUsers = []
-        Subscription.createCriteria().list {
-            projections {
-                'user' {
-                    property('id')
-                    property('userName')
-                    property('firstName')
-                    property('lastName')
-                    property('email')
-                    property('photo')
-                    property('isAdmin')
-                    property('isActive')
-                }
-                eq('topic.id', topic.id)
-            }
-        }?.each {
-            subscribedUsers.add(new UserVO(id: it[0], name: it[1], firstName: it[2], lastName: it[3], email: it[4], photo:
-                    it[5], isAdmin: it[6], isActive: it[7]))
-        }
-        return subscribedUsers
     }
 
     List<User> subscribedUsers() {

@@ -9,7 +9,8 @@ class ReadingItem {
         resource(unique: ['user'])
     }
 
-    static belongsTo = [resource: Resource, user: User]
+    static belongsTo = [resource: Resource,
+                        user    : User]
 
     String toString() {
         return "${user} read the ${resource}: ${isRead}"

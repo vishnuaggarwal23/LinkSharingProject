@@ -2,9 +2,6 @@ package com.ttnd.linksharing
 
 import co.SearchCO
 import co.UserSearchCO
-import vo.PostVO
-import vo.TopicVO
-import vo.UserVO
 
 class User {
     String userName
@@ -19,9 +16,14 @@ class User {
     Date lastUpdated
     String confirmPassword
 
-    static transients = ['confirmPassword', 'subscribedTopics']
+    static transients = ['confirmPassword',
+                         'subscribedTopics']
 
-    static hasMany = [topics: Topic, subscriptions: Subscription, readingItems: ReadingItem, resources: Resource, resourceRatings: ResourceRating]
+    static hasMany = [topics         : Topic,
+                      subscriptions  : Subscription,
+                      readingItems   : ReadingItem,
+                      resources      : Resource,
+                      resourceRatings: ResourceRating]
 
     static mapping = {
         photo(sqlType: 'longblob')
@@ -83,44 +85,17 @@ class User {
         return this
     }
 
-    UserVO getUserDetails() {
-        return new UserVO(id: id, name: userName, firstName: firstName, lastName: lastName, email: email, photo: photo, isActive: isActive, isAdmin: isAdmin)
-    }
-
     def readingItems(SearchCO searchCO) {
         return ReadingItem?.findAllByUser(this, [max: searchCO.max, offset: searchCO.offset])
     }
 
-    static List<PostVO> getReadingItems(User user, SearchCO searchCO) {
-        List<ReadingItem> readingItems = ReadingItem.findAllByUser(user, [max: searchCO.max, offset: searchCO.offset])
-        List<PostVO> readingItemsList = []
-        readingItems.each {
-            readingItemsList.add(new PostVO(resourceID: it.resource.id, description: it.resource.description, topicID: it
-                    .resource.topic.id, topicName: it.resource.topic.name, userID: it.resource.createdBy.id, userName:
-                    it.resource.createdBy.userName, userFirstName: it.resource.createdBy.firstName, userLastName: it
-                    .resource.createdBy.lastName, userPhoto: it.resource.createdBy.photo, isRead: it.isRead, url: it
-                    .resource, filePath: it.resource, postDate: it.resource.lastUpdated))
-        }
-        return readingItemsList
-    }
-
     Integer getScore(Resource resource) {
         ResourceRating resourceRating = ResourceRating.findByUserAndResource(this, resource)
-        /*if (resourceRating) {
-            return resourceRating.score
-        } else {
-            return 1
-        }*/
         return resourceRating ? resourceRating.score : 1
 
     }
 
     Boolean isSubscribed(Long topicId) {
-        /*if (Subscription.findByUserAndTopic(this, Topic.load(topicId))) {
-            return true
-        } else {
-            return false
-        }*/
         return Subscription.findByUserAndTopic(this, Topic.load(topicId)) ? true : false
     }
 
@@ -139,31 +114,8 @@ class User {
         }
     }
 
-    List<TopicVO> getUserSubscriptions() {
-        List<TopicVO> userSubscriptions = []
-        Subscription.createCriteria().list(max: 5) {
-            projections {
-                'topic' {
-                    property('id')
-                    property('name')
-                    property('visibility')
-                }
-                'user' {
-                    eq('id', this.id)
-                }
-            }
-        }.each {
-            userSubscriptions.add(new TopicVO(id: it[0], name: it[1], visibility: it[2], count: 0, createdBy: this))
-        }
-        return userSubscriptions
-    }
-
     Subscription getSubscription(Long topicId) {
         return Subscription.findByUserAndTopic(this, Topic.load(topicId))
-    }
-
-    def getCreatedTopics() {
-        return this.topics
     }
 
     List<Resource> unreadResources() {

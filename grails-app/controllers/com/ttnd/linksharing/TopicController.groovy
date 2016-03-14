@@ -61,12 +61,6 @@ class TopicController {
         render jsonResponse as JSON
     }
 
-    def getTrendingTopics() {
-        TopicVO topicList = Resource.trendingTopics
-
-        render "${topicList}"
-    }
-
     def delete(Long id) {
         Topic topic = Topic.get(id)
         User user = session.user
