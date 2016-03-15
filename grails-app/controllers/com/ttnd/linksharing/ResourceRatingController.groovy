@@ -1,33 +1,23 @@
 package com.ttnd.linksharing
 
+import grails.converters.JSON
+
 class ResourceRatingController {
 
     def resourceService
 
-    def save(Long id, Integer score) {
-        Resource resource = Resource.read(id)
-        User user = session.user
-        ReadingItem readingItem = ReadingItem.findByUserAndResource(user, resource)
-        if (readingItem) {
-            ResourceRating resourceRating = ResourceRating.findByUserAndResource(user, resource)
-            if (resourceRating) {
-                resourceRating.score = score
-                if (resourceService.saveResourceRating(resourceRating)) {
-                    flash.message = "Resource Rated"
-                } else {
-                    flash.error = "Resource is not Rated"
-                }
+    def save(Long userId, Long resourceId, Integer score) {
+
+        Map jsonResponse = [:]
+        Resource resource = Resource?.get(resourceId)
+        User user = User?.get(userId)
+        if (user && resource) {
+            if (resourceService.saveRating(resource, user, score)) {
+                jsonResponse.message = "Resource Rated"
             } else {
-                resourceRating = new ResourceRating(user: user, resource: resource, score: score)
-                if (resourceService.saveResourceRating(resourceRating)) {
-                    flash.message = "Resource Rated"
-                } else {
-                    flash.error = "Resource is not Rated"
-                }
+                jsonResponse.error = "Resource not Rated"
             }
-        } else {
-            flash.error = "Resource can not be rated"
         }
-        redirect(uri: '/')
+        render jsonResponse as JSON
     }
 }

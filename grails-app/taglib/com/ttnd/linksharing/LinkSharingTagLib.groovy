@@ -13,13 +13,14 @@ class LinkSharingTagLib {
         User user = session.user
         if (user) {
             Boolean isRead = Boolean.valueOf(attrs.isRead)
+            String readStatus
             if (isRead) {
-                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
-                        "isRead='${!isRead}'>Mark as Unread</a>"
+                readStatus = "Mark as Unread"
             } else {
-                out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
-                        "isRead='${!isRead}'>Mark as Read</a> "
+                readStatus = "Mark as Read"
             }
+            out << "<a href='' class='pull-right toggleIsRead' resourceId='${attrs.id}' " +
+                    "isRead='${!isRead}'>'${readStatus}'</a>"
         }
     }
 
@@ -49,11 +50,12 @@ class LinkSharingTagLib {
         if (session.user) {
             Long topicID = attrs.topicID
             if (topicID) {
-                if (session.user.isSubscribed(topicID)) {
+                if (Linksharing.isTopicSubscribedByUser(Topic?.get(topicID), session.user)) {
                     out << "<a href='${createLink(controller: 'subscription', action: 'delete', params: [userId: session.user.id, topicId: topicID])}'>Un-Subscribe</a>"
                 } else {
                     out << "<a href='${createLink(controller: 'subscription', action: 'save', params: [userId: session.user.id, topicId: topicID])}'>Subscribe</a>"
                 }
+
             }
         }
     }

@@ -36,8 +36,7 @@ class Linksharing {
     }
 
     static Boolean ifTopicCanbeViewdBy(Topic topic, User user) {
-        return user && topic && (isTopicPublic(topic) || isUserAdmin(user) || Subscription.findByUserAndTopic(user,
-                topic))
+        return user && topic && (isTopicPublic(topic) || isUserAdmin(user) || isTopicSubscribedByUser(topic, user))
     }
 
     static Boolean ifTopicIsCreatedBy(Topic topic, User user) {
@@ -69,5 +68,10 @@ class Linksharing {
     static UUID uniqueFileName() {
         return UUID.randomUUID()
     }
+
+    static Boolean isTopicSubscribedByUser(Topic topic, User user) {
+        return user && topic && Subscription.findByUserAndTopic(user, topic)
+    }
+
 
 }

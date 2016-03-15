@@ -20,7 +20,7 @@
                     <th>Description</th>
                 </tr>
                 </thead>
-                <g:each in="${unreadResource}" var="resource">
+                <g:each in="${unreadResources}" var="resource">
                     <tr>
                         <td>${resource.topic}</td>
                         <td>${resource}</td>

@@ -92,9 +92,9 @@
                         </td>
                     </tr>
                 </g:each>
-                <g:paginate class="pagination" total="${totalUsers}" controller="user" action="registeredUsers"
-                            max="${userSearchCO.max}" offset="${userSearchCO.offset}"/>
             </table>
+            <g:paginate class="pagination" total="${totalUsers}" controller="user" action="registeredUsers"
+                        max="${userSearchCO.max}" offset="${userSearchCO.offset}"/>
         </div>
     </div>
 </div>

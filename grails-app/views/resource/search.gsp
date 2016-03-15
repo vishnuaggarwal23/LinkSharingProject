@@ -21,13 +21,10 @@
                         Top Posts
                     </div>
 
-                    <div class="panel-body">
-                        <div style="overflow-y:scroll; height: 400px;">
-                            <g:each in="${topPosts}" var="post">
-                                <g:render template="/templates/postPanel" model="[post: post]"/>
-                            </g:each>
-                        </div>
-
+                    <div class="panel-body" style="overflow-y:scroll; height: 400px;">
+                        <g:each in="${topPosts}" var="post">
+                            <g:render template="/templates/postPanel" model="[post: post]"/>
+                        </g:each>
                     </div>
                 </div>
 
@@ -40,18 +37,15 @@
                     Search Result
                 </div>
 
-                <div class="panel-body">
-                    <div style="overflow-y:scroll; height: 800px;">
-                        <g:if test="${posts}">
-                            <g:each in="${posts}" var="post">
-                                <g:render template="/templates/postPanel" model="[post: post]"/>
-                            </g:each>
-                        </g:if>
-                        <g:else>
-                            No results to be shown.
-                        </g:else>
-                    </div>
-
+                <div class="panel-body" style="overflow-y:scroll; height: 800px;">
+                    <g:if test="${posts}">
+                        <g:each in="${posts}" var="post">
+                            <g:render template="/templates/postPanel" model="[post: post]"/>
+                        </g:each>
+                    </g:if>
+                    <g:else>
+                        No results to be shown.
+                    </g:else>
                 </div>
             </div>
 

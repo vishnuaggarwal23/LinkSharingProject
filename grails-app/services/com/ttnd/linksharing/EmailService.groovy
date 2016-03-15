@@ -74,7 +74,7 @@ class EmailService {
     def sendUnReadResourcesMail(User user, List<Resource> unreadResources) {
         EmailDTO emailDTO = new EmailDTO(
                 to: [user.email],
-                subject: messageSource.getMessage("com.tothenew.co.dto.EmailDTO.unread.subject", [].toArray(), Locale
+                subject: messageSource.getMessage("com.ttnd.linksharing.dto.EmailDTO.unread.subject", [].toArray(), Locale
                         .default),
                 content: groovyPageRenderer.render(template: '/resource/unreadResouces', model: [user           : user,
                                                                                                  unreadResources: unreadResources])

@@ -146,4 +146,15 @@ class ResourceService {
             }
         }
     }
+
+    ResourceRating saveRating(Resource resource, User user, Integer score) {
+        if (user && resource) {
+            ResourceRating resourceRating = ResourceRating.findOrCreateByResourceAndUser(resource, user)
+            if (resourceRating) {
+                resourceRating.score = score
+                return saveResourceRating(resourceRating)
+            }
+        }
+        return null
+    }
 }

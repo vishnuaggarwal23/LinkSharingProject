@@ -16,11 +16,14 @@
                 <span class="text-muted">@${post.userName}</span>
             </div>
 
-            <div class="col-md-2">
-                <span class="text-muted">${post.postDate}</span>
+            <div class="col-md-3">
+                <span class="text-muted"><g:formatDate format="dd-MMM-yyyy"
+                                                       date="${post.postDate}"/></span>
+                <span class="text-muted"><g:formatDate format="hh:mm"
+                                                       date="${post.postDate}"/></span>
             </div>
 
-            <div class="col-md-2 col-md-offset-3">
+            <div class="col-md-2 col-md-offset-2">
                 <span class="text-primary pull-right"><g:link name="topicClickLnk" controller="topic" action="show"
                                                               params="[id: post.topicID]">${post.topicName}</g:link></span>
             </div>

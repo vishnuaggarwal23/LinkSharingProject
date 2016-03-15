@@ -1,10 +1,10 @@
 package com.ttnd.linksharing
-/**
- * Created by vishnu on 13/3/16.
- */
 
-class UnreadItemEmailJob {
+
+class UnreadItemsMailJob {
+
     def userService
+
     static triggers = {
         cron name: 'myTrigger', cronExpression: "0 0 1 ? * MON"
     }

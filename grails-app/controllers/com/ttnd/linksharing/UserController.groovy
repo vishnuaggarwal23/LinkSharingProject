@@ -20,11 +20,6 @@ class UserController {
         searchCO.max = searchCO.max ?: 5
         searchCO.offset = searchCO.offset ?: 0
 
-        /*List<TopicVO> trendingTopics = Topic.getTrendingTopics()*/
-        /*List<PostVO> recentPostVOList = Resource.getRecentPosts()*/
-        /*UserVO userDetail = session.user.getUserDetails()*/
-        /*List<PostVO> readingResource = User.getReadingItems(session.user, searchCO)*/
-
         List<TopicVO> trendingTopicsVO = DomainToVO.trendingTopics()
         UserVO userDetailsVO = DomainToVO.userDetails(session.user)
         List<PostVO> recentPostVO = DomainToVO.recentPosts()
@@ -66,7 +61,7 @@ class UserController {
                 response.outputStream.flush()
             }
         } else {
-            flash.error = "Photo not Available"
+            flash.error = g.message(code: "com.ttnd.linksharing.user.image.image.not.found")
         }
     }
 
@@ -97,12 +92,12 @@ class UserController {
     }
 
     def registeredUsers(UserSearchCO userSearchCO) {
-        userSearchCO.max = userSearchCO.max ?: 5
+        userSearchCO.max = userSearchCO.max ?: 20
         userSearchCO.offset = userSearchCO.offset ?: 0
         List<UserVO> registeredUsers = DomainToVO.registeredUsers(userSearchCO, session.user)
         if (registeredUsers) {
             render(view: 'users', model: [userList    : registeredUsers,
-                                          totalUsers  : User.count() ?: 0,
+                                          totalUsers  : User.countByIsAdmin(false) ?: 0,
                                           userSearchCO: userSearchCO])
         } else {
             redirect(controller: 'login', action: 'index')
@@ -115,9 +110,9 @@ class UserController {
         if (admin && normal) {
             User tempUser = userService.toggleActiveStatus(admin, normal)
             if (tempUser) {
-                flash.message = "Active Status Toggled"
+                flash.message = g.message(code: "com.ttnd.linksharing.user.update.User.Active.Status.active.status.toggled")
             } else {
-                flash.error = "Active Status not Toggled"
+                flash.error = g.message(code: "com.ttnd.linksharing.user.update.User.Active.Status.active.status.not.toggled")
             }
         }
         redirect(controller: 'user', action: 'registeredUsers')
@@ -133,11 +128,11 @@ class UserController {
                 User user = userService.updateProfile(updateProfileCO)
                 if (user) {
                     session.user = user
-                    flash.message = "Profile Updated"
+                    flash.message = g.message(code: "com.ttnd.linksharing.user.save.profile.updated")
                     render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user),
                                                  userCo     : user])
                 } else {
-                    flash.error = "Profile not Updated"
+                    flash.error = g.message(code: "com.ttnd.linksharing.user.save.profile.not.updated")
                     render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user),
                                                  userCo     : session.user])
                 }
@@ -154,10 +149,10 @@ class UserController {
                 User user = userService.updatePassword(updatePasswordCO)
                 if (user) {
                     session.user = user
-                    flash.message = "Password Updated"
+                    flash.message = g.message(code: "com.ttnd.linksharing.user.save.password.updated")
                     render(view: 'edit', model: [userDetails: DomainToVO.userDetails(user), userCo: user])
                 } else {
-                    flash.error = "Password not Updated"
+                    flash.error = g.message(code: "com.ttnd.linksharing.user.save.password.not.updated")
                     render(view: 'edit', model: [userDetails: DomainToVO.userDetails(session.user), userCo: session.user])
                 }
             }

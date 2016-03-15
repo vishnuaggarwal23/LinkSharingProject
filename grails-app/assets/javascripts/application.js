@@ -237,7 +237,7 @@ $(document).ready(function () {
                         url: "/topic/validateUniqueTopicPerUser",
                         type: 'post',
                         data: {
-                            topicName: function () {
+                            topicFName: function () {
                                 return $('#topicName').val()
                             }
                         }

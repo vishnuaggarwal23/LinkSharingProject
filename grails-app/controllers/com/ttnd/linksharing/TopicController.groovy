@@ -16,9 +16,6 @@ class TopicController {
     def show(Long id) {
         Topic topic = Topic.read(id)
         if (topic) {
-            /*TopicVO topicDetails = Topic.getTopicDetails(topic)*/
-            /*List<UserVO> subscribedUsers = Topic.getSubscribedUsers(topic)*/
-            /*List<PostVO> topicPosts = Resource.getTopicPosts(topic.id)*/
 
             TopicVO topicDetailsVO = DomainToVO.topicDetails(topic)
             List<UserVO> subscribedUsersVO = DomainToVO.subscribedUsers(topic)
@@ -34,11 +31,11 @@ class TopicController {
                     render(view: 'show', model: [topicDetails: topicDetailsVO, subscribedUsers: subscribedUsersVO,
                                                  topicPosts  : topicPostsVO])
                 } else {
-                    flash.put("error", "Topic is Private, User is not Subscribed to it")
+                    flash.error = g.message(code: "com.ttnd.linksharing.topic.show.private.topic.cannot.access")
                 }
             }
         } else {
-            flash.put("error", "Topic do not exists")
+            flash.error = g.message(code: "com.ttnd.linksharing.topic.show.do.not.exists")
             redirect(controller: 'login', action: 'index')
         }
     }
@@ -48,13 +45,13 @@ class TopicController {
         if (session.user) {
             topicCO.createdBy = session.user
             if (topicCO.hasErrors()) {
-                jsonResponse.error = "Topic Save/Update Error"
+                jsonResponse.error = g.message(code: "com.ttnd.linksharing.topic.topic.save.update.error")
             } else {
                 Topic topic = topicService.saveTopic(topicCO)
                 if (topic) {
-                    jsonResponse.message = "Topic Saved/Updated"
+                    jsonResponse.message = g.message(code: "com.ttnd.linksharing.topic.topic.saved.updated")
                 } else {
-                    jsonResponse.error = "Topic not Saved/Updated"
+                    jsonResponse.error = g.message(code: "com.ttnd.linksharing.topic.topic.not.saved.updated")
                 }
             }
         }
@@ -66,12 +63,12 @@ class TopicController {
         User user = session.user
         if (user && topic) {
             if (topicService.deleteTopic(topic, user)) {
-                flash.message = "Topic Deleted"
+                flash.message = g.message(code: "com.ttnd.linksharing.topic.delete.topic.deleted")
             } else {
-                flash.error = "Topic not Deleted"
+                flash.error = g.message(code: "com.ttnd.linksharing.topic.delete.topic.not.deleted")
             }
         } else {
-            flash.error = "Topic/User not Set"
+            flash.error = g.message(code: "com.ttnd.linksharing.topic.delete.topic.user.not.set")
         }
         redirect(controller: 'login', action: 'index')
     }
@@ -79,9 +76,9 @@ class TopicController {
     def invite(Long topic, String email) {
         if (topic && email) {
             if (emailService.invite(topic, email)) {
-                flash.message = "Invitation Sent"
+                flash.message = g.message(code: "com.ttnd.linksharing.topic.invite.invitation.sent")
             } else {
-                flash.error = "Invitation not Sent"
+                flash.error = g.message(code: "com.ttnd.linksharing.topic.invite.invitation.not.sent")
             }
         }
         redirect(controller: 'login', action: 'index')
@@ -92,15 +89,15 @@ class TopicController {
         if (topic) {
             if (session.user) {
                 if (topicService.joinTopic(topic, session.user)) {
-                    flash.message = "Topic Subscribed"
+                    flash.message = g.message(code: "com.ttnd.linksharing.topic.join.topic.subscribed")
                 } else {
-                    flash.error = "Topic not Subscribed"
+                    flash.error = g.message(code: "com.ttnd.linksharing.topic.join.topic.not.subscribed")
                 }
             } else {
-                flash.error = "Session User not Set, Re-login to join"
+                flash.error = g.message(code: "com.ttnd.linksharing.topic.join.session.not.set")
             }
         } else {
-            flash.error = "Topic do not exists"
+            flash.error = g.message(code: "com.ttnd.linksharing.topic.join.topic.do.not.esists")
         }
         redirect(controller: "login", action: "index")
     }

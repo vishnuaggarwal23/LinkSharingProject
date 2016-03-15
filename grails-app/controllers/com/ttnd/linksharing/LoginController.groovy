@@ -11,12 +11,9 @@ class LoginController {
 
     def index() {
         if (session.user) {
-            flash.message = "Logged In"
+            flash.message = g.message(code: "com.ttnd.linksharing.login.index.active.logged.in.account")
             forward(controller: 'user', action: 'index')
-
         } else {
-            /*List<PostVO> topPostVOList = Resource.getTopPosts()*/
-            /*List<PostVO> recentPostVOList = Resource.getRecentPosts()*/
 
             List<PostVO> topPostVO = DomainToVO.topPosts()
             List<PostVO> recentPostVO = DomainToVO.recentPosts()
@@ -31,10 +28,10 @@ class LoginController {
             if (user.isActive) {
                 session.user = user
             } else {
-                flash.error = "Inactive Account"
+                flash.error = g.message(code: "com.ttnd.linksharing.login.login.inactive.account")
             }
         } else {
-            flash.error = "Account Not Found"
+            flash.error = g.message(code: "com.ttnd.linksharing.login.login.unregistered.account")
         }
         redirect(controller: 'login', action: 'index')
     }

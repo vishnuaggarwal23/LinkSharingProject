@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta name="layout" content="applicationLayout">
-    <title></title>
+    <title>Post</title>
+    <asset:stylesheet src="jquery.rateyo.min.css"/>
 </head>
 
 <body>
@@ -23,7 +24,10 @@
                             </div>
 
                             <div class="col-md-4 col-md-offset-1">
-                                <span class="text-primary"><ins>${post.topicName}</ins></span>
+                                <g:link controller="topic" action="show" params="[id: post.topicID]">
+                                    <span class="text-primary"><ins>${post.topicName}</ins></span>
+                                </g:link>
+
                             </div>
                         </div>
 
@@ -33,18 +37,26 @@
                             </div>
 
                             <div class="col-md-4 col-md-offset-1">
-                                <span class="text-muted">${post.postDate}</span>
+                                <span class="text-muted"><g:formatDate format="dd-MMM-yyyy"
+                                                                       date="${post.postDate}"/></span>
+                                <span class="text-muted"><g:formatDate format="hh:mm"
+                                                                       date="${post.postDate}"/></span>
                             </div>
                         </div>
                         <g:if test="${session.user}">
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-7">
-                                    <g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
+                                    <div id="rateYo"></div>
+                                    <input type="hidden" id="default-hidden-resource-rating"
+                                           value="${post?.resourceRating}"/>
+                                    <input type="hidden" id="hidden-user-id" value="${session.user?.id}"/>
+                                    <input type="hidden" id="hidden-resource-id" value="${post?.resourceID}"/>
+                                    %{--<g:form controller="resourceRating" action="save" params="[id: post.resourceID]">
                                         <g:select name="score" from="${[1, 2, 3, 4, 5]}" optionKey="${it}"
                                                   value="${post?.resourceRating}"/>
                                         <g:submitButton name="saveResourceScoreBtn" class="btn btn-default btn-primary"
                                                         value="Save" type="submit"/>
-                                    </g:form>
+                                    </g:form>--}%
                                 </div>
                             </div>
                         </g:if>
@@ -99,5 +111,7 @@
         <g:render template="/templates/trendingTopics" model="[trendingTopics: trendingTopics]"/>
     </div>
 </div>
+<asset:javascript src="jquery.rateyo.min.js"/>
+<asset:javascript src="resourceRating.js"/>
 </body>
 </html>
