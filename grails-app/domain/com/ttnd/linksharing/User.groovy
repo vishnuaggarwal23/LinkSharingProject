@@ -95,10 +95,6 @@ class User {
 
     }
 
-    Boolean isSubscribed(Long topicId) {
-        return Subscription.findByUserAndTopic(this, Topic.load(topicId)) ? true : false
-    }
-
     def userSubscriptions() {
         return Subscription.createCriteria().list(max: 5) {
             projections {

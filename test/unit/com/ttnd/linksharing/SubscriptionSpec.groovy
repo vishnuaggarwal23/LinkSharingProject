@@ -1,6 +1,7 @@
 package com.ttnd.linksharing
 
 import enums.Seriousness
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
@@ -8,9 +9,11 @@ import spock.lang.Specification
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Subscription)
+@Mock(Topic)
 class SubscriptionSpec extends Specification {
-    def "Validating Subscription"() {
-        setup:
+
+    def "validatingSubscription"() {
+        given:
         Subscription subscription = new Subscription(topic: topic, user: user, seriousness: seriousness)
 
         when:
@@ -27,25 +30,33 @@ class SubscriptionSpec extends Specification {
         new Topic() | new User() | null               | false
     }
 
-    def "Validating duplicate subscription"() {
+    def "validatingDuplicateSubscription"() {
+
         given:
-        User user = new User()
-        Topic topic = new Topic()
-        Subscription subscription = new Subscription(topic: topic, user: user, seriousness: Seriousness.VERY_SERIOUS)
-        Subscription newSubscription = new Subscription(topic: topic, user: user, seriousness: Seriousness.VERY_SERIOUS)
+        Topic topic = new Topic();
+        User user = new User();
+        Seriousness seriousness = Seriousness.VERY_SERIOUS;
+        Subscription subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness);
 
         when:
-        subscription.save(flush: true)
-        newSubscription.save(flush: true)
+        subscriptionObj.save();
 
         then:
-        !subscription.errors.allErrors.size()
-        newSubscription.errors.allErrors.size()
-        newSubscription.errors.getFieldError('user')
+        Subscription.count() == 1;
+
+        when:
+        subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness);
+        subscriptionObj.save();
+
+        then:
+        Subscription.count() == 1;
+        subscriptionObj.errors.allErrors.size() == 1;
+        subscriptionObj.errors.getFieldErrorCount('user') == 1;
     }
 
-    def "CheckToString"() {
-        setup:
+    def "tostring"() {
+
+        given:
         User user = new User(userName: userName)
         Topic topic = new Topic(name: topicName)
         Subscription subscription = new Subscription(topic: topic, user: user, seriousness: Seriousness.CASUAL)

@@ -115,7 +115,8 @@ class UserController {
                 flash.error = g.message(code: "com.ttnd.linksharing.user.update.User.Active.Status.active.status.not.toggled")
             }
         }
-        redirect(controller: 'user', action: 'registeredUsers')
+        //redirect(controller: 'user', action: 'registeredUsers')
+        redirect(url: request.getHeader("referer"))
     }
 
     def save(UpdateProfileCO updateProfileCO) {

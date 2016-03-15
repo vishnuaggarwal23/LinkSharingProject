@@ -9,11 +9,11 @@ import spock.lang.Specification
  */
 @TestFor(LinkResource)
 class LinkResourceSpec extends Specification {
-    def "Validate Document Resource "() {
 
+    def "validateLinkResource "() {
         setup:
         User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: "vishnu.aggarwal@tothenew.com",
-                password: "123456", userName: "vishnu.aggarwal")
+                password: "123456", confirmPassword: '123456', userName: "vishnu.aggarwal")
         Topic topic = new Topic(name: "Grails", visibility: Visibility.PRIVATE, createdBy: user)
         LinkResource linkResource = new LinkResource(url: url, description: description, createdBy:
                 user, topic: topic)
@@ -25,15 +25,16 @@ class LinkResourceSpec extends Specification {
         result == valid
 
         where:
-        url                      | description | valid
-        ""                       | ""          | false
-        null                     | null        | false
-        "https://www.google.com" | null        | false
-        null                     | "google"    | false
-        "https://www.google.com" | "google"    | true
+        description   | url                        | valid
+        "description" | 'http://www.tothenew.com/' | true
+        " "           | 'http://www.tothenew.com/' | false
+        null          | 'http://www.tothenew.com/' | false
+        "description" | '://www.tothenew.com/'     | false
+        "description" | ' '                        | false
+        "description" | null                       | false
     }
 
-    def "CheckToString"() {
+    def "tostring"() {
         setup:
         LinkResource linkResource = new LinkResource(url: url)
 
@@ -46,5 +47,7 @@ class LinkResourceSpec extends Specification {
         where:
         url                               | result
         "http://www.testLinkResource.com" | "http://www.testLinkResource.com"
+        ""                                | ""
+        null                              | null
     }
 }

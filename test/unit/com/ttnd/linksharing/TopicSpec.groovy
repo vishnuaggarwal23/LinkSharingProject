@@ -3,68 +3,70 @@ package com.ttnd.linksharing
 import enums.Visibility
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(Topic)
 class TopicSpec extends Specification {
-    def "Check Topic"() {
-        setup:
-        User user = new User()
-        Topic topic = new Topic(name: name, createdBy: user, visibility: visibility)
 
+    @Unroll("Topic Constraints ----- #sno")
+    def "topicConstraints"() {
+        given:
+        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
 
         when:
-        Boolean result = topic.validate()
+        boolean result = topicObj.validate();
 
         then:
         result == valid
 
         where:
-        name     | visibility         | valid
-        ""       | ""                 | false
-        null     | null               | false
-        "Grails" | Visibility.PRIVATE | true
-        "Grails" | Visibility.PUBLIC  | true
-        "Grails" | "abc"              | false
+        sno | topicName | creator    | visibility         | valid
+        1   | "grails"  | new User() | Visibility.PRIVATE | true
+        2   | " "       | new User() | Visibility.PRIVATE | false
+        3   | null      | new User() | Visibility.PRIVATE | false
+        4   | "grails"  | null       | Visibility.PRIVATE | false
+        5   | "grails"  | new User() | null               | false
     }
 
-    def "unique topic name per user"() {
-        setup:
+    def "topicUserUniqueness"() {
+        given:
         String topicName = "grails"
-        User user = new User(firstName: "Vishnu", lastName: "Aggarwal", email: "vishnu.aggarwal@tothenew.com",
-                password: "123456", userName: "vishnu.aggarwal")
-        Topic topic = new Topic(name: topicName, visibility: Visibility.PRIVATE, createdBy: user)
+        User creator = new User();
+        Visibility visibility = Visibility.PRIVATE;
+        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
 
         when:
-        topic.save()
+        topicObj.save();
 
         then:
-        Topic.count() == 1
+        Topic.count() == 1;
 
         when:
-        topic = new Topic(name: topicName, visibility: Visibility.PRIVATE, createdBy: user)
-        topic.save()
+        topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
+        topicObj.save();
 
         then:
-        Topic.count() == 1
-        topic.errors.allErrors.size() == 1
-        topic.errors.getFieldErrorCount('name') == 1
+        Topic.count() == 1;
+        topicObj.errors.allErrors.size() == 1;
+        topicObj.errors.getFieldErrorCount('name') == 1;
     }
 
-    def "CheckToString"() {
-        setup:
-        Topic topic = new Topic(name: name)
+    def "tostring"() {
+        given:
+        User user = new User(userName: 'vishnu')
+        Topic topic = new Topic(name: name, createdBy: user)
 
         when:
-        result == topic.toString()
+        String topicName = topic.toString()
 
         then:
-        noExceptionThrown()
+        topicName == result
 
         where:
-        name     | result
-        "grails" | "grails"
+        name            | result
+        "testTopicName" | "testTopicName, vishnu"
     }
 }

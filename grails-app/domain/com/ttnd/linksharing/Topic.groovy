@@ -3,7 +3,6 @@ package com.ttnd.linksharing
 import constants.AppConstants
 import enums.Visibility
 import vo.TopicVO
-import vo.UserVO
 
 class Topic {
     String name
@@ -11,8 +10,6 @@ class Topic {
     Visibility visibility
     Date dateCreated
     Date lastUpdated
-
-    def subscriptionService
 
     static hasMany = [subscriptions: Subscription,
                       resources    : Resource]
@@ -32,7 +29,7 @@ class Topic {
                     user: this.createdBy,
                     topic: this,
                     seriousness: AppConstants.SERIOUSNESS)
-            if (subscriptionService.saveSubscription(subscription)) {
+            if (subscription.validate() && subscription.save(flush: true)) {
                 log.info "${subscription}-> ${this.createdBy} subscribed for ${this}"
             } else {
                 log.error "Subscription does not occurs--- ${subscription.errors.allErrors}"

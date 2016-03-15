@@ -9,16 +9,4 @@ import spock.lang.Specification
 @TestFor(UserController)
 class UserControllerSpec extends Specification {
 
-    def "CheckUserIndex"() {
-        when:
-        session.user = user
-        controller.index()
-
-        then:
-        response.text == result
-
-        where:
-        user                         | result
-        new User(userName: "vishnu") | "User vishnu Dashboard"
-    }
 }

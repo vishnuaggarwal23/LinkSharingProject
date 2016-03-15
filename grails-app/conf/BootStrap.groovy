@@ -87,7 +87,7 @@ class BootStrap {
             if (!countResources) {
                 2.times {
                     Resource documentResource = new DocumentResource(description: "topic ${topic} doc", createdBy: topic
-                            .createdBy, filePath: "file/path", topic: topic)
+                            .createdBy, filePath: "file/path", topic: topic,contentType: AppConstants.DOCUMENT_CONTENT_TYPE)
                     Resource linkResource = new LinkResource(description: "topic ${topic} link", createdBy: topic
                             .createdBy, url: "https://www.google.co.in", topic: topic)
                     if (resourceService.saveResource(documentResource)) {
