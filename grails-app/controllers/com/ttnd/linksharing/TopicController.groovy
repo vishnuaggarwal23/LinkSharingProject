@@ -14,7 +14,7 @@ class TopicController {
     def topicService
 
     def show(Long id) {
-        Topic topic = Topic.read(id)
+        Topic topic = Topic?.read(id)
         if (topic) {
 
             TopicVO topicDetailsVO = DomainToVO.topicDetails(topic)
@@ -25,9 +25,7 @@ class TopicController {
                 render(view: 'show', model: [topicDetails: topicDetailsVO, subscribedUsers: subscribedUsersVO,
                                              topicPosts  : topicPostsVO])
             } else if (topic.visibility == Visibility.PRIVATE) {
-                User user = session.user
-                Subscription subscription = Subscription.findByUserAndTopic(user, topic)
-                if (subscription) {
+                if (Subscription?.findByUserAndTopic(session.user, topic)) {
                     render(view: 'show', model: [topicDetails: topicDetailsVO, subscribedUsers: subscribedUsersVO,
                                                  topicPosts  : topicPostsVO])
                 } else {
@@ -36,7 +34,7 @@ class TopicController {
             }
         } else {
             flash.error = g.message(code: "com.ttnd.linksharing.topic.show.do.not.exists")
-            redirect(controller: 'login', action: 'index')
+            redirect(url: request.getHeader("referer"))
         }
     }
 
@@ -70,7 +68,7 @@ class TopicController {
         } else {
             flash.error = g.message(code: "com.ttnd.linksharing.topic.delete.topic.user.not.set")
         }
-        redirect(controller: 'login', action: 'index')
+        redirect(url: request.getHeader("referer"))
     }
 
     def invite(Long topic, String email) {
@@ -81,7 +79,7 @@ class TopicController {
                 flash.error = g.message(code: "com.ttnd.linksharing.topic.invite.invitation.not.sent")
             }
         }
-        redirect(controller: 'login', action: 'index')
+        redirect(url: request.getHeader("referer"))
     }
 
     def join(Long id) {
@@ -99,7 +97,7 @@ class TopicController {
         } else {
             flash.error = g.message(code: "com.ttnd.linksharing.topic.join.topic.do.not.esists")
         }
-        redirect(controller: "login", action: "index")
+        redirect(url: request.getHeader("referer"))
     }
 
     def validateUniqueTopicPerUser() {

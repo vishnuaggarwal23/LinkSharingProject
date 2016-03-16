@@ -36,7 +36,7 @@ class Linksharing {
     }
 
     static Boolean ifTopicCanbeViewdBy(Topic topic, User user) {
-        return user && topic && (isTopicPublic(topic) || isUserAdmin(user) || isTopicSubscribedByUser(topic, user))
+        return topic && (isTopicPublic(topic) || isUserAdmin(user) || isTopicSubscribedByUser(topic, user))
     }
 
     static Boolean ifTopicIsCreatedBy(Topic topic, User user) {

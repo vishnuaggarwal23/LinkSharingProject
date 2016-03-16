@@ -34,7 +34,7 @@ class DocumentResourceSpec extends Specification {
         "description" | null          | false
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
         setup:
         DocumentResource documentResource = new DocumentResource(filePath: filePath)
 

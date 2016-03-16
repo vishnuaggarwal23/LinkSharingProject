@@ -125,7 +125,7 @@ class ResourceService {
     }
 
     File downloadDocumentResource(DocumentResource documentResource, User user) {
-        if (user && documentResource && Linksharing.ifTopicCanbeViewdBy(documentResource.topic, user)) {
+        if (documentResource && Linksharing.ifTopicCanbeViewdBy(documentResource.topic, user)) {
             def file = new File(documentResource.filePath)
             if (file.exists()) {
                 return file
@@ -154,6 +154,14 @@ class ResourceService {
                 resourceRating.score = score
                 return saveResourceRating(resourceRating)
             }
+        }
+        return null
+    }
+
+    ReadingItem toggleIsReadResource(Boolean isRead, ReadingItem readingItem) {
+        if (readingItem) {
+            readingItem.isRead = isRead
+            return saveReadingItem(readingItem)
         }
         return null
     }

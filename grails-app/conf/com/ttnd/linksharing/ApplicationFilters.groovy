@@ -7,11 +7,13 @@ class ApplicationFilters {
             before = {
                 log.info params
             }
-            after = { Map model ->
+        }
 
-            }
-            afterView = { Exception e ->
-
+        console(controller: 'console', action: '*') {
+            before = {
+                if (!(session.user?.isAdmin)) {
+                    redirect(controller: 'login', action: 'index')
+                }
             }
         }
     }

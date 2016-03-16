@@ -111,7 +111,7 @@ class UserSpec extends Specification {
         null      | null       | ""
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
         given:
         User user = new User(userName: userName)
 

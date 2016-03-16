@@ -81,7 +81,7 @@ class Topic {
         return this
     }
 
-    List<User> subscribedUsers() {
+    def subscribedUsers() {
         return Subscription.createCriteria().list {
             projections {
                 property('user')

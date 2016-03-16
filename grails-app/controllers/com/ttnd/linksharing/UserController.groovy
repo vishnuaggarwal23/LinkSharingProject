@@ -10,10 +10,7 @@ import vo.conversion.DomainToVO
 
 class UserController {
 
-    def assetResourceLocator
     def userService
-    def topicService
-    def subscriptionService
     def resourceService
 
     def index(SearchCO searchCO) {
@@ -100,7 +97,7 @@ class UserController {
                                           totalUsers  : User.countByIsAdmin(false) ?: 0,
                                           userSearchCO: userSearchCO])
         } else {
-            redirect(controller: 'login', action: 'index')
+            redirect(url: request.getHeader("referer"))
         }
     }
 
@@ -115,7 +112,6 @@ class UserController {
                 flash.error = g.message(code: "com.ttnd.linksharing.user.update.User.Active.Status.active.status.not.toggled")
             }
         }
-        //redirect(controller: 'user', action: 'registeredUsers')
         redirect(url: request.getHeader("referer"))
     }
 

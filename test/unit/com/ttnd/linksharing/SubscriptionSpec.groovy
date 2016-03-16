@@ -33,28 +33,28 @@ class SubscriptionSpec extends Specification {
     def "validatingDuplicateSubscription"() {
 
         given:
-        Topic topic = new Topic();
-        User user = new User();
-        Seriousness seriousness = Seriousness.VERY_SERIOUS;
-        Subscription subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness);
+        Topic topic = new Topic()
+        User user = new User()
+        Seriousness seriousness = Seriousness.VERY_SERIOUS
+        Subscription subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness)
 
         when:
-        subscriptionObj.save();
+        subscriptionObj.save()
 
         then:
-        Subscription.count() == 1;
+        Subscription.count() == 1
 
         when:
-        subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness);
-        subscriptionObj.save();
+        subscriptionObj = new Subscription(topic: topic, user: user, seriousness: seriousness)
+        subscriptionObj.save()
 
         then:
-        Subscription.count() == 1;
-        subscriptionObj.errors.allErrors.size() == 1;
-        subscriptionObj.errors.getFieldErrorCount('user') == 1;
+        Subscription.count() == 1
+        subscriptionObj.errors.allErrors.size() == 1
+        subscriptionObj.errors.getFieldErrorCount('user') == 1
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
 
         given:
         User user = new User(userName: userName)

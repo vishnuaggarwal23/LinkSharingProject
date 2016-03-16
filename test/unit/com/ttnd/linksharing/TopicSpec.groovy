@@ -14,10 +14,10 @@ class TopicSpec extends Specification {
     @Unroll("Topic Constraints ----- #sno")
     def "topicConstraints"() {
         given:
-        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
+        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility)
 
         when:
-        boolean result = topicObj.validate();
+        boolean result = topicObj.validate()
 
         then:
         result == valid
@@ -34,27 +34,27 @@ class TopicSpec extends Specification {
     def "topicUserUniqueness"() {
         given:
         String topicName = "grails"
-        User creator = new User();
-        Visibility visibility = Visibility.PRIVATE;
-        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
+        User creator = new User()
+        Visibility visibility = Visibility.PRIVATE
+        Topic topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility)
 
         when:
-        topicObj.save();
+        topicObj.save()
 
         then:
-        Topic.count() == 1;
+        Topic.count() == 1
 
         when:
-        topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility);
-        topicObj.save();
+        topicObj = new Topic(name: topicName, createdBy: creator, visibility: visibility)
+        topicObj.save()
 
         then:
-        Topic.count() == 1;
-        topicObj.errors.allErrors.size() == 1;
-        topicObj.errors.getFieldErrorCount('name') == 1;
+        Topic.count() == 1
+        topicObj.errors.allErrors.size() == 1
+        topicObj.errors.getFieldErrorCount('name') == 1
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
         given:
         User user = new User(userName: 'vishnu')
         Topic topic = new Topic(name: name, createdBy: user)

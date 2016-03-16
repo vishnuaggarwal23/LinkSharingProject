@@ -13,14 +13,14 @@ class DocumentResourceController {
             DocumentResource tempResource = resourceService.uploadDocumentResource(documentResource, file)
             if (tempResource) {
                 resourceService.addToReadingItems(tempResource, session.user)
-                flash.message = "Resource Saved"
+                flash.message = g.message(code: "com.ttnd.linksharing.document.resource.upload.resource.saved")
             } else {
-                flash.error = "Resource not Saved"
+                flash.error = g.message(code: "com.ttnd.linksharing.document.resource.upload.resource.not.saved")
             }
         } else {
-            flash.error = "Session user not set"
+            flash.error = g.message(code: "com.ttnd.linksharing.document.resource.upload.user.not.set")
         }
-        redirect(controller: 'login', action: 'index')
+        redirect(url: request.getHeader("referer"))
     }
 
     def download(Long id) {
@@ -31,8 +31,8 @@ class DocumentResourceController {
             response.setHeader("Content-disposition", "attachment;filename=\"${documentResource.getFileName()}\"")
             response.outputStream << file.bytes
         } else {
-            flash.error = "Resource not Available"
+            flash.error = g.message(code: "com.ttnd.linksharing.document.resource.download.resource.not.found")
         }
-        redirect(controller: 'login', action: 'index')
+        redirect(url: request.getHeader("referer"))
     }
 }

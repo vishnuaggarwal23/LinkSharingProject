@@ -9,10 +9,10 @@ class LinkResourceController {
         LinkResource tempResource = resourceService.saveResource(linkResource)
         if (tempResource) {
             resourceService.addToReadingItems(linkResource, session.user)
-            flash.message = "Resource Saved"
+            flash.message = g.message(code: "com.ttnd.linksharing.link.resource.save.resource.saved")
         } else {
-            flash.error = "Resource not Saved"
+            flash.error = g.message(code: "com.ttnd.linksharing.link.resource.save.resource.not.saved")
         }
-        redirect(controller: 'user', action: 'index')
+        redirect(url: request.getHeader("referer"))
     }
 }

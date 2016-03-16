@@ -34,7 +34,7 @@ class LinkResourceSpec extends Specification {
         "description" | null                       | false
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
         setup:
         LinkResource linkResource = new LinkResource(url: url)
 

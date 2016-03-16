@@ -8,5 +8,5 @@ import spock.lang.Specification
  */
 @TestFor(UserController)
 class UserControllerSpec extends Specification {
-
+    
 }

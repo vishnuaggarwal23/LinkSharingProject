@@ -12,43 +12,39 @@ class ResourceController {
     def resourceService
 
     def show(Long id) {
-        Resource resource = Resource.get(id)
+        Resource resource = Resource?.get(id)
         if (resource) {
             User user = session.user
             PostVO post = resourceService.show(resource, user)
             if (post) {
                 if (user) {
                     post.resourceRating = user?.getScore(resource)
-
-                    /*List<TopicVO> trendingTopics = Topic.getTrendingTopics()*/
-
                     List<TopicVO> trendingTopicsVO = DomainToVO.trendingTopics()
-                    render(view: 'show', model: [trendingTopics: trendingTopicsVO, post: post])
+                    render(view: 'show', model: [trendingTopics: trendingTopicsVO,
+                                                 post          : post])
                 } else {
                     render(view: 'show', model: [post: post])
                 }
-
             } else {
-                flash.error = "Resource can not be shown"
+                flash.error = g.message(code: "com.ttnd.linksharing.resource.show.resource.can.not.show")
                 redirect(controller: 'login', action: 'index')
             }
         } else {
-            flash.error = "Resource can not be shown"
+            flash.error = g.message(code: "com.ttnd.linksharing.resource.show.resource.not.found")
             redirect(controller: 'login', action: 'index')
         }
-
     }
 
     def delete(Long id) {
         Resource resource = Resource.get(id)
         if (session.user && resource) {
             if (resourceService.deleteResource(resource, session.user)) {
-                flash.message = "Resource Deleted"
+                flash.message = g.message(code: "com.ttnd.linksharing.resource.delete.resource.deleted")
             } else {
-                flash.error = "Resource not Deleted"
+                flash.error = g.message(code: "com.ttnd.linksharing.resource.delete.resource.not.deleted")
             }
         } else {
-            flash.error = "Resource or User not Found"
+            flash.error = g.message(code: "com.ttnd.linksharing.resource.delete.resource.user.not.set")
         }
         redirect(controller: 'login', action: 'index')
     }
@@ -84,19 +80,20 @@ class ResourceController {
 
     def save(Long id, String description) {
         if (session.user) {
-            Resource resource = Resource.get(id)
+            Resource resource = Resource?.get(id)
             if (resource) {
                 if (resourceService.editResourceDescription(resource, description)) {
-                    flash.message = "Resource Description Updated"
+                    flash.message = g.message(code: "com.ttnd.linksharing.resource.save.resource.description.updated")
                 } else {
-                    flash.error = "Resource Description is not Updated"
+                    flash.error = g.message(code: "com.ttnd.linksharing.resource.save.resource.description.not.updated")
                 }
             } else {
-                flash.error = "Resource not Found"
+                flash.error = g.message(code: "com.ttnd.linksharing.resource.save.resource.not.found")
             }
         } else {
-            flash.error = "Session User not Set"
+            flash.error = g.message(code: "com.ttnd.linksharing.resource.save.user.not.set")
         }
-        render(view: 'show', model: [post: DomainToVO.post(Resource?.get(id)), trendingTopics: DomainToVO.trendingTopics()])
+        render(view: 'show', model: [post          : DomainToVO.post(Resource?.get(id)),
+                                     trendingTopics: DomainToVO.trendingTopics()])
     }
 }

@@ -4,20 +4,34 @@ import grails.converters.JSON
 
 class ReadingItemController {
 
-    def index() {}
+    def resourceService
 
     def changeIsRead(Long id, Boolean isRead) {
+        Map jsonResponse = [:]
         User user = session.user
-        Map jsonMap = [:]
-        if (ReadingItem.executeUpdate("update ReadingItem set isRead=:isRead where resource.id=:id and user" +
-                ".id=:userID", [isRead: isRead, id: id, userID: user.id])) {
-            flash.message = "Reading Item Status Changed"
-            jsonMap.message = flash.message
+        Resource resource = Resource?.get(id)
+        if (user && resource) {
+            if (resourceService.toggleIsReadResource(isRead, ReadingItem?.findByUserAndResource(user, resource))) {
+                jsonResponse.message = g.message(code: "com.ttnd.linksharing.reading.item.change.is.read.successful")
+            } else {
+                jsonResponse.error = g.message(code: "com.ttnd.linksharing.reading.item.change.is.read.not.successful")
+            }
         } else {
-            flash.error = "Reading Item Status not Changed"
-            jsonMap.error = flash.error
+            jsonResponse.error = g.message(code: "com.ttnd.linksharing.reading.item.user.resource.not.set")
         }
-        JSON jsonObject = jsonMap as JSON
-        render jsonObject
+        render jsonResponse as JSON
     }
+    /*User user = session.user
+    Map jsonMap = [:]
+    if (ReadingItem.executeUpdate("update ReadingItem set isRead=:isRead where resource.id=:id and user" +
+            ".id=:userID", [isRead: isRead, id: id, userID: user.id])) {
+        flash.message = "Reading Item Status Changed"
+        jsonMap.message = flash.message
+    } else {
+        flash.error = "Reading Item Status not Changed"
+        jsonMap.error = flash.error
+    }
+    JSON jsonObject = jsonMap as JSON
+    render jsonObject
+}*/
 }

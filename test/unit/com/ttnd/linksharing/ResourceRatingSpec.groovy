@@ -49,7 +49,7 @@ class ResourceRatingSpec extends Specification {
         newResourceRating.errors.getFieldError('resource')
     }
 
-    def "tostring"() {
+    def "tostringCheck"() {
         setup:
         User user = new User(userName: userName).save(validate: false)
         Resource resource = new DocumentResource(description: description).save(validate: false)
