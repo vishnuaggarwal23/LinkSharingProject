@@ -13,10 +13,11 @@
                     <span class="text-primary">${topic.createdBy.getName()}</span>
                 </div>
 
-                <div class="col-md-4 col-md-offset-2 col-xs-6 topicShowPanel_${topic.id}">
-                    <span class="text-primary">
+                <div class="col-md-4 col-md-offset-2 col-xs-6 topicShowPanel_${topic.id} topicName">
+                    <span class="text-primary" style="width:inherit">
                         <ins><g:link name="topicClickLnk" controller="topic" action="show"
-                                     params="[id: topic.id]">${topic.name}</g:link></ins></span>
+                                     params="[id: topic.id]" data-toggle="tooltip" data-placement="right"
+                                     title="${topic.name}">${topic.name}</g:link></ins></span>
                 </div>
 
                 <div class="col-md-12" id="topicEditPanel_${topic.id}" style="visibility: hidden">

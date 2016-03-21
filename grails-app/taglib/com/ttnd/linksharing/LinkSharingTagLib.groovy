@@ -180,10 +180,14 @@ class LinkSharingTagLib {
     }
 
     def showSubscribedTopics = {
-        User user = session.user
-        if (user) {
-            out << "${g.select(class: 'btn dropdown-toggle col-sm-8 form-control', name: 'topic', id: 'linkTopic', from: user.getSubscribedTopics(), optionKey: 'id')}"
-        }
+//        User user = session.user
+        print("x" * 10);
+        println session.dump();
+//        println session.user;
+//        println user?.getSubscribedTopics();
+        /*if (user) {
+            out << "${g.select(class: 'btn dropdown-toggle col-sm-8 form-control', name: 'topic', from: user?.getSubscribedTopics(), optionKey: 'id')}"
+        }*/
     }
 
 }

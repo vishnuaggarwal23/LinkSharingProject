@@ -11,7 +11,8 @@
                         <label for="doc" class="col-sm-4 form-control-label">Document *</label>
 
                         <div class="col-sm-8">
-                            <input type="file" class="form-control col-sm-8" id="doc" name="file" required>
+                            <input type="file" class="form-control col-sm-8" id="doc" name="file"
+                                   accept=".pdf" required>
                         </div>
                     </div>
 

@@ -19,6 +19,7 @@
                         <label for="topic" class="col-sm-4 form-control-label">Topic *</label>
 
                         <div class="col-sm-8">
+
                             <div class="dropdown">
                                 <ls:showSubscribedTopics/>
                             </div>

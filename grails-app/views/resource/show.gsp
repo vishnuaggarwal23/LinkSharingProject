@@ -23,9 +23,9 @@
                                 <span class="text-primary">${post.userFirstName} ${post.userLastName}</span>
                             </div>
 
-                            <div class="col-md-4 col-md-offset-1">
-                                <g:link controller="topic" action="show" params="[id: post.topicID]">
-                                    <span class="text-primary"><ins>${post.topicName}</ins></span>
+                            <div class="col-md-4 col-md-offset-1 topicName">
+                                <g:link controller="topic" action="show" params="[id: post.topicID]" title="${post.topicName}" data-toggle="tooltip" data-placement="right">
+                                    <span class="text-primary" style="width:inherit;"><ins>${post.topicName}</ins></span>
                                 </g:link>
 
                             </div>

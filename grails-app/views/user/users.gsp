@@ -40,10 +40,6 @@
                             </div>
                             <g:textField name="q" type="text" class="form-control"
                                          id="q" placeholder="Search"/>
-
-                            <div class="input-group-addon adminUsersSearchCancelBtn"><span
-                                    class="glyphicon glyphicon-remove"
-                                    style="font-size: large"></span></div>
                         </div>
                     </div>
                 </g:form>

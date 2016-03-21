@@ -76,7 +76,7 @@
                             <label for="photo" class="col-sm-4 form-control-label">Photo</label>
 
                             <div class="col-sm-8">
-                                <input type="file" name="file" id="photo">
+                                <input type="file" name="file" accept=".jpeg,.jpg,.png" id="photo">
                                 <span class="file-custom"></span>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="panel-body">
-                    <g:form name="updatePassword"controller="user" action="updatePassword">
+                    <g:form name="updatePassword" controller="user" action="updatePassword">
                         <div class="form-group row">
                             <g:hiddenField name="id" value="${userCo?.id}"/>
                             <label for="oldPassword" class="col-sm-4 form-control-label">Old Password *</label>

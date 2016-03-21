@@ -1,3 +1,9 @@
 .error {
     color: red;
 }
+
+.topicName{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

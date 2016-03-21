@@ -21,7 +21,7 @@
 
 <body>
 <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#linksharingnavbar"
@@ -56,9 +56,10 @@
                                 </div>
                                 <g:textField name="q" type="text" class="form-control globalSearchBox"
                                              id="globalSearchBox" placeholder="Search"/>
-                                <g:hiddenField name="global" value="${true}" />
+                                <g:hiddenField name="global" value="${true}"/>
                                 <div class="input-group-addon globalSearchCancelBtn"><span
-                                        class="glyphicon glyphicon-remove globalSearchCancelBtn" style="font-size: large"></span></div>
+                                        class="glyphicon glyphicon-remove globalSearchCancelBtn"
+                                        style="font-size: large"></span></div>
                             </div>
                         </div>
                         <g:hiddenField name="visibility" id="visibility" class="visibility"
@@ -68,19 +69,24 @@
                 <g:if test="${session.user}">
                     <li>
                         <span>
-                            <a class="btn" role="button" data-toggle="modal" data-target="#createtopicModal">
+                            <a class="btn" role="button" data-toggle="modal" title="Create Topic"
+                               data-placement="bottom"
+                               data-target="#createtopicModal">
                                 <span class="fa fa-weixin"></span>
                             </a>
                             <a class="btn" id="inviteModalBtn" role="button" data-toggle="modal"
-                               data-target="#sendinviteModal">
+                               data-target="#sendinviteModal" title="Send Invitation"
+                               data-placement="bottom">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </a>
                             <a class="btn" id="linkResourceModalBtn" role="button" data-toggle="modal"
-                               data-target="#sharelinkModal">
+                               data-target="#sharelinkModal" title="Link Resource"
+                               data-placement="bottom">
                                 <span class="fa fa-link"></span>
                             </a>
                             <a class="btn" id="documentResourceModalBtn" role="button" data-toggle="modal"
-                               data-target="#sharedocModal">
+                               data-target="#sharedocModal" title="Document Resource"
+                               data-placement="bottom">
                                 <span class="fa fa-file-o"></span>
                             </a>
                         </span>
@@ -114,8 +120,8 @@
     <g:if test="${session.user}">
         <g:render template="/topic/create"/>
         <g:render template="/topic/email"/>
-        <g:render template="/resource/linkResourceCreate"/>
-        <g:render template="/resource/documentResourceCreate"/>
+        %{--<g:render template="/resource/linkResourceCreate"/>--}%
+        %{--<g:render template="/resource/documentResourceCreate"/>--}%
     </g:if>
     <g:else>
         <g:render template="/login/forgotPassword"/>
@@ -137,7 +143,8 @@
             ${flash.error}
         </div>
     </g:if>
-
+    ${session.dump()}
+    ${session.user}
     <div class="jsonObjectResponse" style="display: none">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
